@@ -46,11 +46,11 @@ feat: 로그인 페이지 구현
 
 ### 📝 브랜치 타입
 
-feat: 새로운 기능 추가
-fix: 버그 수정
-refactor: 코드 리팩토링
-docs: 문서 수정
-hotfix: 버그 수정
+feat/새로운 기능 추가
+fix/버그 수정
+refactor/코드 리팩토링
+docs/문서 수정
+hotfix/버그 수정
 
 ### 📝 브랜치 내용
 
