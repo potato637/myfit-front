@@ -1,6 +1,6 @@
 function BottomNav() {
   return (
-    <div className="w-full h-[89px] fixed bottom-0 left-0 right-0 ct-center bg-white">
+    <div className="w-full h-[89px] fixed bottom-0 left-0 right-0 z-50 ct-center bg-ct-white">
       <div className="flex-1 ct-center flex-col gap-1">
         <img
           src="/assets/bottom-nav/feed.svg"
