@@ -50,7 +50,9 @@ function Recruiting() {
           className="w-[18px] h-[22px]"
         />
       </div>
-      <div className="flex flex-col mt-[6px] gap-[11px] items-center">
+      <div className="flex flex-col mt-[6px] gap-[11px] items-center mb-[89px]">
+        <RecruitCard />
+        <RecruitCard />
         <RecruitCard />
         <RecruitCard />
         <RecruitCard />
