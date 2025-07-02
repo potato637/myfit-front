@@ -45,7 +45,7 @@ function Recruiting() {
           공고 등록
         </button>
         <img
-          src="assets/recruit/bookmark.svg"
+          src="assets/recruit/bookmark(on).svg"
           alt="bookmark"
           className="w-[18px] h-[22px]"
         />
