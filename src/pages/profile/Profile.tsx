@@ -18,7 +18,7 @@ function Profile() {
           성과로 증명하는 디지털 광고 전략가입니다. 🤩
         </span>
       </div>
-      <CompanyLink />
+      <CompanyLink link="www.injaecompany.com" width="w-[335px]" />
       <NetworkingBar />
       <div className="w-full h-[40px] bg-ct-gray-100 flex sticky top-0 mt-[17px] mb-[17px]">
         <div

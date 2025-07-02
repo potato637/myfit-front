@@ -34,6 +34,7 @@ export default {
         "ct-gray-100": "#EDEDED",
         "ct-blue-gray-100": "#7D9AC3",
         "ct-red-100": "#FF3535",
+        "ct-light-blue-100": "#E5F0FF",
       },
     },
   },
