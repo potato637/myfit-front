@@ -36,6 +36,9 @@ export default {
         "ct-red-100": "#FF3535",
         "ct-light-blue-100": "#E5F0FF",
       },
+      boxShadow: {
+        "recruit-card": "0px 0px 5px 0px rgba(0, 0, 0, 0.15)",
+      },
     },
   },
   plugins: [],
