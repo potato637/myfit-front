@@ -1,7 +1,7 @@
 function RecruitCard() {
   return (
-    <div className="w-[360px] min-h-[123px] rounded-[10px] ct-center border border-ct-gray-200 px-2 py-1 ">
-      <div className="w-[332.64px] my-[18.5px] my-[15px]">
+    <div className="w-[360px] min-h-[123px] rounded-[10px] ct-center border border-ct-gray-200 px-2 py-1 shadow-recruit-card ">
+      <div className="w-[332.64px] my-[15px]">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-[8px]">
             <div className="w-[32px] h-[32px] bg-ct-gray-100 rounded-[10px]" />
