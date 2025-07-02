@@ -1,47 +1,41 @@
+import BottomNav from "../../components/layouts/BottomNav";
 import RecruitCard from "../../components/recruiting/RecruitCard";
 
 function Recruiting() {
   return (
-    <div className="mt-[65px] flex flex-col px-4 py-2 ">
-      <div className="flex w-full relative max-w-[401px] h-[32px]">
-        <button className="flex-1 flex flex-col h-[22px] ct-center">
-          <span className="font-Pretendard text-[18px] text-[#000000] font-[600] leading-[22px] tracking-[-0.408px]">
+    <div className="flex flex-col px-4 py-2 bg-white">
+      <div className="fixed h-[118px] top-0 left-0 right-0 py-[16.5px] z-10 bg-ct-white">
+        <div className="flex w-full relative max-w-[401px] h-[36px] px-[15px]">
+          <button className="flex-1 flex flex-col h-[32px] ct-center font-Pretendard text-h2 text-ct-black-300 tracking-[-0.408px] border-b-[4px] border-ct-gray-300">
             개발
-          </span>
-          <div className="flex-1 absolute bottom-0 w-[75px] h-[4px] bg-[#828282]" />
-        </button>
-        <button className="flex-1 flex flex-col h-[22px] ct-center">
-          <span className="font-Pretendard text-[18px] text-ct-gray-200 font-[600] leading-[22px] tracking-[-0.408px]">
+          </button>
+          <button className="flex-1 flex flex-col h-[32px] ct-center font-Pretendard text-h2 text-ct-gray-200 tracking-[-0.408px]">
             기획
-          </span>
-        </button>
-        <button className="flex-1 flex flex-col h-[22px] ct-center">
-          <span className="font-Pretendard text-[18px] text-ct-gray-200 font-[600] leading-[22px] tracking-[-0.408px]">
+          </button>
+          <button className="flex-1 flex flex-col h-[32px] ct-center font-Pretendard text-h2 text-ct-gray-200 tracking-[-0.408px]">
             디자인
-          </span>
-        </button>
-        <button className="flex-1 flex flex-col h-[22px] ct-center">
-          <span className="font-Pretendard text-[18px] text-ct-gray-200 font-[600] leading-[22px] tracking-[-0.408px]">
+          </button>
+          <button className="flex-1 flex flex-col h-[32px] ct-center font-Pretendard text-h2 text-ct-gray-200 tracking-[-0.408px]">
             마케팅
-          </span>
-        </button>
+          </button>
+        </div>
+        <div className="mt-[11px] flex w-full max-w-[401px] px-[15px]">
+          <button className="flex-1 py-2 font-Pretendard text-h2 text-ct-black-300 tracking-[-0.32px]">
+            프론트엔드
+          </button>
+          <button className="flex-1 py-2 font-Pretendard text-h2 text-ct-gray-200 tracking-[-0.32px]">
+            백엔드
+          </button>
+          <button className="flex-1 py-2 font-Pretendard text-h2 text-ct-gray-200 tracking-[-0.32px]">
+            풀스택
+          </button>
+          <button className="flex-1 py-2 font-Pretendard text-h2 text-ct-gray-200 tracking-[-0.32px]">
+            QA
+          </button>
+        </div>
       </div>
-      <div className="mt-[11px] flex w-full max-w-[401px]">
-        <button className="flex-1 py-2 font-Pretendard text-[18px] font-[600] text-[#000000] leading-[20px] tracking-[-0.32px]">
-          프론트엔드
-        </button>
-        <button className="flex-1 py-2 font-Pretendard text-[18px] font-[600] text-ct-gray-200 leading-[20px] tracking-[-0.32px]">
-          백엔드
-        </button>
-        <button className="flex-1 py-2 font-Pretendard text-[18px] font-[600] text-ct-gray-200 leading-[20px] tracking-[-0.32px]">
-          풀스택
-        </button>
-        <button className="flex-1 py-2 font-Pretendard text-[18px] font-[600] text-ct-gray-200 leading-[20px] tracking-[-0.32px]">
-          QA
-        </button>
-      </div>
-      <div className="mt-[11px] flex justify-between items-center w-full max-w-[401px]">
-        <button className="mr-[14px] w-[70px] h-[33px] pt-[6px] pb-[5px] px-[7px] text-[15px] font-Pretendard font-[500] leading-[22px] text-ct-white bg-ct-main-blue-100 rounded-[5px]">
+      <div className="mt-[118px] mb-[21px] flex justify-between items-center w-full max-w-[401px]">
+        <button className="w-[70px] h-[24px] text-body1 font-Pretendard font-[500] text-ct-white bg-ct-main-blue-200 rounded-[5px]">
           공고 등록
         </button>
         <img
@@ -58,6 +52,7 @@ function Recruiting() {
         <RecruitCard />
         <RecruitCard />
       </div>
+      <BottomNav />
     </div>
   );
 }
