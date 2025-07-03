@@ -6,6 +6,7 @@ import FeedDetail from "../pages/profile/FeedDetail";
 import Recruiting from "../pages/recruiting/Recruiting";
 import Splash from "../pages/onboarding/Splash";
 import RecruitAnnouncement from "../pages/recruiting/RecruitAnnouncement";
+import SelectMembers from "../pages/onboarding/SelectMembers";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "onboarding",
         element: <Splash />,
+      },
+      {
+        path: "onboarding/selectmembers",
+        element: <SelectMembers />,
       },
     ],
   },
