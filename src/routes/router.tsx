@@ -7,6 +7,8 @@ import Recruiting from "../pages/recruiting/Recruiting";
 import Splash from "../pages/onboarding/Splash";
 import RecruitAnnouncement from "../pages/recruiting/RecruitAnnouncement";
 import SelectMembers from "../pages/onboarding/SelectMembers";
+import SavedAnnouncement from "../pages/recruiting/SavedAnnouncement";
+import RegisterAnnouncement from "../pages/recruiting/RegisterAnnouncement";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +34,14 @@ const router = createBrowserRouter([
       {
         path: "recruit/announcement",
         element: <RecruitAnnouncement />,
+      },
+      {
+        path: "recruit/savedannouncement",
+        element: <SavedAnnouncement />,
+      },
+      {
+        path: "recruit/registerannouncement",
+        element: <RegisterAnnouncement />,
       },
       {
         path: "onboarding",
