@@ -42,3 +42,16 @@ body {
     @apply flex justify-center items-center;
   }
 }
+
+.swiper-pagination-bullets .swiper-pagination-bullet {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 3px !important;
+  background-color: #b4b4b4 !important;
+  margin: 0 !important;
+}
+
+.swiper-pagination-bullets .swiper-pagination-bullet-active {
+  background-color: #368bff !important;
+  margin: 0 !important;
+}
