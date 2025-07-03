@@ -1,0 +1,25 @@
+import TopBar from "../../components/common/TopBar";
+import BottomNav from "../../components/layouts/BottomNav";
+
+function PersonalSetting() {
+  return (
+    <div className="flex flex-col">
+      <TopBar>
+        <span className="text-h2 font-Pretendard text-ct-black-100">설정</span>
+      </TopBar>
+      <div className="w-full mt-[146.38px]">
+        <button className="w-full h-[47.97px] text-left pl-[32px] text-sub1 font-Pretendard text-ct-black-100 border-b border-ct-gray-100">
+          프로필 관리
+        </button>
+        <button className="w-full h-[47.97px] text-left pl-[32px] text-sub1 font-Pretendard text-ct-black-100 border-b border-ct-gray-100">
+          계정
+        </button>
+        <button className="w-full h-[47.97px] text-left pl-[32px] text-sub1 font-Pretendard text-ct-black-100 border-none">
+          알림 설정
+        </button>
+      </div>
+      <BottomNav />
+    </div>
+  );
+}
+export default PersonalSetting;

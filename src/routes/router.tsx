@@ -9,6 +9,9 @@ import RecruitAnnouncement from "../pages/recruiting/RecruitAnnouncement";
 import SelectMembers from "../pages/onboarding/SelectMembers";
 import SavedAnnouncement from "../pages/recruiting/SavedAnnouncement";
 import RegisterAnnouncement from "../pages/recruiting/RegisterAnnouncement";
+import PersonalSetting from "../pages/setting/PersonalSetting";
+import CompanySetting from "../pages/setting/CompanySetting";
+import VerifiedCompanySetting from "../pages/setting/VerifiedCompanySetting";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +53,18 @@ const router = createBrowserRouter([
       {
         path: "onboarding/selectmembers",
         element: <SelectMembers />,
+      },
+      {
+        path: "companysetting",
+        element: <CompanySetting />,
+      },
+      {
+        path: "companysetting/verified",
+        element: <VerifiedCompanySetting />,
+      },
+      {
+        path: "personalsetting",
+        element: <PersonalSetting />,
       },
     ],
   },
