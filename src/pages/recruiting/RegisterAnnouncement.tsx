@@ -1,17 +1,19 @@
 import BottomCTAButton from "../../components/common/BottomCTAButton";
 import ImageUploadBox from "../../components/common/ImageUploadBox";
-import TopBar from "../../components/common/TopBar";
+import TopBarContainer from "../../components/common/TopBarContainer";
 import InputField from "../../components/recruiting/InputField";
 
 function RegisterAnnouncement() {
+  const TopBarContent = () => {
+    return (
+      <span className="text-h2 font-Pretendard text-ct-black-300">
+        공고 등록
+      </span>
+    );
+  };
   return (
-    <>
-      <TopBar>
-        <span className="text-h2 font-Pretendard text-ct-black-300">
-          공고 등록
-        </span>
-      </TopBar>
-      <div className="flex flex-col pt-[90px] mx-[19px]">
+    <TopBarContainer TopBarContent={<TopBarContent />}>
+      <div className="flex flex-col pt-[24px] mx-[19px]">
         <InputField label="공고 제목" placeholder="입력해주세요" />
         <InputField label="구인 직무" placeholder="입력해주세요" />
         <InputField
@@ -41,7 +43,7 @@ function RegisterAnnouncement() {
           <BottomCTAButton text="공고 등록하기" />
         </div>
       </div>
-    </>
+    </TopBarContainer>
   );
 }
 export default RegisterAnnouncement;

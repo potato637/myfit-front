@@ -1,21 +1,23 @@
 import ImageDisplay from "../../components/common/ImageDisplay";
-import TopBar from "../../components/common/TopBar";
+import TopBarContainer from "../../components/common/TopBarContainer";
 import BottomNav from "../../components/layouts/BottomNav";
 
 const temp = "";
 
 function RecruitAnnouncement() {
+  const TopBarContent = () => {
+    return (
+      <div className="flex items-center gap-[6px]">
+        <div className="w-[24px] h-[24px] bg-[#d9d9d9] rounded-[10px]" />
+        <span className="text-h1 font-Pretendard text-ct-black-100 tracking-[-0.31px]">
+          위플랜
+        </span>
+      </div>
+    );
+  };
   return (
-    <>
-      <TopBar>
-        <div className="flex items-center gap-[6px]">
-          <div className="w-[24px] h-[24px] bg-[#d9d9d9] rounded-[10px]" />
-          <span className="text-h1 font-Pretendard text-ct-black-100 tracking-[-0.31px]">
-            위플랜
-          </span>
-        </div>
-      </TopBar>
-      <div className="flex flex-col pt-[66px] mb-[89px] px-[19px]">
+    <TopBarContainer TopBarContent={<TopBarContent />}>
+      <div className="flex flex-col px-[19px]">
         <div className="text-sub2 px-[5px] text-ct-main-blue-100">
           마감일자:2025.01.01
         </div>
@@ -73,20 +75,20 @@ function RecruitAnnouncement() {
         </ul>
         {temp && (
           <ImageDisplay
-            imageUrl="assets/onboarding/splash.jpg"
+            imageUrl="/assets/onboarding/splash.jpg"
             alt="팀 상세 페이지"
             className="h-[397px] w-[349px] rounded-[16px] "
           />
         )}
         <div className="mt-[26px] flex justify-between">
-          <img src="assets/recruit/bookmark(off).svg" alt="bookmark" />
+          <img src="/assets/recruit/bookmark(off).svg" alt="bookmark" />
           <button className="w-[132px] h-[34px] rounded-[16px] bg-ct-main-blue-100 text-sub2 font-Pretendard text-ct-white">
             채팅으로 문의
           </button>
         </div>
       </div>
       <BottomNav />
-    </>
+    </TopBarContainer>
   );
 }
 export default RecruitAnnouncement;
