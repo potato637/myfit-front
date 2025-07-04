@@ -10,6 +10,13 @@ const imgList = [
   "/assets/profile/feed.jpg",
   "/assets/profile/profileImage.png",
   "/assets/profile/feed.jpg",
+  "/assets/profile/feed.jpg",
+  "/assets/profile/feed.jpg",
+  "/assets/profile/feed.jpg",
+  "/assets/profile/feed.jpg",
+  "/assets/profile/feed.jpg",
+  "/assets/profile/feed.jpg",
+  "/assets/profile/feed.jpg",
 ];
 
 function DetailFeedItem() {
@@ -32,6 +39,8 @@ function DetailFeedItem() {
         pagination={{
           el: paginationRef.current,
           clickable: true,
+          dynamicBullets: true,
+          dynamicMainBullets: 4,
         }}
         className="mySwiper w-[343px] h-[359px]"
       >
@@ -45,7 +54,9 @@ function DetailFeedItem() {
           </SwiperSlide>
         ))}
       </Swiper>
-      <div ref={paginationRef} className="flex justify-center gap-1" />
+      <div className="w-full h-[10px] relative">
+        <div ref={paginationRef} className="absolute" />
+      </div>
       <div className="w-full flex justify-between items-center">
         <div>
           <span className="text-ct-gray-200 text-sub2">30분 전</span>
