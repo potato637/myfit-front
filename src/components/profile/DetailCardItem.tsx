@@ -1,13 +1,10 @@
 import CompanyLink from "./CompanyLink";
 import CardTagContainer from "./CardTagContainer";
+import { useBottomSheet } from "../../contexts/ui/bottomSheetContext";
 
-function DetailCardItem({
-  setIsBottomSheetOpen,
-  setIsModalOpen,
-}: {
-  setIsBottomSheetOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+function DetailCardItem() {
+  const { setIsBottomSheetOpen } = useBottomSheet();
+
   return (
     <div className="w-full h-auto bg-ct-white rounded-[10px] p-[16px] flex flex-col gap-[10px] items-center">
       <div className="w-full h-[30px] px-[5px] py-[14px] flex items-center justify-between">
@@ -15,7 +12,7 @@ function DetailCardItem({
         <img
           src="/assets/profile/settingIcon.svg"
           alt="설정"
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setIsBottomSheetOpen(true)}
         />
       </div>
       <img

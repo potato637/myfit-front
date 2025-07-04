@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { useBottomSheet } from "../../contexts/ui/bottomSheetContext";
+import { useModal } from "../../contexts/ui/modalContext";
 
 function BottomSheetContent() {
+  const { setIsBottomSheetOpen } = useBottomSheet();
+  const { setIsModalOpen } = useModal();
   const [how, setHow] = useState<"see" | "hide">("see");
 
   return (
@@ -45,7 +49,12 @@ function BottomSheetContent() {
         />
         <span className="text-sub2 text-ct-black-200 ml-[14px]">숨기기</span>
       </div>
-      <div>
+      <div
+        onClick={() => {
+          setIsBottomSheetOpen(false);
+          setIsModalOpen(true);
+        }}
+      >
         <span className="text-ct-gray-400 text-sub2 border-b-[1px] border-ct-gray-400">
           피드 삭제
         </span>

@@ -1,17 +1,13 @@
 import { useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useBottomSheet } from "../../contexts/ui/bottomSheetContext";
 
-interface BottomSheetProps {
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  children: React.ReactNode;
-}
-
-function BottomSheet({ isOpen, setIsOpen, children }: BottomSheetProps) {
+function BottomSheet({ children }: { children: React.ReactNode }) {
+  const { isBottomSheetOpen, setIsBottomSheetOpen } = useBottomSheet();
   const bottomSheetRef = useRef<HTMLDivElement>(null);
 
   const handleClose = () => {
-    setIsOpen(false);
+    setIsBottomSheetOpen(false);
   };
   const handleOutsideClick = (e: React.MouseEvent) => {
     if (
@@ -22,7 +18,7 @@ function BottomSheet({ isOpen, setIsOpen, children }: BottomSheetProps) {
     }
   };
 
-  if (!isOpen) return null;
+  if (!isBottomSheetOpen) return null;
 
   return (
     <AnimatePresence>

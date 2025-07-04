@@ -1,4 +1,8 @@
+import { useModal } from "../../contexts/ui/modalContext";
+
 function ModalContent() {
+  const { setIsModalOpen } = useModal();
+
   return (
     <div className="w-full ct-center flex-col gap-[15px]">
       <div className="ct-center flex-col gap-2">
@@ -17,7 +21,10 @@ function ModalContent() {
         />
       </div>
       <div className="ct-center gap-[8px]">
-        <div className="w-[139px] h-[45px] rounded-[10px] ct-center bg-ct-gray-100">
+        <div
+          className="w-[139px] h-[45px] rounded-[10px] ct-center bg-ct-gray-100"
+          onClick={() => setIsModalOpen(false)}
+        >
           <span className="text-body1 text-ct-gray-400">취소</span>
         </div>
         <div className="w-[139px] h-[45px] rounded-[10px] ct-center bg-ct-sub-blue-300">
