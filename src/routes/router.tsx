@@ -15,6 +15,7 @@ import VerifiedCompanySetting from "../pages/setting/VerifiedCompanySetting";
 import AlarmSetting from "../pages/setting/AlarmSetting";
 import RegisterEmail from "../pages/onboarding/RegisterEmail";
 import RegisterMethod from "../pages/onboarding/RegisterMethod";
+import VerifiedSettingPage from "../pages/setting/VerifiedSettingPage";
 
 const router = createBrowserRouter([
   {
@@ -80,6 +81,10 @@ const router = createBrowserRouter([
       {
         path: "companysetting/alarmsetting",
         element: <AlarmSetting />,
+      },
+      {
+        path: "companysetting/verifiedsetting",
+        element: <VerifiedSettingPage />,
       },
     ],
   },
