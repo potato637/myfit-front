@@ -1,6 +1,7 @@
 import TopBar from "../../components/common/TopBar";
 import DetailIntroduction from "../../components/profile/DetailIntroduction";
 import DetailFeedItem from "../../components/profile/DetailFeedItem";
+import Modal from "../../components/ui/Modal";
 
 function FeedDetail() {
   const createList = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -18,6 +19,11 @@ function FeedDetail() {
       {createList.map((_, index) => (
         <DetailFeedItem key={index} />
       ))}
+      <Modal>
+        <div>
+          <span>Hello world</span>
+        </div>
+      </Modal>
     </div>
   );
 }

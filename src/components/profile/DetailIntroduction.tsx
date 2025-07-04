@@ -1,6 +1,6 @@
 function DetailIntroduction() {
   return (
-    <div className="w-full h-[61px] flex items-center px-[17px] mt-[66px] gap-[7px] bg-ct-white">
+    <div className="w-full h-[61px] flex items-center px-[17px] gap-[7px] bg-ct-white">
       <img
         src="/assets/profile/profileImage.png"
         alt="프로필 이미지"
