@@ -1,9 +1,34 @@
-import React from "react";
+import React, { useRef } from "react";
 
-function Modal({ children }: { children: React.ReactNode }) {
+interface ModalProps {
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  children: React.ReactNode;
+}
+
+function Modal({ isOpen, setIsOpen, children }: ModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+  const handleOutsideClick = (e: React.MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+      handleClose();
+    }
+  };
+
+  if (!isOpen) return null;
+
   return (
-    <div className="fixed inset-0 bg-ct-black-100/50 z-[9999] ct-center">
-      <div className="w-[333px] h-[auto] px-[24px] py-[22px] ct-center bg-ct-white rounded-[30px]">
+    <div
+      className="fixed inset-0 bg-ct-black-100/50 z-[9999] ct-center"
+      onClick={handleOutsideClick}
+    >
+      <div
+        ref={modalRef}
+        className="w-[333px] h-[auto] px-[24px] py-[22px] ct-center bg-ct-white rounded-[30px]"
+      >
         {children}
       </div>
     </div>
