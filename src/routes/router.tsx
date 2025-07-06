@@ -16,6 +16,13 @@ import AlarmSetting from "../pages/setting/AlarmSetting";
 import RegisterEmail from "../pages/onboarding/RegisterEmail";
 import RegisterMethod from "../pages/onboarding/RegisterMethod";
 import VerifiedSettingPage from "../pages/setting/VerifiedSettingPage";
+import ProfileRegister from "../pages/onboarding/ProfileRegister";
+import ProfileCardRegister from "../pages/onboarding/ProfileCardRegister";
+import ProfilePreview from "../pages/onboarding/ProfilePreview";
+import CompanyProfileRegister from "../pages/onboarding/CompanyProfileRegister";
+import CompanyCardRegister from "../pages/onboarding/CompanyCardRegister";
+import CompanyPreview from "../pages/onboarding/CompanyPreview";
+import CompanyVerification from "../pages/onboarding/CompanyVerification";
 
 const router = createBrowserRouter([
   {
@@ -77,6 +84,34 @@ const router = createBrowserRouter([
       {
         path: "onboarding/register-email",
         element: <RegisterEmail />,
+      },
+      {
+        path: "onboarding/profile-register",
+        element: <ProfileRegister />,
+      },
+      {
+        path: "onboarding/profile-card-register",
+        element: <ProfileCardRegister />,
+      },
+      {
+        path: "onboarding/profile-preview",
+        element: <ProfilePreview />,
+      },
+      {
+        path: "onboarding/company-profile-register",
+        element: <CompanyProfileRegister />,
+      },
+      {
+        path: "onboarding/company-card-register",
+        element: <CompanyCardRegister />,
+      },
+      {
+        path: "onboarding/company-preview",
+        element: <CompanyPreview />,
+      },
+      {
+        path: "onboarding/company-verification",
+        element: <CompanyVerification />,
       },
       {
         path: "companysetting/alarmsetting",
