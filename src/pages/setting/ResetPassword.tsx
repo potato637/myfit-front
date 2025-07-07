@@ -13,9 +13,9 @@ function ResetPasssword() {
   };
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
-      <div className="pl-[25.45px] pr-[25.55px]">
+      <div className="px-[25.45px]">
         {/* 이메일 입력 */}
-        <fieldset className="w-full mt-[38.12px]">
+        <fieldset className="w-full mt-[16px]">
           <label
             htmlFor="email"
             className="block mb-[10px] text-sub1 font-sans text-ct-black-200"
@@ -129,7 +129,7 @@ function ResetPasssword() {
           />
         </fieldset>
         {/* CTA 버튼 */}
-        <div className="mb-[42px]">
+        <div className="absolute bottom-[50px]">
           <BottomCTAButton
             text="저장하기"
             onClick={() => {

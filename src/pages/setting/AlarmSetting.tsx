@@ -13,7 +13,7 @@ function AlarmSetting() {
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
       <div className="flex flex-col">
-        <div className="w-full px-[15px] pt-[60px]">
+        <div className="w-full px-[15px] pt-[20px]">
           <span className="font-Pretendard text-sub1 text-ct-black-100">
             시스템 알림 설정
           </span>

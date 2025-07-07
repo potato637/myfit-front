@@ -12,7 +12,7 @@ function VerifiedSettingPage() {
   };
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
-      <div className="flex flex-col h-full mt-[41px] px-[25.26px]">
+      <div className="flex flex-col h-full mt-[19px] px-[25.26px]">
         <span className="text-sub1 text-ct-black-100 font-Pretendard">
           사업자 등록증 첨부
         </span>

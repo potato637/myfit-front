@@ -10,7 +10,7 @@ function Account() {
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
       <div className="flex flex-col">
-        <div className="w-full mt-[42.12px]">
+        <div className="w-full mt-[28px]">
           <button className="w-full h-[47.97px] text-left pl-[32px] text-sub1 font-Pretendard text-ct-black-100 border-b border-ct-gray-100">
             이메일 joink478@naver.com
           </button>
