@@ -1,4 +1,3 @@
-import TopBar from "../../components/common/TopBar";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import BottomNav from "../../components/layouts/BottomNav";
 
@@ -11,7 +10,7 @@ function CompanySetting() {
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
       <div className="flex flex-col">
-        <div className="w-full mt-[80.38px]">
+        <div className="w-full mt-[40px]">
           <button className="w-full h-[47.97px] text-left pl-[32px] text-sub1 font-Pretendard text-ct-black-100 border-b border-ct-gray-100">
             프로필 관리
           </button>

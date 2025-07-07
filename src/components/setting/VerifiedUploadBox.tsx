@@ -21,9 +21,11 @@ function VerfiedUploadBox({
       <div className={`text-center leading-normal ${textClassName}`}>
         불러오기
       </div>
-      <div className="mt-[10px] w-[24px] h-[24px] ct-center bg-ct-white rounded-full text-[24px] text-[#0074ff]">
-        +
-      </div>
+      <img
+        src="/assets/setting/plus.svg"
+        alt="plus"
+        className="mt-[10px] w-[24px] h-[24px]"
+      />
     </div>
   );
 }

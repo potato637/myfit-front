@@ -1,7 +1,7 @@
 import BottomCTAButton from "../../components/common/BottomCTAButton";
 import TopBarContainer from "../../components/common/TopBarContainer";
 
-function CompanyPreview() {
+function CompanyVerification() {
   const TopBarContent = () => (
     <span className="text-h2 font-sans text-ct-black-300">회사인증(선택)</span>
   );
@@ -56,4 +56,4 @@ function CompanyPreview() {
   );
 }
 
-export default CompanyPreview;
+export default CompanyVerification;
