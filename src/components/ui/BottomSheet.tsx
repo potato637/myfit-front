@@ -32,7 +32,7 @@ function BottomSheet({ children }: { children: React.ReactNode }) {
           animate={{ y: 0 }}
           exit={{ y: "100%" }}
           transition={{ duration: 0.2, ease: "easeOut" }}
-          className="fixed bottom-0 left-0 right-0 min-h-[300px] rounded-t-[30px] bg-ct-white ct-center px-[30px] py-[45px]"
+          className="fixed bottom-0 left-0 right-0 min-h-[300px] rounded-t-[30px] bg-ct-white ct-center px-[30px] py-[45px] pb-safe"
         >
           {children}
         </motion.div>

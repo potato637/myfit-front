@@ -23,7 +23,7 @@ function Modal({ children }: { children: React.ReactNode }) {
     >
       <div
         ref={modalRef}
-        className="w-[333px] h-[auto] px-[24px] py-[22px] ct-center bg-ct-white rounded-[30px]"
+        className="w-[333px] h-[auto] px-[24px] py-[22px] ct-center bg-ct-white rounded-[30px] pt-safe pb-safe"
       >
         {children}
       </div>
