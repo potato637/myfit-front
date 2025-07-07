@@ -23,6 +23,7 @@ import CompanyProfileRegister from "../pages/onboarding/CompanyProfileRegister";
 import CompanyCardRegister from "../pages/onboarding/CompanyCardRegister";
 import CompanyPreview from "../pages/onboarding/CompanyPreview";
 import CompanyVerification from "../pages/onboarding/CompanyVerification";
+import ProfileStatus from "../pages/profile/ProfileStatus";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "mypage/feed",
         element: <FeedDetail />,
+      },
+      {
+        path: "mypage/status",
+        element: <ProfileStatus />,
       },
       {
         path: "recruit",
