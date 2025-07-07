@@ -41,6 +41,18 @@ body {
   .ct-center {
     @apply flex justify-center items-center;
   }
+  .pt-safe {
+    padding-top: max(
+      env(safe-area-inset-top, 24px),
+      env(--safe-area-inset-top, 24px)
+    );
+  }
+  .pb-safe {
+    padding-bottom: max(
+      env(safe-area-inset-bottom, 0px),
+      env(--safe-area-inset-bottom, 0px)
+    );
+  }
 }
 
 .swiper-pagination-bullets .swiper-pagination-bullet {
