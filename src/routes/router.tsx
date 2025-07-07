@@ -143,6 +143,7 @@ const router = createBrowserRouter([
         path: "coffeechat/request",
         element: <RequestCoffeeChat />,
       },
+      {
         path: "companysetting/profile",
         element: <CompanyProfile />,
       },
