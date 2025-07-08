@@ -29,6 +29,7 @@ import CompanyVerification from "../pages/onboarding/CompanyVerification";
 import RequestCoffeeChat from "../pages/chatting/RequestCoffeeChat";
 import CompanyProfile from "../pages/setting/CompanyProfile";
 import PersonalProfile from "../pages/setting/PersonalProfile";
+import CoffeChatModal from "../pages/chatting/CoffeeChatModal";
 
 const router = createBrowserRouter([
   {
@@ -150,6 +151,10 @@ const router = createBrowserRouter([
       {
         path: "personalsetting/profile",
         element: <PersonalProfile />,
+      },
+      {
+        path: "chatting",
+        element: <CoffeChatModal />,
       },
     ],
   },
