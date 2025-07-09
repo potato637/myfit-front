@@ -1,24 +1,28 @@
+import { useState } from "react";
 import BottomCTAButton from "../../components/common/BottomCTAButton";
-import TopBar from "../../components/common/TopBar";
+import TopBarContainer from "../../components/common/TopBarContainer";
 
 function RegisterEmail() {
+  const [authCode, setAuthCode] = useState("");
+  const TopBarContent = () => {
+    return (
+      <span className="text-h2 font-Pretendard text-ct-black-100">
+        비밀번호 재설정
+      </span>
+    );
+  };
   return (
-    <div className="w-full h-screen bg-white ct-center overflow-hidden">
-      <div className="w-[375px] min-h-[812px] rounded-[15px] bg-white pt-[66px] pl-[25.45px] pr-[25.55px]">
-        <TopBar>
-          <span className="text-h2 font-sans text-ct-black-200 ">
-            이메일 회원가입
-          </span>
-        </TopBar>
+    <TopBarContainer TopBarContent={<TopBarContent />}>
+      <div className="px-[25.45px]">
         {/* 이메일 입력 */}
-        <fieldset className="w-full max-w-[324px] mx-auto mt-[60px]">
+        <fieldset className="w-full mt-[30px]">
           <label
             htmlFor="email"
             className="block mb-[10px] text-sub1 font-sans text-ct-black-200"
           >
             이메일
           </label>
-          <div className="flex items-center gap-[6px]">
+          <div className="flex justify-between items-center">
             <input
               id="email"
               name="email"
@@ -26,18 +30,18 @@ function RegisterEmail() {
               placeholder="이메일"
               className="w-[127px] h-[44px] pl-[18px] rounded-[10px] bg-[#F7F7F7] text-sub2 font-sans text-ct-gray-200"
             />
-            <span>@</span>
+            <span className="ml-[7px] w-[18px] h-[24px]">@</span>
             <input
               id="emailDomain"
               name="emailDomain"
               type="text"
               placeholder="도메인 주소 입력"
-              className="w-[162px] h-[44px] pl-[26.5px] rounded-[10px] bg-[#F7F7F7] text-sub2 font-sans text-ct-gray-200"
+              className="w-[162px] h-[44px] ml-[12px] pl-[26.5px] rounded-[10px] bg-[#F7F7F7] text-sub2 font-sans text-ct-gray-200"
             />
           </div>
         </fieldset>
         {/* 인증번호 입력 */}
-        <fieldset className="w-full  mx-auto mt-[40px]">
+        <fieldset className="w-full  mx-auto mt-[50px]">
           <label
             htmlFor="authCode"
             className="block mb-[10px] text-sub1 font-sans text-ct-black-200"
@@ -57,30 +61,40 @@ function RegisterEmail() {
             </button>
 
             {/* 인증번호 입력칸 */}
-            <div className="flex gap-[10px]">
+            <div className="flex justify-between">
               <div className="relative w-[205px] h-[44px]">
                 <input
                   id="authCode"
                   name="authCode"
                   type="text"
+                  value={authCode}
+                  onChange={(e) => setAuthCode(e.target.value)}
                   className="w-full h-full rounded-[10px] bg-[#F7F7F7] px-3 pr-[36px] text-sub2 font-sans text-ct-gray-200"
                   placeholder="인증번호 입력"
                 />
-                {/* X 아이콘 */}
-                <button
-                  type="button"
-                  className="absolute right-[10px] top-1/2 -translate-y-1/2"
-                  aria-label="입력값 지우기"
-                  onClick={() => {
-                    // TODO: input값 초기화 로직
-                  }}
-                >
-                  <img
-                    src="/public/assets/onboarding/delete.svg"
-                    alt="지우기 아이콘"
-                    className="w-[16px] h-[16px]"
-                  />
-                </button>
+
+                {authCode.trim() === "" ? (
+                  <button
+                    type="button"
+                    className="absolute right-[10px] top-1/2 -translate-y-1/2"
+                    aria-label="입력값 지우기"
+                  >
+                    <img
+                      src="/assets/onboarding/delete.svg"
+                      alt="지우기 아이콘"
+                      className="w-[16px] h-[16px]"
+                    />
+                  </button>
+                ) : (
+                  // 체크 아이콘 (입력값 존재 시)
+                  <div className="absolute right-[10px] top-1/2 -translate-y-1/2">
+                    <img
+                      src="/assets/setting/check.svg"
+                      alt="확인 아이콘"
+                      className="w-[16px] h-[16px]"
+                    />
+                  </div>
+                )}
               </div>{" "}
               <button
                 type="button"
@@ -94,38 +108,38 @@ function RegisterEmail() {
           </div>
         </fieldset>
         {/* 비밀번호 입력 */}
-        <fieldset className="w-full mx-auto mt-[40px] mb-[127px] flex flex-col gap-[13px]">
+        <fieldset className="w-full mx-auto mt-[50px] mb-[127px] flex flex-col gap-[13px]">
           <label
             htmlFor="password"
             className="text-sub1 font-sans text-ct-black-200"
           >
-            비밀번호
+            새로운 비밀번호
           </label>
           <input
             id="password"
             type="password"
             name="password"
-            placeholder="비밀번호"
+            placeholder="새로운 비밀번호"
             className="w-full h-[44px] pl-[18px] bg-[#F7F7F7] rounded-[10px] text-sub2 font-sans text-ct-gray-200"
           />
           <input
             type="password"
-            placeholder="비밀번호 확인"
+            placeholder="새로운 비밀번호 확인"
             className="w-full h-[44px] pl-[18px] bg-[#F7F7F7] rounded-[10px] text-sub2 font-sans text-ct-gray-200 "
           />
         </fieldset>
         {/* CTA 버튼 */}
-        <div className="mb-[42px]">
+        <div className="mt-[127px] mb-[50px]">
           <BottomCTAButton
-            text="다음 단계로 이동"
+            text="저장하기"
             onClick={() => {
               // TODO: 폼 유효성 검사 후 다음 단계로 이동
             }}
-            disabled={false} // TODO: 실제 유효성 검사 로직 추가
+            disabled={true} // TODO: 실제 유효성 검사 로직 추가
           />{" "}
         </div>
       </div>
-    </div>
+    </TopBarContainer>
   );
 }
 

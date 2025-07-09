@@ -47,9 +47,7 @@ function ProfileRegister() {
           placeholder="예시) 마핏대학교, 마핏대학교 일반대학원"
         />
         <InputField label="재학/졸업 상태" placeholder="선택" />
-        <div className="flex justify-center mb-[42px]">
-          <BottomCTAButton text="다음 단계로 이동" />
-        </div>
+        <BottomCTAButton text="다음 단계로 이동" />
       </div>
     </TopBarContainer>
   );

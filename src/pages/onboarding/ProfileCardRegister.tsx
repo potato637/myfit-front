@@ -73,9 +73,7 @@ function ProfileCardRegister() {
         >
           미리보기
         </button>
-        <div className="flex justify-center mb-[42px]">
-          <BottomCTAButton text="다음 단계로 이동" />
-        </div>
+        <BottomCTAButton text="다음 단계로 이동" />
       </div>
     </TopBarContainer>
   );

@@ -32,7 +32,7 @@ function CompanyVerification() {
               +
             </div>
           </div>
-          <div className="space-y-[8px] text-body2 text-ct-gray-300 leading-[150%]">
+          <div className="space-y-[8px] text-body2 text-ct-gray-300 leading-[150%] mb-[137px]">
             <p>
               사업자 등록 인증 시, 프로필에 인증 배지가 표시되어 신뢰도가
               높아집니다. 인증은 1~2 영업일 내 완료되며 결과는 이메일로
@@ -43,13 +43,13 @@ function CompanyVerification() {
               사업자 등록증 정보와 일치해야 합니다!
             </p>
           </div>
-          {/* ✅ 하단 버튼 */}
-          <div className="flex justify-center mt-[137px] mb-[5px]">
-            <BottomCTAButton text="제출하고 완료하기" disabled={true} />
-          </div>
-          <div className="flex justify-center mb-[42px]">
+          {/* 하단 버튼 우회 마진 적용 */}
+          <div className="flex flex-col gap-[5px]">
+            <div className="-mb-[42px]">
+              <BottomCTAButton text="제출하고 완료하기" disabled={true} />
+            </div>
             <BottomCTAButton text="건너뛰기" />
-          </div>
+          </div>{" "}
         </div>
       </div>
     </TopBarContainer>

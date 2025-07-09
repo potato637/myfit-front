@@ -59,9 +59,7 @@ function CompanyProfileRegister() {
           placeholder="선택"
           helperText={<>링크 등록 시, 자동으로 프로필 페이지에 기재 됩니다.</>}
         />
-        <div className="flex justify-center mb-[42px]">
-          <BottomCTAButton text="다음 단계로 이동" />
-        </div>
+        <BottomCTAButton text="다음 단계로 이동" />
       </div>
     </TopBarContainer>
   );
