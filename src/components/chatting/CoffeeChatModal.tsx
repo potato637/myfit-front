@@ -4,11 +4,11 @@ import MatchingButton from "../../components/chatting/MatchingButton";
 function CoffeChatModal() {
   const status = "afterediting";
   return (
-    <div className="w-[330px] h-[498px] rounded-[15px] bg-ct-white flex flex-col items-center border border-black">
+    <div className="w-full h-[498px] rounded-[15px] bg-ct-white flex flex-col items-center">
       <img
         src="/assets/chatting/coffechatlogo.svg"
         alt="커피챗 로고"
-        className="w-[80.53px] h-[80.53px] mt-[24px]"
+        className="w-[80.53px] h-[80.53px]"
       />
       <span className="text-h2 text-ct-black-200 mt-[4.24px]">
         만나서 얘기해보면 더 재밌을 것 같아요

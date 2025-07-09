@@ -29,8 +29,10 @@ import CompanyVerification from "../pages/onboarding/CompanyVerification";
 import RequestCoffeeChat from "../pages/chatting/RequestCoffeeChat";
 import CompanyProfile from "../pages/setting/CompanyProfile";
 import PersonalProfile from "../pages/setting/PersonalProfile";
-import CoffeChatModal from "../pages/chatting/CoffeeChatModal";
-
+import Chatting from "../pages/chatting/Chatting";
+import ChattingList from "../pages/chatting/ChattingList";
+import CoffeeChatList from "../pages/chatting/CoffeeChatList";
+import CoffeeChatStorage from "../pages/chatting/CoffeeChatStorage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -154,7 +156,19 @@ const router = createBrowserRouter([
       },
       {
         path: "chatting",
-        element: <CoffeChatModal />,
+        element: <Chatting />,
+      },
+      {
+        path: "chatting/chattinglist",
+        element: <ChattingList />,
+      },
+      {
+        path: "chatting/coffeechatlist",
+        element: <CoffeeChatList />,
+      },
+      {
+        path: "chatting/coffeechatstorage",
+        element: <CoffeeChatStorage />,
       },
     ],
   },
