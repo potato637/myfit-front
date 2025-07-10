@@ -57,7 +57,7 @@ function FeedPage() {
   return (
     <BottomNavContainer>
       {/* 🧷 고정 헤더 삽입 */}
-      <FixedHeader /> //TODO - safe area 고려하여 padding-top 조정 필요
+      <FixedHeader />
       <div className="pt-[66px] pb-[89px] px-[10px] bg-ct-white min-h-screen flex flex-col gap-6">
         {dummyFeed.map((item, idx) => (
           <FeedCard key={idx} user={item.user} post={item.post} />
