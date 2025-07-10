@@ -4,7 +4,7 @@ import ChatUserCard from "../../components/chatting/ChatUserCard";
 
 function ChattingList() {
   const nav = useNavigate();
-  const nothing = false;
+  const nothing = true;
   return (
     <div className="flex flex-col">
       <div className="flex w-full h-[39px]">
@@ -20,7 +20,7 @@ function ChattingList() {
       </div>
       {nothing ? (
         <div className="h-[680px] w-full flex flex-col gap-[8px] ct-center">
-          <img src="assets/chatting/coffeechat" alt="임시로고" />
+          <img src="/assets/chatting/nochattingicon.svg" alt="채팅없음아이콘" />
           <span className="text-[17px] font-[400] text-ct-gray-300">
             현재 진행중인 대화가 없습니다.
           </span>

@@ -34,7 +34,9 @@ function VerifiedSettingPage() {
         </div>
         <div className="mt-[194.32px] flex flex-col gap-[5px]">
           <BottomCTAButton text="제출하고 완료하기" disabled={true} />
-          <BottomCTAButton text="건너뛰기" />
+          <div className="mt-[-42px]">
+            <BottomCTAButton text="건너뛰기" />
+          </div>
         </div>
       </div>
     </TopBarContainer>

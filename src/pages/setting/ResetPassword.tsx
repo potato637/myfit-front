@@ -129,14 +129,14 @@ function ResetPasssword() {
           />
         </fieldset>
         {/* CTA 버튼 */}
-        <div className="absolute bottom-[50px]">
+        <div className="absolute bottom-[50px] w-[328px]">
           <BottomCTAButton
             text="저장하기"
             onClick={() => {
               // TODO: 폼 유효성 검사 후 다음 단계로 이동
             }}
             disabled={true} // TODO: 실제 유효성 검사 로직 추가
-          />{" "}
+          />
         </div>
       </div>
     </TopBarContainer>
