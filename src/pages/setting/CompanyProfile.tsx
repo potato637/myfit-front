@@ -10,7 +10,7 @@ function CompanyProfile() {
   };
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
-      <div className="flex flex-col gap-[27px] mt-[21px] justify-center">
+      <div className="flex flex-col gap-[27px] mt-[21px] items-center">
         <CompanyInputField
           label="회사"
           placeholder="입력"

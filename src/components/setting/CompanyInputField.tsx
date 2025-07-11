@@ -12,7 +12,7 @@ function CompanyInputField({
   hintDescription,
 }: CompanyInputFieldProps) {
   return (
-    <div className="flex flex-col gap-[15px] pl-[13px]">
+    <div className="flex flex-col gap-[15px]">
       <label className="text-sub1 text-ct-black-200 ml-[12px]">{label}</label>
       <input
         type="text"

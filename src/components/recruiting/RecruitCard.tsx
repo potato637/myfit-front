@@ -1,6 +1,6 @@
 function RecruitCard() {
   return (
-    <div className="w-[360px] min-h-[123px] rounded-[10px] ct-center border border-ct-gray-200 px-2 py-1 shadow-recruit-card ">
+    <div className="w-[360px] min-h-[123px] rounded-[10px] ct-center border border-ct-white px-2 py-1 shadow-[0px_0px_5px_rgba(0,0,0,0.15)] ">
       <div className="w-[332.64px] my-[15px]">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-[8px]">
@@ -9,7 +9,7 @@ function RecruitCard() {
               마이루틴
             </span>
           </div>
-          <span className="text-body1 font-Pretendard text-ct-main-blue-200">
+          <span className="text-body1 text-ct-main-blue-200">
             마감일자 : 2025.01.01
           </span>
         </div>

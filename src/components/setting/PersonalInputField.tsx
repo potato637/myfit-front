@@ -5,7 +5,7 @@ interface PersonalInputFieldProps {
 
 function PersonalInputField({ label, placeholder }: PersonalInputFieldProps) {
   return (
-    <div className="flex flex-col gap-[11px] pl-[16px]">
+    <div className="flex flex-col gap-[11px]">
       <label className="ml-[10px] text-sub1 text-ct-black-300">{label}</label>
       <input
         type="text"

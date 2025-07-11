@@ -9,7 +9,7 @@ function PersonalProfile() {
   };
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
-      <div className="flex flex-col mt-[19px] gap-[27px] mb-[35px]">
+      <div className="flex flex-col mt-[19px] gap-[27px] mb-[35px] items-center">
         <PersonalInputField label="닉네임" />
         <div className="flex flex-col gap-[8px]">
           <PersonalInputField label="한줄 소개" />

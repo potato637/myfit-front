@@ -37,7 +37,7 @@ export default {
         "ct-light-blue-100": "#E5F0FF",
       },
       boxShadow: {
-        "recruit-card": "0px 0px 5px 0px rgba(0, 0, 0, 0.15)",
+        "recruit-card": "0px 0px 5px 0px rgba(255,255,255, 0.01)",
         "find-card": "0px 0px 10px 0px rgba(0, 0, 0, 0.05)",
       },
     },
