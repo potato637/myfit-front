@@ -1,7 +1,6 @@
 import { useState } from "react";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import KeywordCategoryTabs from "../../components/onboarding/KeywordCategoryTabs";
-import KeywordSearchInput from "../../components/onboarding/KeywordSearchInput";
 import SelectedKeywords from "../../components/onboarding/SelectedKeywords";
 import KeywordList from "../../components/onboarding/KeywordList";
 
@@ -24,7 +23,7 @@ function KeywordSelectorPage() {
   const TopBarContent = () => {
     return (
       <div className="relative w-full ct-center">
-        <span className="text-ct-black-100 text-h1">미리보기 </span>
+        <span className="text-ct-black-100 text-h1">키워드 </span>
         <div className="absolute right-[22px]">
           <span className="text-sub2 text-ct-gray-200">완료</span>
         </div>
@@ -34,8 +33,7 @@ function KeywordSelectorPage() {
 
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
-      <div className="p-[16px] flex flex-col gap-4">
-        <KeywordSearchInput />
+      <div className="px-[16px] flex flex-col gap-5">
         <SelectedKeywords
           keywords={selectedKeywords}
           onRemove={handleRemoveKeyword}

@@ -17,20 +17,25 @@ function KeywordCategoryTabs({
   ];
 
   return (
-    <div className="flex gap-3 ml-3 mr-[10px] border-b border-ct-gray-200 pb-3">
-      {categories.map((category) => (
-        <button
-          key={category}
-          className={`text-sub2 ${
-            activeCategory === category ? "font-bold" : "text-ct-gray-300"
-          }`}
-          onClick={() => onSelectCategory(category)}
-        >
-          {category}
-        </button>
-      ))}
+    <div className="border-b border-ct-gray-200 pb-2">
+      <div className="flex justify-center">
+        <div className="flex gap-[34px] w-fit">
+          {categories.map((category) => (
+            <button
+              key={category}
+              className={`${
+                activeCategory === category
+                  ? "text-sub1 text-ct-black-200"
+                  : "text-sub2 text-ct-gray-300"
+              }`}
+              onClick={() => onSelectCategory(category)}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
-
 export default KeywordCategoryTabs;

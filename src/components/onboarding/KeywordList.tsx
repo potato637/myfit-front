@@ -95,16 +95,16 @@ const KeywordList = ({
   onSelect,
 }: KeywordListProps) => {
   return (
-    <div className="flex flex-wrap gap-[8px] ml-3">
+    <div className="flex flex-wrap gap-[8px] ml-3 pt-[10px]">
       {keywordMap[category].map((keyword) => (
         <button
           key={keyword}
           onClick={() => onSelect(keyword)}
           disabled={selectedKeywords.includes(keyword)}
-          className={`px-[12px] py-[6px] rounded-[20px] text-sub2 border ${
+          className={`px-[12px] py-[6px] rounded-[20px] text-body2 border ${
             selectedKeywords.includes(keyword)
-              ? "bg-ct-main-blue-100 text-white border-ct-main-blue-100"
-              : "bg-white text-ct-black-200 border-ct-gray-200"
+              ? "bg-ct-main-blue-100 text-ct-white border-ct-main-blue-100"
+              : "bg-ct-white text-ct-black-200 border-ct-gray-200"
           }`}
         >
           #{keyword}
