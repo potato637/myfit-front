@@ -18,9 +18,7 @@ function ImageUploadBox({
       } ${className}`}
       onClick={!disabled ? onClick : undefined}
     >
-      <div className="w-[27px] h-[27px] ct-center bg-ct-white rounded-full text-[24px] text-gray-100">
-        +
-      </div>
+      <img src="/public/assets/common/pluswhite.svg" alt="" />
       <div
         className={`mt-[9.29px] text-center leading-normal ${textClassName}`}
       >

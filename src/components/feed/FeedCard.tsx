@@ -22,7 +22,7 @@ interface Post {
 
 function FeedTagContainer({ tags }: { tags: string[] }) {
   return (
-    <div className="flex flex-wrap gap-1 text-ct-main-blue-100 text-body2">
+    <div className="flex flex-wrap gap-1 text-ct-sub-blue-200 text-body1">
       {tags.map((tag, idx) => (
         <span key={idx}>#{tag}</span>
       ))}

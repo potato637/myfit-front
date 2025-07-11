@@ -28,9 +28,7 @@ function CompanyVerification() {
             <span className="text-body2 text-ct-gray-300 mb-[8px]">
               불러오기
             </span>
-            <div className="w-[36px] h-[36px] rounded-full bg-white border border-[#3C89F3] text-[#3C89F3] flex items-center justify-center text-[24px] leading-none">
-              +
-            </div>
+            <img src="/public/assets/setting/plus.svg" alt="" />
           </div>
           <div className="space-y-[8px] text-body2 text-ct-gray-300 leading-[150%] mb-[137px]">
             <p>

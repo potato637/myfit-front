@@ -46,7 +46,7 @@ function KeywordInput() {
         {keywords.map((tag) => (
           <div
             key={tag}
-            className="flex items-center gap-1 px-[10px] py-[6px] bg-blue-100 rounded-full text-blue-500 text-body2"
+            className="flex items-center gap-1 px-[10px] py-[6px] bg-[#E5F0FF] rounded-full text-ct-sub-blue-200 text-body1"
           >
             #{tag}
             <button
@@ -66,11 +66,11 @@ function KeywordInput() {
             type="text"
             value={inputValue}
             onChange={handleChange}
-            className="mt-[10px] w-full border-b border-ct-gray-100 outline-none text-body2"
+            className="mt-[10px] w-full border-b border-ct-gray-200 outline-none  placeholder:text-ct-gray-200 placeholder:text-body1"
             placeholder="키워드를 입력해주세요"
           />
           {error && (
-            <p className="text-caption text-red-500 mt-[6px]">{error}</p>
+            <p className="text-body1 text-[#FF3535] mt-[8px]">{error}</p>
           )}
         </>
       )}

@@ -37,6 +37,7 @@ import FeedPage from "../pages/feed/FeedPage";
 import FeedSearch from "../pages/feed/FeedSearch";
 import MyAlarm from "../pages/feed/MyAlarm";
 import PostFeed from "../pages/feed/PostFeed";
+import KeywordSelectorPage from "../pages/onboarding/KeywordSelector";
 
 const router = createBrowserRouter([
   {
@@ -130,6 +131,10 @@ const router = createBrowserRouter([
       {
         path: "onboarding/company-verification",
         element: <CompanyVerification />,
+      },
+      {
+        path: "onboarding/keyword-selector",
+        element: <KeywordSelectorPage />,
       },
       {
         path: "feed/feed-main",

@@ -7,7 +7,7 @@ function RegisterEmail() {
   const TopBarContent = () => {
     return (
       <span className="text-h2 font-Pretendard text-ct-black-100">
-        비밀번호 재설정
+        이메일로 회원가입
       </span>
     );
   };
@@ -129,14 +129,8 @@ function RegisterEmail() {
           />
         </fieldset>
         {/* CTA 버튼 */}
-        <div className="mt-[127px] mb-[50px]">
-          <BottomCTAButton
-            text="저장하기"
-            onClick={() => {
-              // TODO: 폼 유효성 검사 후 다음 단계로 이동
-            }}
-            disabled={true} // TODO: 실제 유효성 검사 로직 추가
-          />{" "}
+        <div className="mt-[127px] ">
+          <BottomCTAButton text="저장하기" onClick={() => {}} disabled={true} />{" "}
         </div>
       </div>
     </TopBarContainer>
