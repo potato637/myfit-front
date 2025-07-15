@@ -5,7 +5,7 @@ import CoffeeChatStorageBox from "../../components/chatting/CoffeeChatStorageBox
 
 function CoffeeChatList() {
   const nav = useNavigate();
-  const nothing = true;
+  const nothing = false;
   return (
     <div className="flex flex-col">
       <div className="flex w-full h-[39px] fixed bg-ct-white">

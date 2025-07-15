@@ -1,4 +1,4 @@
-export const regions = {
+export const regions: Record<string, string[]> = {
   서울특별시: [
     "강남구",
     "강동구",
@@ -59,7 +59,7 @@ export const regions = {
     "하남시",
     "화성시",
   ],
-  부산광역시: [
+  " 부산광역시": [
     "강서구",
     "금정구",
     "기장군",

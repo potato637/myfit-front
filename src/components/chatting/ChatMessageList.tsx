@@ -1,5 +1,4 @@
 import MessageBubble from "./MessageBubble";
-import RequestCoffeeChatBox from "./RequestCoffechatBox";
 
 interface Message {
   id: number;

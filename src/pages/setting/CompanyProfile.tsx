@@ -1,8 +1,12 @@
 import TopBarContainer from "../../components/common/TopBarContainer";
 import BottomNav from "../../components/layouts/BottomNav";
+import BirthModal from "../../components/onboarding/BirthModal";
 import CompanyInputField from "../../components/setting/CompanyInputField";
+import Modal from "../../components/ui/Modal";
+import { useModal } from "../../contexts/ui/modalContext";
 
 function CompanyProfile() {
+  const { setIsModalOpen } = useModal();
   const TopBarContent = () => {
     return (
       <span className="text-h2 font-Pretendard text-ct-black-100">프로필</span>
@@ -28,6 +32,7 @@ function CompanyProfile() {
           placeholder="입력"
           hintLabel="필수"
           hintDescription="정확한 생년월일을 입력해주세요!"
+          onClick={() => setIsModalOpen(true)}
         />
         <CompanyInputField
           label="업종"
