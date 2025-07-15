@@ -8,6 +8,7 @@ import EmploymentStatusModal from "../../components/onboarding/EmploymentStatusM
 import BirthModal from "../../components/onboarding/BirthModal";
 import RegionModal from "../../components/onboarding/RegionModal";
 import SubRegionModal from "../../components/onboarding/SubRegionModal";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function PersonalProfile() {
   const { isModalOpen, setIsModalOpen } = useModal();
@@ -26,6 +27,9 @@ function PersonalProfile() {
     setModalType(type);
     setIsModalOpen(true);
   };
+  const nav = useNavigate();
+  const location = useLocation();
+  const selectedJob = location.state?.selectedSkill;
   const TopBarContent = () => {
     return (
       <div className="flex ct-center">
@@ -84,7 +88,9 @@ function PersonalProfile() {
         />
         <PersonalInputField
           label="희망 직무를 선택해주세요"
+          value={selectedJob}
           placeholder="희망직무 입력"
+          onClick={() => nav("/personalsetting/profile/jobpreference")}
         />
         <PersonalInputField
           label="최종 학력을 입력해주세요"

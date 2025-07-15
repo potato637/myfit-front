@@ -39,6 +39,7 @@ import MyAlarm from "../pages/feed/MyAlarm";
 import PostFeed from "../pages/feed/PostFeed";
 import KeywordSelectorPage from "../pages/onboarding/KeywordSelector";
 import Search from "../pages/recruiting/Search";
+import JobPreference from "../pages/setting/JobPreference";
 
 const router = createBrowserRouter([
   {
@@ -201,6 +202,10 @@ const router = createBrowserRouter([
       {
         path: "recruit/search",
         element: <Search />,
+      },
+      {
+        path: "personalsetting/profile/jobpreference",
+        element: <JobPreference />,
       },
     ],
   },
