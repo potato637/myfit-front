@@ -9,7 +9,7 @@ function TopBarContainer({ TopBarContent, children }: TopBarContainerProps) {
   return (
     <>
       <TopBar>{TopBarContent}</TopBar>
-      <div className="h-[66px]" />
+      <div className="h-[42px]" />
       {children}
     </>
   );

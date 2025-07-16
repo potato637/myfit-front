@@ -6,14 +6,25 @@ import CreateItemButton from "../../components/profile/CreateItemButton";
 import NetworkingBar from "../../components/profile/NetworkingBar";
 import CompanyLink from "../../components/profile/CompanyLink";
 import BottomNavContainer from "../../components/layouts/BottomNavContainer";
+import EditProfile from "./EditProfile";
 
-function Profile() {
+function ProfileItem({
+  editProfile,
+  setEditProfile,
+}: {
+  editProfile: boolean;
+  setEditProfile: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const [selectedTab, setSelectedTab] = useState<"card" | "feed">("card");
 
   return (
-    <BottomNavContainer>
-      <div className="w-full h-full ct-center flex-col mt-5">
-        <Introduction />
+    <>
+      <div
+        className={`w-full h-full ct-center flex-col mt-5 ${
+          editProfile ? "blur-sm" : ""
+        }`}
+      >
+        <Introduction setEditProfile={setEditProfile} />
         <div className="mt-[20px] w-[335px]">
           <span className="text-ct-black-100 text-body1">
             성과로 증명하는 디지털 광고 전략가입니다. 🤩
@@ -61,6 +72,19 @@ function Profile() {
         {selectedTab === "feed" && <ProfileFeedContainer />}
         <CreateItemButton />
       </div>
+      {editProfile && <EditProfile setEditProfile={setEditProfile} />}
+    </>
+  );
+}
+
+function Profile() {
+  const [editProfile, setEditProfile] = useState<boolean>(false);
+
+  return editProfile ? (
+    <ProfileItem editProfile={editProfile} setEditProfile={setEditProfile} />
+  ) : (
+    <BottomNavContainer>
+      <ProfileItem editProfile={editProfile} setEditProfile={setEditProfile} />
     </BottomNavContainer>
   );
 }

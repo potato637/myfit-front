@@ -8,7 +8,7 @@ function DetailCardItem() {
   return (
     <div className="w-full h-auto bg-ct-white rounded-[10px] p-[16px] flex flex-col gap-[10px] items-center">
       <div className="w-full h-[30px] px-[5px] py-[14px] flex items-center justify-between">
-        <span className="text-ct-main-blue-100 text-body1">활동 카드 1</span>
+        <span className="text-ct-main-blue-100 text-body1">활동 카드</span>
         <img
           src="/assets/profile/settingIcon.svg"
           alt="설정"

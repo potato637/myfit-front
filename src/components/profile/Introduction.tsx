@@ -1,6 +1,10 @@
 import { useNavigate } from "react-router-dom";
 
-function Introduction() {
+function Introduction({
+  setEditProfile,
+}: {
+  setEditProfile: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const certificated = true;
   const navigate = useNavigate();
 
@@ -16,6 +20,7 @@ function Introduction() {
           src="/assets/profile/profileImage.png"
           alt="프로필 이미지"
           className="w-[70px] h-[70px] rounded-full"
+          onClick={() => setEditProfile(true)}
         />
         <div className="w-[160px] h-full flex flex-col justify-between">
           <div className="h-[20px] flex items-center gap-1">

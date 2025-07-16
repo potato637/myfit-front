@@ -23,7 +23,7 @@ function ProfileStatus() {
 
   const handleClick = (index: number) => {
     setIsSelected((prev) => {
-      return prev.map((item, idx) => (idx === index ? true : false));
+      return prev.map((_, idx) => (idx === index ? true : false));
     });
   };
 
@@ -44,7 +44,7 @@ function ProfileStatus() {
                   isSelected[0] ? "text-ct-main-blue-100" : "text-ct-gray-100"
                 }`}
               >
-                현재 구직 중!
+                구직 중
               </span>
               <div
                 className={`w-[19px] h-[19px] rounded-full   ${
@@ -61,7 +61,7 @@ function ProfileStatus() {
                   isSelected[1] ? "text-ct-main-blue-100" : "text-ct-gray-100"
                 }`}
               >
-                현재 구인 중!
+                구인 중
               </span>
               <div
                 className={`w-[19px] h-[19px] rounded-full   ${
@@ -78,7 +78,7 @@ function ProfileStatus() {
                   isSelected[2] ? "text-ct-main-blue-100" : "text-ct-gray-100"
                 }`}
               >
-                구인 협의 중!
+                구인 협의 중
               </span>
               <div
                 className={`w-[19px] h-[19px] rounded-full   ${
@@ -95,7 +95,7 @@ function ProfileStatus() {
                   isSelected[3] ? "text-ct-main-blue-100" : "text-ct-gray-100"
                 }`}
               >
-                네트워킹 환영!
+                네트워킹 환영
               </span>
               <div
                 className={`w-[19px] h-[19px] rounded-full   ${
