@@ -40,6 +40,8 @@ import PostFeed from "../pages/feed/PostFeed";
 import KeywordSelectorPage from "../pages/onboarding/KeywordSelector";
 import Search from "../pages/recruiting/Search";
 import JobPreference from "../pages/setting/JobPreference";
+import Networking from "../pages/profile/Networking";
+import MypageSetting from "../pages/profile/MypageSetting";
 
 const router = createBrowserRouter([
   {
@@ -206,6 +208,14 @@ const router = createBrowserRouter([
       {
         path: "personalsetting/profile/jobpreference",
         element: <JobPreference />,
+      },
+      {
+        path: "mypage/networking",
+        element: <Networking />,
+      },
+      {
+        path: "mypage/setting",
+        element: <MypageSetting />,
       },
     ],
   },

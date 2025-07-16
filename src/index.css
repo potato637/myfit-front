@@ -37,6 +37,7 @@ body {
     -webkit-overflow-scrolling: touch;
   }
 }
+
 @layer utilities {
   .ct-center {
     @apply flex justify-center items-center;

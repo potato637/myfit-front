@@ -1,7 +1,7 @@
 import TopBar from "./TopBar";
 
 interface TopBarContainerProps {
-  TopBarContent: React.ReactNode;
+  TopBarContent?: React.ReactNode;
   children: React.ReactNode;
 }
 
