@@ -1,12 +1,20 @@
 import TopBarContainer from "../../components/common/TopBarContainer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BottomNavContainer from "../../components/layouts/BottomNavContainer";
 import ProfileResult from "../../components/feed/ProfileResult";
+import ProfileResultSkeleton from "../../components/skeletons/common/ProfileResultSkeleton";
 
 function Networking() {
   const [selectedTab, setSelectedTab] = useState<
     "network" | "request" | "send" | "receive"
   >("network");
+  const [isReady, setIsReady] = useState<boolean>(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsReady(true);
+    }, 3000);
+  }, []);
 
   return (
     <TopBarContainer>
@@ -94,7 +102,17 @@ function Networking() {
             </div>
           </div>
           <div className="w-[350px] mx-auto mt-[30px]">
-            <ProfileResult keyword="" />
+            {isReady ? (
+              <ProfileResult keyword="" />
+            ) : (
+              <div className="flex flex-col gap-[20px]">
+                <ProfileResultSkeleton />
+                <ProfileResultSkeleton />
+                <ProfileResultSkeleton />
+                <ProfileResultSkeleton />
+                <ProfileResultSkeleton />
+              </div>
+            )}
           </div>
         </div>
       </BottomNavContainer>

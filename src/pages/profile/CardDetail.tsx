@@ -1,10 +1,13 @@
 import DetailIntroduction from "../../components/profile/DetailIntroduction";
 import DetailCardItem from "../../components/profile/DetailCardItem";
+import DetailIntroductionSkeleton from "../../components/skeletons/mypage/DetailIntroductionSkeleton";
+import DetailCardItemSkeleton from "../../components/skeletons/mypage/DetailCardItemSkeleton";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import Modal from "../../components/ui/Modal";
 import BottomSheet from "../../components/ui/BottomSheet";
 import BottomSheetContent from "../../components/profile/BottomSheetContent";
 import ModalContent from "../../components/profile/ModalContent";
+import { useEffect, useState } from "react";
 
 const TopBarContent = () => {
   return (
@@ -18,14 +21,30 @@ const TopBarContent = () => {
 
 function CardDetail() {
   const createList = Array.from({ length: 10 }, (_, i) => i + 1);
+  const [isReady, setIsReady] = useState<boolean>(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsReady(true);
+    }, 3000);
+  }, []);
 
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
       <div className="w-full h-full bg-ct-gray-100 flex flex-col gap-[7px]">
-        <DetailIntroduction />
-        {createList.map((_, index) => (
-          <DetailCardItem key={index} />
-        ))}
+        {isReady ? (
+          <>
+            <DetailIntroduction />
+            {createList.map((_, index) => (
+              <DetailCardItem key={index} />
+            ))}
+          </>
+        ) : (
+          <>
+            <DetailIntroductionSkeleton />
+            <DetailCardItemSkeleton />
+          </>
+        )}
       </div>
       <BottomSheet>
         <BottomSheetContent />
