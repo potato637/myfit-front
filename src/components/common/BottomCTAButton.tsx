@@ -2,17 +2,20 @@ interface BottomCTAButtonProps {
   text: string;
   onClick?: () => void;
   disabled?: boolean;
+  type?: "button" | "submit"; // 🔥 추가
 }
 
 function BottomCTAButton({
   text,
   onClick,
   disabled = false,
+  type = "button", // 🔥 기본값 설정
 }: BottomCTAButtonProps) {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
+      type={type} // 🔥 여기에 반영
       className={`w-full mb-[42px] h-[62px] rounded-[10px] font-sans text-h2 text-ct-white
         ${disabled ? "bg-ct-gray-200" : "bg-ct-main-blue-100"}
       `}

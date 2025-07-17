@@ -1,12 +1,19 @@
 import { useState } from "react";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import { jobs } from "../../data/jobs";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function JobPreference() {
+  const location = useLocation();
   const nav = useNavigate();
+
+  const isFromOnboarding = location.state?.from === "onboarding";
+  const prevData = location.state?.prevData;
+
   const [selectedCategory, setSelectedCategory] = useState("개발/엔지니어링");
-  const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
+  const [selectedSkill, setSelectedSkill] = useState<string | null>(() => {
+    return location.state?.prevData?.selectedJob || null;
+  });
   const currentCategory = jobs.find((j) => j.category === selectedCategory);
   const TopBarContent = () => {
     return (
@@ -17,7 +24,17 @@ function JobPreference() {
         <span
           className="absolute right-[23px] text-sub2 text-ct-gray-300"
           onClick={() =>
-            nav("/personalsetting/profile", { state: { selectedSkill } })
+            nav(
+              isFromOnboarding
+                ? "/onboarding/profile-register"
+                : "/personalsetting/profile",
+              {
+                state: {
+                  prevData: prevData,
+                  selectedSkill: selectedSkill,
+                },
+              }
+            )
           }
         >
           완료

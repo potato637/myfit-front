@@ -38,6 +38,7 @@ function ProfileCardRegister() {
         />{" "}
         <InputField
           label="상세 설명"
+          as="textarea"
           placeholder="300자 이내"
           helperText={
             <span>

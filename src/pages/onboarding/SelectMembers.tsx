@@ -1,16 +1,21 @@
 import { useState } from "react";
 import BottomCTAButton from "../../components/common/BottomCTAButton";
 import TopBarContainer from "../../components/common/TopBarContainer";
+import { useNavigate } from "react-router-dom";
 
 type MemberType = "individual" | "team";
 
 function SelectMembers() {
+  const navigate = useNavigate();
+  // 선택된 회원 유형 상태 관리
   const [selected, setSelected] = useState<MemberType | null>(null);
 
   const handleSelect = (type: MemberType) => setSelected(type);
   const handleNextStep = () => {
     if (!selected) return;
+    localStorage.setItem("memberType", selected); // 새로고침 대비
     // navigate logic 추가
+    navigate("/onboarding/register-method");
   };
 
   return (

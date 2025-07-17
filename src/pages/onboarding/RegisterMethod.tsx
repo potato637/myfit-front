@@ -5,8 +5,15 @@ function RegisterMethod() {
   const TopBarContent = () => (
     <span className="text-h2 font-sans text-ct-black-300">회사인증(선택)</span>
   );
-
   const navigate = useNavigate();
+  // ✅ SelectMembers 에서 전달된 memberType (state or localStorage)
+  const memberType = localStorage.getItem("memberType");
+
+  // ✅ 안전장치: memberType 없을 경우 이전 화면으로 되돌림
+  if (!memberType) {
+    navigate("/onboarding/selectmembers");
+    return null;
+  }
 
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>

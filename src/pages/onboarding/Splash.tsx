@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 function Splash() {
+  const navigate = useNavigate();
   return (
     <div className="fixed inset-0 w-screen h-screen overflow-hidden">
       {/* ✅ 배경 이미지 */}
@@ -45,10 +48,14 @@ function Splash() {
         </button>
 
         {/* 하단 링크 */}
-        <div className="flex items-center justify-center gap-[32px] text-ct-white text-sub2 mb-[57px]">
-          <span>비밀번호 재설정</span>
+        <div className="ct-center gap-[32px] text-ct-white text-sub2 mb-[57px]">
+          <button onClick={() => navigate("/personalsetting/resetpassword")}>
+            비밀번호 재설정
+          </button>
           <div className="w-px h-[12px] bg-ct-white" />
-          <span>회원가입</span>
+          <button onClick={() => navigate("/onboarding/selectmembers")}>
+            회원가입
+          </button>
         </div>
 
         {/* 소셜 로그인 구분선 */}
