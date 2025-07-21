@@ -1,11 +1,16 @@
 import BottomNav from "./BottomNav";
 
-function BottomNavContainer({ children }: { children: React.ReactNode }) {
+interface Props {
+  children: React.ReactNode;
+  showBottomNav?: boolean;
+}
+
+function BottomNavContainer({ children, showBottomNav = true }: Props) {
   return (
     <>
       {children}
-      <div className="h-[89px]" />
-      <BottomNav />
+      {showBottomNav && <div className="h-[89px]" />}
+      {showBottomNav && <BottomNav />}
     </>
   );
 }

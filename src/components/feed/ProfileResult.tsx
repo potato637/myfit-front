@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import ProfileResultSkeleton from "../skeletons/common/ProfileResultSkeleton";
+
 interface Profile {
   name: string;
   age: number;
@@ -9,7 +12,7 @@ interface Props {
   keyword: string;
 }
 
-const mockProfiles = [
+const mockProfiles: Profile[] = [
   {
     name: "양진경",
     age: 28,
@@ -37,9 +40,26 @@ const mockProfiles = [
 ];
 
 const ProfileResult = ({ keyword }: Props) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 3000);
+    return () => clearTimeout(timer);
+  }, [keyword]);
+
   const filtered = mockProfiles.filter((profile) =>
     profile.name.includes(keyword)
   );
+
+  if (isLoading) {
+    return (
+      <ul className="mt-[6px] flex flex-col gap-[20px]">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <ProfileResultSkeleton key={i} />
+        ))}
+      </ul>
+    );
+  }
 
   return (
     <ul className="mt-[6px] flex flex-col gap-[20px]">

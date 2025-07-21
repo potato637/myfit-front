@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import HashtagResultSkeleton from "../skeletons/feed/HashtagResultSkeleton";
+
 interface Props {
   keyword: string;
 }
@@ -13,6 +16,14 @@ const mockHashtags = [
 
 const HashtagResult = ({ keyword }: Props) => {
   const filtered = mockHashtags.filter((tag) => tag.includes(keyword));
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 3000);
+    return () => clearTimeout(timer);
+  }, [keyword]);
+
+  if (isLoading) return <HashtagResultSkeleton />;
 
   return (
     <ul className="space-y-3">

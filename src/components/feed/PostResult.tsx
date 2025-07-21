@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import PostResultSkeleton from "../skeletons/feed/PostResultSkeleton";
+
 interface Props {
   keyword: string;
 }
@@ -29,6 +32,14 @@ const mockPosts = [
 const PostResult = ({ keyword }: Props) => {
   // keyword를 이용해 실제 필터링하려면 여기에 조건 추가 가능
   const filteredPosts = mockPosts; // 현재는 전부 사용
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 3000);
+    return () => clearTimeout(timer);
+  }, [keyword]);
+
+  if (isLoading) return <PostResultSkeleton />;
 
   return (
     <div className="-mx-[22px] grid grid-cols-3 gap-2">

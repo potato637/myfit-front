@@ -8,17 +8,13 @@ type TabType = (typeof TABS)[number];
 
 function FeedSearchUI() {
   const [searchText, setSearchText] = useState("");
-  const [searchHistory, setSearchHistory] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<TabType | null>(null); // 기본값 null
+  const [activeTab, setActiveTab] = useState<TabType | null>("프로필");
 
   const handleSearch = () => {
     if (searchText.trim()) {
-      setSearchHistory((prev) => [searchText, ...prev]);
       setSearchText("");
     }
   };
-
-  const clearHistory = () => setSearchHistory([]);
 
   const renderTabContent = () => {
     if (!activeTab) return null;

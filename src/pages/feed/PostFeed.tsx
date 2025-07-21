@@ -23,7 +23,7 @@ function PostFeed() {
           <div className="flex flex-col mb-[19px]">
             {/* 안내 텍스트 */}
             <ImageUploadBox
-              className="w-full aspect-square rounded-[5px] bg-ct-gray-100 overflow-hidden"
+              className="w-full mt-4 aspect-square rounded-[5px] bg-ct-gray-100 overflow-hidden"
               textClassName="text-body3 text-ct-gray-300"
             />
           </div>
