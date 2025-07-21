@@ -8,6 +8,7 @@ interface Message {
   id: number;
   text: string;
   sender: "me" | "you";
+  type: "message" | "request";
 }
 
 function Chatting() {
@@ -18,6 +19,7 @@ function Chatting() {
       id: Date.now(),
       text,
       sender: "you",
+      type: "request",
     };
     setMessages((prev) => [...prev, NewMessage]);
   };

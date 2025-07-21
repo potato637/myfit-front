@@ -1,9 +1,15 @@
-function SearchBar() {
+interface SearchBarProps {
+  query: string;
+  setQuery: (value: string) => void;
+}
+function SearchBar({ query, setQuery }: SearchBarProps) {
   return (
     <div className="relative">
       <input
         type="text"
-        className=" w-[337px] h-[30px] pl-[8px] border-b border-ct-gray-200"
+        value={query}
+        className=" w-[337px] h-[30px] pl-[8px] border-b border-ct-gray-200 focus:outline-none text-sub1 text-ct-black-300"
+        onChange={(e) => setQuery(e.target.value)}
       />
       <img
         src="/assets/recruit/searchicon.svg"

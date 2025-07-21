@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { CalendarDateData, getCalendarData } from "../../utils/date";
-import Month from "./Month";
+import { getCalendarData } from "../../utils/date";
+import Month from "../chatting/Month";
 import { useCoffeeChat } from "../../contexts/coffeeChatContext";
+import { useModal } from "../../contexts/ui/modalContext";
 
-function Calendar() {
-  const { selectedTitle, setSelectedTitle } = useCoffeeChat();
+function CalendarModal() {
   const [selectedMonth, setSelectedMonth] = useState<number>(0);
   const calendarData = getCalendarData();
   const monthArray = Array.from(calendarData.keys());
@@ -16,18 +16,17 @@ function Calendar() {
   const handleChevronRight = () => {
     setSelectedMonth((prev) => (prev === 2 ? 0 : prev + 1));
   };
+  const { selectedDate, setSelectedDate } = useCoffeeChat();
+  const { setIsModalOpen } = useModal();
+  const handleSelectDate = () => {
+    if (selectedDate) {
+      setSelectedDate(selectedDate);
+      setIsModalOpen(false);
+    }
+  };
 
   return (
     <div className="w-[330px] ct-center flex-col">
-      <div className="w-full flex flex-col gap-[10px] mb-[57px]">
-        <span className="text-sub1 text-ct-black-100">커피챗 제목</span>
-        <input
-          className="w-full h-[40px] bg-ct-gray-100 rounded-[10px] px-[14px] py-[12px] placeholder-ct-gray-200 placeholder:text-body1"
-          placeholder="자유롭게 작성해보세요!"
-          value={selectedTitle}
-          onChange={(e) => setSelectedTitle(e.target.value)}
-        />
-      </div>
       <div className="w-full h-auto ct-center gap-2 mb-[50px]">
         <img
           src="/assets/chatting/chevronLeft.svg"
@@ -48,8 +47,14 @@ function Calendar() {
         />
       </div>
       <Month data={calendarData.get(monthArray[selectedMonth]) || []} />
+      <button
+        className="w-full h-[48px] rounded-[10px] bg-ct-main-blue-200 text-white text-body1 mt-[24px] hover:bg-ct-main-blue-300 transition-colors duration-200 cursor-pointer"
+        onClick={handleSelectDate}
+      >
+        선택
+      </button>
     </div>
   );
 }
 
-export default Calendar;
+export default CalendarModal;

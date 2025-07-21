@@ -2,10 +2,14 @@ import { createContext, ReactNode, useContext, useState } from "react";
 import { CalendarDateData } from "../utils/date";
 
 interface CoffeeChatContextType {
+  selectedTitle: string;
+  setSelectedTitle: React.Dispatch<React.SetStateAction<string>>;
   selectedDate: CalendarDateData;
   setSelectedDate: React.Dispatch<React.SetStateAction<CalendarDateData>>;
   selectedTime: string;
   setSelectedTime: React.Dispatch<React.SetStateAction<string>>;
+  selectedPlace: string;
+  setSelectedPlace: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const CoffeeChatContext = createContext<CoffeeChatContextType | undefined>(
@@ -13,12 +17,23 @@ const CoffeeChatContext = createContext<CoffeeChatContextType | undefined>(
 );
 
 export const CoffeeChatProvider = ({ children }: { children: ReactNode }) => {
+  const [selectedTitle, setSelectedTitle] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<CalendarDateData>(null);
   const [selectedTime, setSelectedTime] = useState<string>("");
+  const [selectedPlace, setSelectedPlace] = useState<string>("");
 
   return (
     <CoffeeChatContext.Provider
-      value={{ selectedDate, setSelectedDate, selectedTime, setSelectedTime }}
+      value={{
+        selectedTitle,
+        setSelectedTitle,
+        selectedDate,
+        setSelectedDate,
+        selectedTime,
+        setSelectedTime,
+        selectedPlace,
+        setSelectedPlace,
+      }}
     >
       {children}
     </CoffeeChatContext.Provider>

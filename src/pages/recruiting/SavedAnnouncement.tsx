@@ -1,6 +1,7 @@
 import TopBarContainer from "../../components/common/TopBarContainer";
 import BottomNav from "../../components/layouts/BottomNav";
 import RecruitCard from "../../components/recruiting/RecruitCard";
+import RecruitCardSkeleton from "../../components/skeletons/recruiting/RecruitCardSkeleton";
 
 function SavedAnnouncement() {
   const TopBarContent = () => {
@@ -13,8 +14,8 @@ function SavedAnnouncement() {
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
       <div className="flex flex-col gap-[12px] items-center mb-[89px] ">
-        <RecruitCard />
-        <RecruitCard />
+        <RecruitCardSkeleton />
+        <RecruitCardSkeleton />
       </div>
       <BottomNav />
     </TopBarContainer>

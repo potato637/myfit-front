@@ -1,24 +1,41 @@
-function RecruitCard() {
+interface RecruitCardProps {
+  data: {
+    title: string;
+    job: string;
+    dead_line: string;
+    work_type: string;
+    writer: {
+      name: string;
+      profile_img: string;
+    };
+  };
+}
+
+function RecruitCard({ data }: RecruitCardProps) {
   return (
     <div className="w-[360px] min-h-[123px] rounded-[10px] ct-center border border-ct-white px-2 py-1 shadow-[0px_0px_5px_rgba(0,0,0,0.15)] ">
       <div className="w-[332.64px] my-[15px]">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-[8px]">
-            <div className="w-[32px] h-[32px] bg-ct-gray-100 rounded-[10px]" />
+            <img
+              src={data.writer.profile_img}
+              alt="프로필 이미지"
+              className="w-[32px] h-[32px] rounded-[10px] object-cover"
+            />
             <span className="text-sub1 font-Pretendard text-ct-black-100">
-              마이루틴
+              {data.writer.name}
             </span>
           </div>
           <span className="text-body1 text-ct-main-blue-200">
-            마감일자 : 2025.01.01
+            마감일자 : {data.dead_line}
           </span>
         </div>
 
         <div className="mt-[16px] text-body1 font-Pretendard text-ct-black-200">
-          [신입/경력] 사용자 경험을 바꾸는 프론트엔드 개발자 모집
+          {data.title}
         </div>
         <div className="mt-[8px] font-Pretendard text-body1 text-ct-sub-blue-100">
-          구인 직무
+          {data.work_type}
         </div>
       </div>
     </div>

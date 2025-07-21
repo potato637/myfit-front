@@ -1,14 +1,20 @@
-function SearchResult() {
-  const dummydata = [
-    "데이터 분석가",
-    "데이터 엔지니어",
-    "데이터베이스 관리자(DBA)",
-    "데이터베이스 개발자",
-    "데이터베이스 보안 전문가",
-  ];
+import { jobs } from "../../data/jobs";
+
+interface SearchResultProps {
+  query: string;
+}
+
+function SearchResult({ query }: SearchResultProps) {
+  const allskills = jobs.flatMap((job) => job.skills);
+  const filtered = query
+    ? allskills.filter((skill) =>
+        skill.toLowerCase().includes(query.toLowerCase())
+      )
+    : [];
+
   return (
     <ul className="flex flex-col gap-[17px]">
-      {dummydata.map((job, idx) => (
+      {filtered.map((job, idx) => (
         <li key={idx} className="text-sub2 text-[#898989]">
           {job}
         </li>

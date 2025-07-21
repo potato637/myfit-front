@@ -1,3 +1,4 @@
+import { useState } from "react";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import SearchBar from "../../components/recruiting/SearchBar";
 import SearchResult from "../../components/recruiting/SearchResult";
@@ -15,13 +16,14 @@ function Search() {
       </div>
     );
   };
+  const [query, setQuery] = useState("");
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
-      <div className="flex justify-center">
-        <SearchBar />
+      <div className="flex justify-center mt-[10px]">
+        <SearchBar query={query} setQuery={setQuery} />
       </div>
-      <div className="px-[25px] mt-[34px]">
-        <SearchResult />
+      <div className="px-[40px] mt-[34px]">
+        <SearchResult query={query} />
       </div>
     </TopBarContainer>
   );

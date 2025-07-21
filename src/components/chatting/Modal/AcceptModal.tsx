@@ -1,8 +1,6 @@
-import InformationBox from "../../components/chatting/InformationBox";
-import MatchingButton from "../../components/chatting/MatchingButton";
+import InformationBox from "../InformationBox";
 
-function CoffeChatModal() {
-  const status = "afterediting";
+function AcceptModal() {
   return (
     <div className="w-full h-[498px] rounded-[15px] bg-ct-white flex flex-col items-center">
       <img
@@ -22,11 +20,20 @@ function CoffeChatModal() {
           date="2025.05.21 토"
           time="PM 03:30"
           place="서울시 용산구 마핏카페"
-          status={status}
+        />
+        <img
+          src="/assets/chatting/disablecheck.svg"
+          alt="비활성 체크"
+          className="absolute top-[10px] right-[10px]"
         />
       </div>
-      <MatchingButton status={status} />
+      <button className="mt-[26px] w-[168px] h-[42px] rounded-[100px] border border-ct-main-blue-200 text-sub1 bg-ct-main-blue-200 text-ct-white">
+        수락 하기
+      </button>
+      <button className="mt-[20px] w-[70px] h-[23px] border-b border-ct-gray-300 text-sub1 text-ct-gray-300">
+        거절 하기
+      </button>
     </div>
   );
 }
-export default CoffeChatModal;
+export default AcceptModal;

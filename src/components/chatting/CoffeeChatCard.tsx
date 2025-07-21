@@ -1,6 +1,6 @@
 import { useModal } from "../../contexts/ui/modalContext";
 import Modal from "../ui/Modal";
-import CancelModal from "./CancelModal";
+import CancelModal from "./Modal/CancelModal";
 
 function CoffeeChatCard() {
   const { setIsModalOpen } = useModal();

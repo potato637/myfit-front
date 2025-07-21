@@ -1,9 +1,14 @@
+import { useCoffeeChatModal } from "../../contexts/CoffeeChatModalContext";
+import { useUser } from "../../contexts/UserContext";
+import { ChatBoxStatus } from "../../types/chatting/ChatBoxStatus";
 import MessageBubble from "./MessageBubble";
+import RequestCoffeeChatBox from "./RequestCoffechatBox";
 
 interface Message {
   id: number;
   text: string;
   sender: "me" | "you";
+  type: "message" | "request";
 }
 interface Props {
   messages: Message[];
@@ -11,6 +16,17 @@ interface Props {
 }
 
 function ChatMessageList({ messages, bottomRef }: Props) {
+  const { requestStatus } = useCoffeeChatModal();
+  const { myId, senderId, name } = useUser();
+  let boxStatus: ChatBoxStatus = "none";
+  if (requestStatus === "requested") {
+    boxStatus = myId === senderId ? "requested_by_me" : "requested_by_other";
+  } else if (requestStatus === "edited") {
+    boxStatus = "edited";
+  } else if (requestStatus === "rejected") {
+    boxStatus = "rejected";
+  }
+
   return (
     <div className="flex flex-col px-4 h-[670px] overflow-y-auto border-t border-[#E0E0E0]">
       {messages.length > 0 && (
@@ -24,6 +40,11 @@ function ChatMessageList({ messages, bottomRef }: Props) {
         </div>
       )}
       {messages.map((msg, idx) => {
+        if (msg.type == "request") {
+          return (
+            <RequestCoffeeChatBox key={msg.id} status={boxStatus} name={name} />
+          );
+        }
         const prev = messages[idx - 1];
         const isSame = prev?.sender === msg.sender;
         const MarginTop = isSame ? "mt-[5px]" : "mt-[20px]";
@@ -40,7 +61,6 @@ function ChatMessageList({ messages, bottomRef }: Props) {
                 <MessageBubble text={msg.text} sender={msg.sender} />
               </div>
             </div>
-            {/*<RequestCoffeeChatBox />*/}
           </div>
         );
       })}
