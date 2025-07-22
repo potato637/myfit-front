@@ -6,23 +6,28 @@ import { CoffeeChatProvider } from "./coffeeChatContext";
 import { CoffeeChatModalProvider } from "./CoffeeChatModalContext";
 import { UserProvider } from "./UserContext";
 import { ChattingProvider } from "./ChattingContext";
+import { AuthProvider } from "./AuthContext";
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <CoffeeChatProvider>
-        <BottomSheetProvider>
-          <UserProvider>
-            <ChattingProvider>
+      <AuthProvider>
+        <CoffeeChatProvider>
+          <BottomSheetProvider>
+            <UserProvider>
               <ModalProvider>
-                <CoffeeChatModalProvider>
-                  <ProfileImgModalProvider>{children}</ProfileImgModalProvider>
-                </CoffeeChatModalProvider>
+                <ChattingProvider>
+                  <CoffeeChatModalProvider>
+                    <ProfileImgModalProvider>
+                      {children}
+                    </ProfileImgModalProvider>
+                  </CoffeeChatModalProvider>
+                </ChattingProvider>
               </ModalProvider>
-            </ChattingProvider>
-          </UserProvider>
-        </BottomSheetProvider>
-      </CoffeeChatProvider>
+            </UserProvider>
+          </BottomSheetProvider>
+        </CoffeeChatProvider>
+      </AuthProvider>
     </>
   );
 }
