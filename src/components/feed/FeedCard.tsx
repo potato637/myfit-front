@@ -95,7 +95,7 @@ function FeedCard({
       </div>{" "}
       {/* 좋아요 / 댓글 */}
       <div className="flex justify-between items-center px-3">
-        <span className="text-sub2 text-ct-gray-200">{post.timeAgo}</span>
+        <span className="text-sub2 text-ct-gray-300">{post.timeAgo}</span>
         <div className="flex gap-4">
           <div className="flex items-center gap-1">
             <button type="button" onClick={onLikeClick}>

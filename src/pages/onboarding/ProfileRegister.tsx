@@ -172,7 +172,7 @@ function ProfileRegister() {
                 educationLevel,
                 selectedJob,
               };
-              nav("/personalsetting/profile", {
+              nav("/onboarding/profile-card-register", {
                 state: { profileData },
               });
             }}

@@ -5,7 +5,7 @@ export const mockComments: Comment[] = [
     id: 101,
     comment_text: "그 연결고리, 혹시 API 엔드포인트로는 안 되겠죠? 😅",
     high_comment_id: null,
-    created_at: "2025-07-04T08:22:00Z",
+    created_at: "2025-07-21T08:22:00Z",
     writer: {
       user_id: 3,
       name: "임호현",
@@ -19,7 +19,7 @@ export const mockComments: Comment[] = [
     comment_text:
       "브랜드는 결국 사람의 말에서 시작되죠! 오늘도 잘 다녀오세요용 다음에 같이 가요~ ☺️",
     high_comment_id: null,
-    created_at: "2025-07-04T08:15:00Z",
+    created_at: "2025-07-21T07:15:00Z",
     writer: {
       user_id: 7,
       name: "장예슬",
@@ -55,10 +55,10 @@ export const mockComments: Comment[] = [
     ],
   },
   {
-    id: 101,
+    id: 301,
     comment_text: "그 연결고리, 혹시 API 엔드포인트로는 안 되겠죠? 😅",
     high_comment_id: null,
-    created_at: "2025-07-04T08:22:00Z",
+    created_at: "2025-07-21T08:22:00Z",
     writer: {
       user_id: 3,
       name: "임호현",
@@ -68,10 +68,10 @@ export const mockComments: Comment[] = [
     replies: [],
   },
   {
-    id: 101,
+    id: 401,
     comment_text: "그 연결고리, 혹시 API 엔드포인트로는 안 되겠죠? 😅",
     high_comment_id: null,
-    created_at: "2025-07-04T08:22:00Z",
+    created_at: "2025-07-21T08:22:00Z",
     writer: {
       user_id: 3,
       name: "임호현",

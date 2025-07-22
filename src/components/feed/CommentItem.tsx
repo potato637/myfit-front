@@ -1,4 +1,5 @@
 import { Comment, Reply } from "../../types/feed/comment";
+import getTimeAgo from "../../utils/timeAgo";
 
 interface Props {
   comment: Comment | Reply;
@@ -26,9 +27,9 @@ function CommentItem({ comment, isReply = false }: Props) {
         <p className="mt-1 text-ct-black-100">{comment.comment_text}</p>
 
         {/* 하단 정보: 시간 / 답글달기 / 삭제 */}
-        <div className="flex justify-between items-center mt-1 text-body2 text-gray-300">
+        <div className="flex justify-between items-center mt-1 text-body2 text-ct-gray-300">
           <div className="flex gap-3">
-            <span>{new Date(comment.created_at).toLocaleString()}</span>
+            <span>{getTimeAgo(comment.created_at)}</span>{" "}
             <button type="button" className="hover:underline">
               답글달기
             </button>
