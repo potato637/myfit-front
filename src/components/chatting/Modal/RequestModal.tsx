@@ -3,29 +3,27 @@ import InformationBox from "../InformationBox";
 import { useCoffeeChat } from "../../../contexts/coffeeChatContext";
 import { useModal } from "../../../contexts/ui/modalContext";
 import { useCoffeeChatModal } from "../../../contexts/CoffeeChatModalContext";
+import { useChatting } from "../../../contexts/ChattingContext";
+import { formatDateWithDay } from "../../../utils/format";
 
 function RequestModal() {
   const nav = useNavigate();
   const { setIsModalOpen } = useModal();
+  const { addMessage } = useChatting();
   const { selectedTitle, selectedDate, selectedTime, selectedPlace } =
     useCoffeeChat();
   const { setRequestStatus } = useCoffeeChatModal();
-  const getDayOfWeek = (year: number, month: number, day: number): string => {
-    const date = new Date(year, month - 1, day); // month는 0-based
-    const dayIndex = date.getDay(); // 0~6: 일~토
-    const days = ["일", "월", "화", "수", "목", "금", "토"];
-    return days[dayIndex];
-  };
-  const formatedDate = `${selectedDate?.year}.${selectedDate?.month}.${
-    selectedDate?.date
-  } ${getDayOfWeek(
-    selectedDate!.year,
-    selectedDate!.month,
-    selectedDate!.date
-  )}`;
+
+  const formattedDate = selectedDate
+    ? formatDateWithDay(
+        selectedDate.year,
+        selectedDate.month,
+        selectedDate.date
+      )
+    : "";
 
   return (
-    <div className="w-full h-[498px] rounded-[15px] bg-ct-white flex flex-col items-center">
+    <div className="w-full h-[498px] rounded-[15px] bg-ct-white flex flex-col ct-center">
       <img
         src="/assets/chatting/coffechatlogo.svg"
         alt="커피챗 로고"
@@ -40,7 +38,7 @@ function RequestModal() {
       </div>
       <div className="mt-[25px]">
         <InformationBox
-          date={formatedDate}
+          date={formattedDate}
           time={selectedTime}
           place={selectedPlace}
         />
@@ -49,6 +47,13 @@ function RequestModal() {
         className="mt-[26px] w-[168px] h-[42px] rounded-[100px] border border-ct-main-blue-200 text-sub1 bg-ct-white text-ct-black-200"
         onClick={() => {
           setRequestStatus("requested");
+          addMessage({
+            id: Date.now(),
+            text: "",
+            sender: "me",
+            type: "coffeechat",
+            status: "requested",
+          });
           nav("/chatting");
           setIsModalOpen(false);
         }}

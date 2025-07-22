@@ -5,8 +5,8 @@ import TopBarContainer from "../../components/common/TopBarContainer";
 import { useModal } from "../../contexts/ui/modalContext";
 import Modal from "../../components/ui/Modal";
 import RequestModal from "../../components/chatting/Modal/RequestModal";
-import { useCoffeeChatModal } from "../../contexts/CoffeeChatModalContext";
 import EditConfirmedModal from "../../components/chatting/Modal/EditConfirmedModal";
+import { useCoffeeChatModal } from "../../contexts/CoffeeChatModalContext";
 
 const TopBarContent = () => {
   return <span className="text-h2 text-ct-black-100">커피챗 요청</span>;
@@ -15,13 +15,18 @@ const TopBarContent = () => {
 function RequestCoffeeChat() {
   const { setIsModalOpen } = useModal();
   const { editMode, modalType, setModalType } = useCoffeeChatModal();
+
   const handleClick = () => {
     if (editMode) {
       setModalType("editConfirm");
-    } else setModalType("request");
+    } else {
+      setModalType("request");
+    }
     setIsModalOpen(true);
   };
+
   const label = editMode ? "수정하기" : "요청하기";
+
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
       <div className="w-full h-auto ct-center flex-col">

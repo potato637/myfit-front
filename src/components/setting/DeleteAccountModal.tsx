@@ -5,16 +5,16 @@ function DeleteAccountModal() {
   const nav = useNavigate();
   const { setIsModalOpen } = useModal();
   return (
-    <div className="w-full h-full flex flex-col px-[6px] pb-[26px]">
+    <div className="w-full h-full flex flex-col mx-[24px] my-[19px]">
       <img
         src="/assets/setting/face.svg"
         alt="얼굴 아이콘"
-        className="w-[25px] h-[25px]"
+        className="w-[25px] h-[25px] ml-[10px]"
       />
-      <span className="mt-[15px] text-sub1 text-ct-black-100">
+      <span className="mt-[15px] ml-[10px] text-sub1 text-ct-black-100">
         정말 탈퇴하시겠어요?
       </span>
-      <span className="mt-[23px] text-body1 text-ct-gray-300">
+      <span className="mt-[23px] ml-[10px] text-body1 text-ct-gray-300">
         회원 탈퇴 시 계정 정보 및 보유중인
         <br />
         활동카드와 피드는 삭제되어 복구가 불가해요.

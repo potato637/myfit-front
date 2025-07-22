@@ -10,6 +10,7 @@ interface CoffeeChatContextType {
   setSelectedTime: React.Dispatch<React.SetStateAction<string>>;
   selectedPlace: string;
   setSelectedPlace: React.Dispatch<React.SetStateAction<string>>;
+  resetSelections: () => void;
 }
 
 const CoffeeChatContext = createContext<CoffeeChatContextType | undefined>(
@@ -21,7 +22,12 @@ export const CoffeeChatProvider = ({ children }: { children: ReactNode }) => {
   const [selectedDate, setSelectedDate] = useState<CalendarDateData>(null);
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [selectedPlace, setSelectedPlace] = useState<string>("");
-
+  const resetSelections = () => {
+    setSelectedTitle("");
+    setSelectedDate(null);
+    setSelectedTime("");
+    setSelectedPlace("");
+  };
   return (
     <CoffeeChatContext.Provider
       value={{
@@ -33,6 +39,7 @@ export const CoffeeChatProvider = ({ children }: { children: ReactNode }) => {
         setSelectedTime,
         selectedPlace,
         setSelectedPlace,
+        resetSelections,
       }}
     >
       {children}

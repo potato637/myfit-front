@@ -1,36 +1,23 @@
+import { useChatting } from "../../contexts/ChattingContext";
 import { useCoffeeChatModal } from "../../contexts/CoffeeChatModalContext";
 import { useUser } from "../../contexts/UserContext";
 import { ChatBoxStatus } from "../../types/chatting/ChatBoxStatus";
 import MessageBubble from "./MessageBubble";
 import RequestCoffeeChatBox from "./RequestCoffechatBox";
 
-interface Message {
-  id: number;
-  text: string;
-  sender: "me" | "you";
-  type: "message" | "request";
-}
 interface Props {
-  messages: Message[];
   bottomRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-function ChatMessageList({ messages, bottomRef }: Props) {
+function ChatMessageList({ bottomRef }: Props) {
+  const { messages } = useChatting();
   const { requestStatus } = useCoffeeChatModal();
   const { myId, senderId, name } = useUser();
-  let boxStatus: ChatBoxStatus = "none";
-  if (requestStatus === "requested") {
-    boxStatus = myId === senderId ? "requested_by_me" : "requested_by_other";
-  } else if (requestStatus === "edited") {
-    boxStatus = "edited";
-  } else if (requestStatus === "rejected") {
-    boxStatus = "rejected";
-  }
 
   return (
-    <div className="flex flex-col px-4 h-[670px] overflow-y-auto border-t border-[#E0E0E0]">
+    <div className="flex-1 flex flex-col overflow-y-auto overscroll-contain px-4 pb-[80px]">
       {messages.length > 0 && (
-        <div className="flex flex-col items-center gap-[6px] mt-[20px]">
+        <div className="flex flex-col items-center gap-[6px] pt-[46px]">
           <span className="text-body2 text-ct-gray-300">
             2025.05.15 (월) PM 3:00
           </span>
@@ -40,9 +27,22 @@ function ChatMessageList({ messages, bottomRef }: Props) {
         </div>
       )}
       {messages.map((msg, idx) => {
-        if (msg.type == "request") {
+        const LastCoffeeChatIndex = [...messages]
+          .map((m) => m.type)
+          .lastIndexOf("coffeechat");
+        const isLast = idx === LastCoffeeChatIndex;
+        if (msg.type == "coffeechat") {
           return (
-            <RequestCoffeeChatBox key={msg.id} status={boxStatus} name={name} />
+            <div className="min-h-[41px] my-[10px]">
+              <RequestCoffeeChatBox
+                key={msg.id}
+                status={msg.status!}
+                name={name}
+                sender="you"
+                myId={myId}
+                isLast={isLast}
+              />
+            </div>
           );
         }
         const prev = messages[idx - 1];

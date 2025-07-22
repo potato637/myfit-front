@@ -19,8 +19,14 @@ function CoffeeChatList() {
           커피챗
         </button>
       </div>
-      <div className="pt-[19px] pl-[23px] flex flex-col mt-[39px]  max-h-[690px]  overflow-y-scroll">
-        <div className="flex gap-[6px]">
+      <div className="pt-[19px] px-[18px] flex flex-col mt-[39px]  max-h-[690px]  overflow-y-scroll pb-[90px]">
+        <div className="flex flex-col gap-[9px] text-[17px] font-[600] text-ct-black-100">
+          지난 커피챗은 이곳에서 보관해요!
+          <div className="flex justify-center">
+            <CoffeeChatStorageBox />
+          </div>
+        </div>
+        <div className="flex gap-[6px] mt-[31px]">
           <img src="/assets/chatting/coffeechat.svg" alt="커피챗로고" />
           <span className="text-h1 text-ct-black-100">예정된 커피챗</span>
         </div>
@@ -38,10 +44,6 @@ function CoffeeChatList() {
             <CoffeeChatCard />
           </div>
         )}
-        <div className="flex flex-col mt-[30px] gap-[9px] text-[17px] font-[600] text-ct-black-100">
-          지난 커피챗은 이곳에서 보관해요!
-          <CoffeeChatStorageBox />
-        </div>
       </div>
 
       <BottomNav />

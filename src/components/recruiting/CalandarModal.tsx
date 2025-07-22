@@ -26,8 +26,8 @@ function CalendarModal() {
   };
 
   return (
-    <div className="w-[330px] ct-center flex-col">
-      <div className="w-full h-auto ct-center gap-2 mb-[50px]">
+    <div className="w-full h-full ct-center flex-col">
+      <div className="w-full h-auto ct-center gap-2 mb-[19px] mt-[19px]">
         <img
           src="/assets/chatting/chevronLeft.svg"
           alt="chevronLeft"
@@ -48,7 +48,7 @@ function CalendarModal() {
       </div>
       <Month data={calendarData.get(monthArray[selectedMonth]) || []} />
       <button
-        className="w-full h-[48px] rounded-[10px] bg-ct-main-blue-200 text-white text-body1 mt-[24px] hover:bg-ct-main-blue-300 transition-colors duration-200 cursor-pointer"
+        className="w-full h-[60px] rounded-b-[30px] bg-ct-main-blue-200 text-white text-body1 mt-[24px] hover:bg-ct-main-blue-300 transition-colors duration-200 cursor-pointer"
         onClick={handleSelectDate}
       >
         선택

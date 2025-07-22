@@ -19,10 +19,13 @@ function VerifiedSettingPage() {
         <span className="mt-[52.89px] text-body1 text-[#797979] font-Pretendard">
           파일은 최대 10MB까지 가능합니다.
         </span>
-        <VerfiedUploadBox
-          className="mt-[21px] w-[334px] h-[107px] rounded-[10px] bg-[#D9D9D9]"
-          textClassName="text-body2 text-[#797979] font-Pretendard"
-        />
+        <div className="flex items-center">
+          <VerfiedUploadBox
+            className="mt-[21px] w-[334px] h-[107px] rounded-[10px] bg-[#D9D9D9]"
+            textClassName="text-body2 text-[#797979] font-Pretendard"
+          />
+        </div>
+
         <div className="mt-[20px] h-[102px] text-body1 font-Pretendard text-ct-gray-300">
           사업자 등록 인증 시, 프로필에 인증 뱃지가 표시되어 신뢰도가
           높아집니다. 인증은 1~2 영업일 내 완료되며 결과는 이메일로
@@ -34,9 +37,6 @@ function VerifiedSettingPage() {
         </div>
         <div className="mt-[194.32px] flex flex-col gap-[5px]">
           <BottomCTAButton text="제출하고 완료하기" disabled={true} />
-          <div className="mt-[-42px]">
-            <BottomCTAButton text="건너뛰기" />
-          </div>
         </div>
       </div>
     </TopBarContainer>

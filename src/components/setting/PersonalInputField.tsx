@@ -21,8 +21,9 @@ function PersonalInputField({
       <input
         type="text"
         value={value}
+        readOnly={!!onClick}
         placeholder={placeholder}
-        className="w-full flex text-[15px] font-[400] placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100"
+        className="w-full flex text-body1 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100"
         onClick={onClick}
         onChange={onChange}
       />

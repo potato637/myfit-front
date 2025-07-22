@@ -10,6 +10,8 @@ function Recruiting() {
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const pageSize = 10;
+  const nav = useNavigate();
+
   const currentCategory = jobs.find((j) => j.category === selectedCategory);
   const filterList = dummyRecruitList.filter(
     (item) => item.job === selectedSkill
@@ -19,7 +21,6 @@ function Recruiting() {
     (page - 1) * pageSize,
     page * pageSize
   );
-  const nav = useNavigate();
 
   return (
     <div className="flex flex-col px-4 py-2 bg-white">
@@ -28,7 +29,7 @@ function Recruiting() {
           {jobs.map((item) => (
             <button
               key={item.category}
-              className={`h-[32px] text-h2  tracking-[-0.408px] px-[21px] pb-[10px] ${
+              className={`h-[32px] text-h2 tracking-[-0.408px] px-[21px] pb-[10px] ${
                 selectedCategory === item.category
                   ? "border-b-[4px] border-ct-gray-300 text-ct-black-300"
                   : "text-ct-gray-200"
@@ -62,12 +63,17 @@ function Recruiting() {
         >
           공고 등록
         </button>
-        <img
-          src="assets/recruit/bookmark(on).svg"
-          alt="bookmark"
-          className="w-[18px] h-[22px]"
+        <div
+          className="flex gap-[4px] w-[105px] h-[24px] bg-ct-gray-100 rounded-[5px] ct-center"
           onClick={() => nav("/recruit/savedannouncement")}
-        />
+        >
+          <span className="text-body1 text-ct-black-100">저장된 공고</span>
+          <img
+            src="assets/recruit/bookmark(on).svg"
+            alt="bookmark"
+            className="w-[10px] h-[12px]"
+          />
+        </div>
       </div>
       <div className="flex flex-col mt-[6px] gap-[11px] items-center mb-[89px]">
         {filterList.length === 0 ? (
@@ -76,7 +82,6 @@ function Recruiting() {
           </div>
         ) : (
           <>
-            {" "}
             {paginatedList.map((item) => (
               <RecruitCard key={item.id} data={item} />
             ))}
@@ -118,4 +123,5 @@ function Recruiting() {
     </div>
   );
 }
+
 export default Recruiting;

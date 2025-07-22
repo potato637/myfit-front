@@ -1,25 +1,45 @@
+import { useNavigate } from "react-router-dom";
+import { useChatting } from "../../../contexts/ChattingContext";
+import { useCoffeeChat } from "../../../contexts/coffeeChatContext";
+import { useModal } from "../../../contexts/ui/modalContext";
+import { formatDateWithDay } from "../../../utils/format";
 import InformationBox from "../InformationBox";
+import RejectModal from "./RejectModal";
+import Modal from "../../ui/Modal";
 
 function AcceptModal() {
+  const { selectedTitle, selectedDate, selectedTime, selectedPlace } =
+    useCoffeeChat();
+  const { addMessage } = useChatting();
+  const { setIsModalOpen } = useModal();
+  const nav = useNavigate();
+
+  const formattedDate = selectedDate
+    ? formatDateWithDay(
+        selectedDate.year,
+        selectedDate.month,
+        selectedDate.date
+      )
+    : "";
   return (
-    <div className="w-full h-[498px] rounded-[15px] bg-ct-white flex flex-col items-center">
+    <div className="w-full h-[498px] rounded-[15px] bg-ct-white flex flex-col ct-center">
       <img
         src="/assets/chatting/coffechatlogo.svg"
         alt="커피챗 로고"
         className="w-[80.53px] h-[80.53px]"
       />
       <span className="text-h2 text-ct-black-200 mt-[4.24px]">
-        만나서 얘기해보면 더 재밌을 것 같아요
+        {selectedTitle}
       </span>
       <div className="mt-[21px] flex">
         <img src="/assets/chatting/manprofile.svg" alt="남성프로필" />
         <img src="/assets/chatting/womanprofile.svg" alt="여성프로필" />
       </div>
-      <div className="mt-[25px]">
+      <div className="mt-[25px] relative">
         <InformationBox
-          date="2025.05.21 토"
-          time="PM 03:30"
-          place="서울시 용산구 마핏카페"
+          date={formattedDate}
+          time={selectedTime}
+          place={selectedPlace}
         />
         <img
           src="/assets/chatting/disablecheck.svg"
@@ -27,10 +47,36 @@ function AcceptModal() {
           className="absolute top-[10px] right-[10px]"
         />
       </div>
-      <button className="mt-[26px] w-[168px] h-[42px] rounded-[100px] border border-ct-main-blue-200 text-sub1 bg-ct-main-blue-200 text-ct-white">
+      <button
+        className="mt-[26px] w-[168px] h-[42px] rounded-[100px] border border-ct-main-blue-200 text-sub1 bg-ct-main-blue-200 text-ct-white"
+        onClick={() => {
+          addMessage({
+            id: Date.now(),
+            text: "",
+            sender: "me", // 나 기준으로 수락하는 거니까 "me"
+            type: "coffeechat",
+            status: "accepted",
+          });
+          nav("/chatting");
+          setIsModalOpen(false);
+        }}
+      >
         수락 하기
       </button>
-      <button className="mt-[20px] w-[70px] h-[23px] border-b border-ct-gray-300 text-sub1 text-ct-gray-300">
+      <button
+        className="mt-[20px] w-[70px] h-[23px] border-b border-ct-gray-300 text-sub1 text-ct-gray-300"
+        onClick={() => {
+          addMessage({
+            id: Date.now(),
+            text: "",
+            sender: "me",
+            type: "coffeechat",
+            status: "rejected",
+          });
+          nav("/chatting");
+          setIsModalOpen(false);
+        }}
+      >
         거절 하기
       </button>
     </div>

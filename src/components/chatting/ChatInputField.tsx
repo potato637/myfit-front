@@ -18,10 +18,7 @@ function ChatInputField({ onSend }: ChatInputFieldProps) {
     }
   };
   return (
-    <div
-      className="fixed bottom-[15px] left-0 right-0 w-full bg-white
-                    px-4 z-10"
-    >
+    <div className="fixed bottom-0 left-0 right-0 z-10 bg-white px-4 pt-3 h-[80px] max-w-[480px] mx-auto pb-[env(safe-area-inset-bottom,15px)]">
       <div className="relative">
         <input
           value={text}

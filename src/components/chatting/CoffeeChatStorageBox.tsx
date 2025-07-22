@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 function CoffeeChatStorageBox() {
   const nav = useNavigate();
   return (
-    <div className="w-[338px] h-[71px] rounded-[10px] bg-[linear-gradient(90deg,_#004CE4_0%,_#0AF_100%)] flex items-center pl-[12px]">
+    <div className="min-w-[338px] h-[71px] rounded-[10px] bg-[linear-gradient(90deg,_#004CE4_0%,_#0AF_100%)] flex items-center pl-[12px]">
       <div className="flex gap-[14px] items-center">
         <img src="/assets/chatting/storageicon.svg" alt="보관아이콘" />
         <div className="flex flex-col">

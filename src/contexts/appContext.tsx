@@ -5,6 +5,7 @@ import { ProfileImgModalProvider } from "./ui/profileImgModalContext";
 import { CoffeeChatProvider } from "./coffeeChatContext";
 import { CoffeeChatModalProvider } from "./CoffeeChatModalContext";
 import { UserProvider } from "./UserContext";
+import { ChattingProvider } from "./ChattingContext";
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   return (
@@ -12,11 +13,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       <CoffeeChatProvider>
         <BottomSheetProvider>
           <UserProvider>
-            <ModalProvider>
-              <CoffeeChatModalProvider>
-                <ProfileImgModalProvider>{children}</ProfileImgModalProvider>
-              </CoffeeChatModalProvider>
-            </ModalProvider>
+            <ChattingProvider>
+              <ModalProvider>
+                <CoffeeChatModalProvider>
+                  <ProfileImgModalProvider>{children}</ProfileImgModalProvider>
+                </CoffeeChatModalProvider>
+              </ModalProvider>
+            </ChattingProvider>
           </UserProvider>
         </BottomSheetProvider>
       </CoffeeChatProvider>

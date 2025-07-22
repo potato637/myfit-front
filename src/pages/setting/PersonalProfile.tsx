@@ -10,6 +10,11 @@ import RegionModal from "../../components/onboarding/RegionModal";
 import SubRegionModal from "../../components/onboarding/SubRegionModal";
 import { useLocation, useNavigate } from "react-router-dom";
 
+type CategoryWithSkills = {
+  category: string;
+  skills: string[];
+};
+
 function PersonalProfile() {
   const { isModalOpen, setIsModalOpen } = useModal();
   const [nickname, setNickname] = useState("");
@@ -33,13 +38,14 @@ function PersonalProfile() {
   const nav = useNavigate();
   const location = useLocation();
 
-  const [selectedJob, setSelectedJob] = useState<string | null>(
-    location.state?.selectedSkill || null
+  const [selectedSkills, setSelectedSkills] = useState<CategoryWithSkills[]>(
+    []
   );
 
   useEffect(() => {
-    if (location.state?.prevData) {
-      const data = location.state.prevData;
+    const state = location.state;
+    if (state?.prevData) {
+      const data = state.prevData;
       setNickname(data.nickname || "");
       setShortIntro(data.shortIntro || "");
       setEducationLevel(data.educationLevel || "");
@@ -48,10 +54,14 @@ function PersonalProfile() {
       setBirthDate(data.birthDate || "");
       setEmploy(data.employ || "");
       setAcademic(data.academic || "");
-      setSelectedJob(location.state.selectedSkill || null); // ✅ 추가
-      // 필요시 다른 데이터도 복원
+
+      if (state?.selectedSkills) {
+        setSelectedSkills(state.selectedSkills);
+      }
     }
   }, [location.state]);
+
+  const selectedSkillLabel = selectedSkills.flatMap((c) => c.skills).join(", ");
 
   const TopBarContent = () => {
     return (
@@ -76,13 +86,13 @@ function PersonalProfile() {
             label="닉네임"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
-          />{" "}
+          />
           <div className="flex flex-col gap-[8px]">
             <PersonalInputField
               label="한줄 소개"
               value={shortIntro}
               onChange={(e) => setShortIntro(e.target.value)}
-            />{" "}
+            />
             <span className="text-Body1 text-ct-gray-200 ml-[16px]">
               한줄로 나에 대해 나타내보세요!
               <br />
@@ -123,23 +133,23 @@ function PersonalProfile() {
           />
           <PersonalInputField
             label="희망 직무를 선택해주세요"
-            value={selectedJob || ""}
+            value={selectedSkillLabel}
             placeholder="희망직무 입력"
             onClick={() =>
               nav("/personalsetting/profile/jobpreference", {
                 state: {
-                  from: "onboarding",
+                  from: "setting",
                   prevData: {
                     region,
                     subRegion,
                     birthDate,
                     employ,
                     academic,
-                    selectedJob,
                     nickname,
                     shortIntro,
                     educationLevel,
                   },
+                  selectedSkills: selectedSkills,
                 },
               })
             }

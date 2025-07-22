@@ -28,10 +28,10 @@ function BirthModal({ onConfirm }: { onConfirm: (val: string) => void }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full relative">
-      <div className="absolute w-[302px] top-[152px] h-[36px] -translate-y-1/2 bg-[#EAF6FF] z-10 pointer-events-none rounded-[6px]" />
+    <div className="flex flex-col ct-center w-full h-full relative">
+      <div className="absolute w-[302px] top-[145px] left-[12px] h-[36px] bg-[#EAF6FF] z-10 pointer-events-none rounded-[6px]" />
 
-      <span className="text-[18px] font-[500] text-ct-black-200">생년월일</span>
+      <span className="text-h2 text-ct-black-200 mt-[19px]">생년월일</span>
       <div className="w-full border-y border-[#A8A8A8] h-[208px] mt-[18px]">
         <Picker
           value={pickerValue}
@@ -49,7 +49,9 @@ function BirthModal({ onConfirm }: { onConfirm: (val: string) => void }) {
                 key={y}
                 value={y}
                 className={`${
-                  pickerValue.year === y ? "text-ct-gray-500" : "text-[#909397]"
+                  pickerValue.year === y
+                    ? "text-ct-gray-500"
+                    : "text-[#909397] opacity-[50%]"
                 }`}
               >
                 {y}년
@@ -64,7 +66,7 @@ function BirthModal({ onConfirm }: { onConfirm: (val: string) => void }) {
                 className={`${
                   pickerValue.month === m
                     ? "text-ct-gray-500"
-                    : "text-[#909397]"
+                    : "text-[#909397] opacity-[50%]"
                 }`}
               >
                 {m}월
@@ -77,7 +79,9 @@ function BirthModal({ onConfirm }: { onConfirm: (val: string) => void }) {
                 key={d}
                 value={d}
                 className={`${
-                  pickerValue.day === d ? "text-ct-gray-500" : "text-[#909397]"
+                  pickerValue.day === d
+                    ? "text-ct-gray-500"
+                    : "text-[#909397] opacity-[50%]"
                 }`}
               >
                 {d}일
