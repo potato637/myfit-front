@@ -4,8 +4,6 @@ import { useCoffeeChat } from "../../../contexts/coffeeChatContext";
 import { useModal } from "../../../contexts/ui/modalContext";
 import { formatDateWithDay } from "../../../utils/format";
 import InformationBox from "../InformationBox";
-import RejectModal from "./RejectModal";
-import Modal from "../../ui/Modal";
 
 function AcceptModal() {
   const { selectedTitle, selectedDate, selectedTime, selectedPlace } =

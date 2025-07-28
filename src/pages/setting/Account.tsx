@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import BottomNav from "../../components/layouts/BottomNav";
 import { useModal } from "../../contexts/ui/modalContext";
-import CancelModal from "../../components/chatting/CancelModal";
 import Modal from "../../components/ui/Modal";
 import DeleteAccountModal from "../../components/setting/DeleteAccountModal";
 

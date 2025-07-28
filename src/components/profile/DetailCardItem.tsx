@@ -35,7 +35,7 @@ function DetailCardItem() {
           구성했습니다..
         </span>
       </div>
-      <CompanyLink link="notion.so/plan-structure-case-study" width="w-full" />
+      <CompanyLink link="notion.so/plan-structure-case-study" />
       <CardTagContainer />
     </div>
   );

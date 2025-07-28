@@ -1,7 +1,5 @@
 import { useChatting } from "../../contexts/ChattingContext";
-import { useCoffeeChatModal } from "../../contexts/CoffeeChatModalContext";
 import { useUser } from "../../contexts/UserContext";
-import { ChatBoxStatus } from "../../types/chatting/ChatBoxStatus";
 import MessageBubble from "./MessageBubble";
 import RequestCoffeeChatBox from "./RequestCoffechatBox";
 
@@ -11,8 +9,7 @@ interface Props {
 
 function ChatMessageList({ bottomRef }: Props) {
   const { messages } = useChatting();
-  const { requestStatus } = useCoffeeChatModal();
-  const { myId, senderId, name } = useUser();
+  const { name } = useUser();
 
   return (
     <div className="flex-1 flex flex-col overflow-y-auto overscroll-contain px-4 pb-[80px]">
@@ -39,7 +36,6 @@ function ChatMessageList({ bottomRef }: Props) {
                 status={msg.status!}
                 name={name}
                 sender="you"
-                myId={myId}
                 isLast={isLast}
               />
             </div>

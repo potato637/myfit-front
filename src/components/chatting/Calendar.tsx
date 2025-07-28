@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CalendarDateData, getCalendarData } from "../../utils/date";
+import { getCalendarData } from "../../utils/date";
 import Month from "./Month";
 import { useCoffeeChat } from "../../contexts/coffeeChatContext";
 

@@ -52,7 +52,7 @@ export default function CardPreview({
           <span className="text-body3 text-ct-black-200">{description}</span>
         </div>
 
-        <CompanyLink link={link} width="w-full" />
+        <CompanyLink link={link} />
         <CardTagContainer />
       </div>
     </div>

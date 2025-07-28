@@ -1,6 +1,5 @@
 import TopBarContainer from "../../components/common/TopBarContainer";
 import BottomNav from "../../components/layouts/BottomNav";
-import RecruitCard from "../../components/recruiting/RecruitCard";
 import RecruitCardSkeleton from "../../components/skeletons/recruiting/RecruitCardSkeleton";
 
 function SavedAnnouncement() {

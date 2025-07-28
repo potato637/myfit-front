@@ -11,7 +11,6 @@ function ImageUploadBox({
   className = "",
   textClassName = "",
   disabled = false,
-  onUploaded,
 }: ImageUploadBoxProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);

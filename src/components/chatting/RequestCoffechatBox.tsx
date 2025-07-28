@@ -10,7 +10,6 @@ interface RequestCoffeeChatProps {
   name: string;
   isLast: boolean;
   sender: "me" | "you";
-  myId: number;
 }
 
 function RequestCoffeeChatBox({
@@ -18,7 +17,6 @@ function RequestCoffeeChatBox({
   name = "장예솔",
   isLast,
   sender,
-  myId,
 }: RequestCoffeeChatProps) {
   const { setIsModalOpen } = useModal();
 
