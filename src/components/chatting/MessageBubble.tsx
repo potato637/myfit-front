@@ -1,9 +1,9 @@
 interface MessageBubbleProps {
   text: string;
-  sender: "me" | "you";
+  sender_id: number;
 }
-function MessageBubble({ text, sender }: MessageBubbleProps) {
-  const isMe = sender === "me";
+function MessageBubble({ text, sender_id }: MessageBubbleProps) {
+  const isMe = sender_id === 1;
   return (
     <div
       className={`text-[14px] font-[400] max-w-[305px] px-[15px] py-[11px] ${

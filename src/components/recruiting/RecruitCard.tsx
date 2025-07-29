@@ -1,10 +1,12 @@
 interface RecruitCardProps {
   data: {
+    recruitment_id: number;
     title: string;
-    job: string;
+    low_sector: string[];
     dead_line: string;
     work_type: string;
     writer: {
+      id: number;
       name: string;
       profile_img: string;
     };
@@ -35,7 +37,7 @@ function RecruitCard({ data }: RecruitCardProps) {
           {data.title}
         </div>
         <div className="mt-[8px] font-Pretendard text-body1 text-ct-sub-blue-100">
-          {data.work_type}
+          {data.low_sector.join(", ")}
         </div>
       </div>
     </div>

@@ -2,24 +2,35 @@ import TopBarContainer from "../../components/common/TopBarContainer";
 import ChatMessageList from "../../components/chatting/ChatMessageList";
 import ChatInputField from "../../components/chatting/ChatInputField";
 import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useChatting } from "../../contexts/ChattingContext";
 import { useCoffeeChatModal } from "../../contexts/CoffeeChatModalContext";
 import { useCoffeeChat } from "../../contexts/coffeeChatContext";
+import { sendChatMessage } from "../../apis/chatting/chatting";
 
 function Chatting() {
-  const { messages, addMessage } = useChatting();
+  const { messages, addMessage, prependMessages } = useChatting();
   const { setEditMode } = useCoffeeChatModal();
   const { resetSelections } = useCoffeeChat();
+  const { setRoomId } = useChatting();
   const nav = useNavigate();
-  const handleSend = (text: string) => {
-    addMessage({ id: Date.now(), text, sender: "me", type: "message" });
-  };
+  const { chattingRoomId } = useParams();
+  const numericRoomId = Number(chattingRoomId);
+  const handleSend = async (text: string) => {};
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    if (!isNaN(numericRoomId)) {
+      setRoomId(numericRoomId);
+    }
+    return () => {
+      setRoomId(null);
+    };
+  }, [chattingRoomId]);
 
   const TopBarContent = () => {
     return (

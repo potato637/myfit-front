@@ -1,9 +1,13 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { Message } from "../types/chatting/Message";
+import { ChatMessage } from "../apis/chatting/chatting";
 
 interface ChattingContextType {
-  messages: Message[];
-  addMessage: (msg: Message) => void;
+  roomId: number | null;
+  setRoomId: (id: number | null) => void;
+  messages: ChatMessage[];
+  addMessage: (msg: ChatMessage) => void;
+  prependMessages: (msgs: ChatMessage[]) => void;
   clearMessages: () => void;
 }
 
@@ -12,10 +16,15 @@ const ChattingContext = createContext<ChattingContextType | undefined>(
 );
 
 export const ChattingProvider = ({ children }: { children: ReactNode }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [roomId, setRoomId] = useState<number | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
 
-  const addMessage = (msg: Message) => {
+  const addMessage = (msg: ChatMessage) => {
     setMessages((prev) => [...prev, msg]);
+  };
+
+  const prependMessages = (msgs: ChatMessage[]) => {
+    setMessages((prev) => [...msgs, ...prev]);
   };
 
   const clearMessages = () => {
@@ -23,7 +32,16 @@ export const ChattingProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <ChattingContext.Provider value={{ messages, addMessage, clearMessages }}>
+    <ChattingContext.Provider
+      value={{
+        roomId,
+        setRoomId,
+        messages,
+        addMessage,
+        prependMessages,
+        clearMessages,
+      }}
+    >
       {children}
     </ChattingContext.Provider>
   );

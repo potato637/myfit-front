@@ -1,27 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BottomNav from "../../components/layouts/BottomNav";
 import RecruitCard from "../../components/recruiting/RecruitCard";
 import { jobs } from "../../data/jobs";
-import { dummyRecruitList } from "../../data/dummyRecruitList";
 import { useNavigate } from "react-router-dom";
+import {
+  RecruitmentItem,
+  useGetRecruitmentsQuery,
+} from "../../apis/recruiting/recruiting";
 
 function Recruiting() {
   const [selectedCategory, setSelectedCategory] = useState("기획/PM");
-  const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
+  const [selectedSkill, setSelectedSkill] = useState<string>(
+    selectedCategory[0]
+  );
+  const [recruitList, setRecruitList] = useState<RecruitmentItem[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
-  const pageSize = 10;
   const nav = useNavigate();
 
-  const currentCategory = jobs.find((j) => j.category === selectedCategory);
-  const filterList = dummyRecruitList.filter(
-    (item) => item.job === selectedSkill
+  const { data, isLoading, isError } = useGetRecruitmentsQuery(
+    selectedCategory,
+    selectedSkill,
+    page
   );
-  const totalPages = Math.ceil(filterList.length / pageSize);
-  const paginatedList = filterList.slice(
-    (page - 1) * pageSize,
-    page * pageSize
-  );
+  useEffect(() => {
+    if (data) {
+      setRecruitList(data.result.recruitments);
+      setTotalPages(Math.ceil(data.result.pagination.total_page));
+    }
+  }, [data]);
+  if (isLoading) return <div>로딩 중...</div>;
+  if (isError) return <div>공고 데이터를 불러오는 중 오류가 발생했습니다.</div>;
 
+  const currentCategory = jobs.find((j) => j.category === selectedCategory);
   return (
     <div className="flex flex-col px-4 py-2 bg-white">
       <div className="fixed h-[118px] top-0 left-0 right-0 py-[16.5px] z-10 bg-ct-white">
@@ -76,16 +87,16 @@ function Recruiting() {
         </div>
       </div>
       <div className="flex flex-col mt-[6px] gap-[11px] items-center mb-[89px]">
-        {filterList.length === 0 ? (
+        {recruitList.length === 0 ? (
           <div className="absolute top-[50%] text-sub2 text-ct-gray-200">
             현재 업로드된 공고가 없습니다.
           </div>
         ) : (
           <>
-            {paginatedList.map((item) => (
-              <RecruitCard key={item.id} data={item} />
+            {recruitList.map((item) => (
+              <RecruitCard key={item.recruitment_id} data={item} />
             ))}
-            {totalPages > 1 && (
+            {totalPages >= 1 && (
               <div className="flex justify-center gap-2 mt-4">
                 <button
                   disabled={page === 1}

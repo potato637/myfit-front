@@ -4,35 +4,40 @@ interface ImageUploadBoxProps {
   className?: string;
   textClassName?: string;
   disabled?: boolean;
-  onUploaded?: (url: string) => void;
-  initialImage?: string; // 외부에서 전달받은 초기 이미지
+  initialPreview?: string | null;
+  onFileSelected?: (base64: string) => void;
 }
 
 function ImageUploadBox({
   className = "",
   textClassName = "",
   disabled = false,
-  onUploaded,
-  initialImage,
+  initialPreview,
+  onFileSelected,
 }: ImageUploadBoxProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [preview, setPreview] = useState<string | null>(initialImage || null);
-  
-  // initialImage가 변경되면 preview 업데이트
+  const [preview, setPreview] = useState<string | null>(null);
+
   useEffect(() => {
-    setPreview(initialImage || null);
-  }, [initialImage]);
-  
+    if (initialPreview) {
+      setPreview(initialPreview);
+    }
+  }, [initialPreview]);
+
   const handleBoxClick = () => {
     if (!disabled) inputRef.current?.click();
   };
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const imgUrl = URL.createObjectURL(file);
-    setPreview(imgUrl);
-    // 로컬 미리보기 URL을 부모 컴포넌트에 전달
-    onUploaded?.(imgUrl);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      const base64 = reader.result as string;
+      setPreview(base64);
+      onFileSelected?.(base64);
+    };
   };
 
   return (
@@ -75,4 +80,5 @@ function ImageUploadBox({
     </div>
   );
 }
+
 export default ImageUploadBox;

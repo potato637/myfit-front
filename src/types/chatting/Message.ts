@@ -1,11 +1,12 @@
 import { ChatBoxStatus } from "./ChatBoxStatus";
 
-export type MessageType = "message" | "coffeechat";
-
 export interface Message {
-  id: number;
-  text: string;
-  sender: "me" | "you";
-  type: MessageType;
+  chatting_room_id: number;
+  message_id: number;
+  sender_id: number;
+  receiver_id: number;
+  message: string;
+  type: "TEXT" | "COFFEECHAT" | "SYSTEM";
+  created_at: string;
   status?: ChatBoxStatus;
 }

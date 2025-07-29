@@ -58,23 +58,23 @@ const router = createBrowserRouter([
           { path: "mypage/card", element: <CardDetail /> },
           { path: "mypage/feed", element: <FeedDetail /> },
           { path: "mypage/status", element: <ProfileStatus /> },
+          {
+            path: "recruit/announcement",
+            element: <RecruitAnnouncement />,
+          },
+          {
+            path: "recruit/savedannouncement",
+            element: <SavedAnnouncement />,
+          },
+          {
+            path: "recruit/registerannouncement",
+            element: <RegisterAnnouncement />,
+          },
         ],
       },
       {
         path: "recruit",
         element: <Recruiting />,
-      },
-      {
-        path: "recruit/announcement",
-        element: <RecruitAnnouncement />,
-      },
-      {
-        path: "recruit/savedannouncement",
-        element: <SavedAnnouncement />,
-      },
-      {
-        path: "recruit/registerannouncement",
-        element: <RegisterAnnouncement />,
       },
       {
         path: "onboarding",
@@ -178,7 +178,7 @@ const router = createBrowserRouter([
         element: <PersonalProfile />,
       },
       {
-        path: "chatting",
+        path: "chatting/:chattingRoomId",
         element: <Chatting />,
       },
       {

@@ -9,6 +9,7 @@ import SalaryModal from "../../components/recruiting/SalaryModal";
 import CalendarModal from "../../components/recruiting/CalandarModal";
 import { useCoffeeChat } from "../../contexts/coffeeChatContext";
 import { useLocation, useNavigate } from "react-router-dom";
+import { RegisterRecruitPost } from "../../apis/recruiting/recruiting";
 
 type CategoryWithSkills = {
   category: string;
@@ -27,6 +28,7 @@ function RegisterAnnouncement() {
   const [salary, setSalary] = useState("");
   const [workType, setWorkType] = useState("");
   const [modalType, setModalType] = useState("");
+  const [imageFile, setImageFile] = useState<string | null>(null);
   const [selectedSkills, setSelectedSkills] = useState<CategoryWithSkills[]>(
     []
   );
@@ -44,6 +46,7 @@ function RegisterAnnouncement() {
       setRequire(d.require || "");
       setSalary(d.salary || "");
       setWorkType(d.workType || "");
+      setImageFile(d.recruiting_img || "");
     }
     if (state?.selectedSkills) {
       setSelectedSkills(state.selectedSkills);
@@ -51,6 +54,31 @@ function RegisterAnnouncement() {
   }, [location.state]);
 
   const selectedSkillLabel = selectedSkills.flatMap((c) => c.skills).join(", ");
+
+  const handleSubmit = async () => {
+    if (!imageFile) {
+      alert("이미지를 선택해주세요.");
+      return;
+    }
+    const data = {
+      title: title,
+      sectors: selectedSkills,
+      area: locationText,
+      require,
+      salary,
+      work_type: workType,
+      dead_line: formatedDate,
+      recruiting_img: imageFile,
+    };
+    try {
+      const response = await RegisterRecruitPost(data);
+      alert("공고가 성공적으로 등록되었습니다!");
+      nav("/recruit"); // 예시: 등록 후 공고 목록 페이지로 이동
+    } catch (error) {
+      console.error("공고 등록 실패:", error);
+      alert("공고 등록에 실패했습니다.");
+    }
+  };
 
   const openModal = (type: "salary" | "calendar") => {
     setModalType(type);
@@ -85,6 +113,7 @@ function RegisterAnnouncement() {
                   salary,
                   workType,
                   deadline: formatedDate,
+                  recruiting_img: imageFile,
                 },
                 selectedSkills: selectedSkills,
               },
@@ -128,7 +157,9 @@ function RegisterAnnouncement() {
           <div className="flex items-center">
             <ImageUploadBox
               className="w-[349px] h-[384px] rounded-[16px] bg-ct-gray-100"
-              textClassName="text-body2 font-Pretendard text-ct-gray-300"
+              textClassName="text-body2 text-ct-gray-300"
+              initialPreview={imageFile}
+              onFileSelected={(file) => setImageFile(file)}
             />
           </div>
         </div>
@@ -136,7 +167,7 @@ function RegisterAnnouncement() {
           등록된 공고는 ‘마이페이지’, ‘공고 관리’ 탭에서 확인 가능합니다.
         </span>
         <div className="flex justify-center mb-[42px]">
-          <BottomCTAButton text="공고 등록하기" />
+          <BottomCTAButton text="공고 등록하기" onClick={handleSubmit} />
         </div>
       </div>
       <Modal>
