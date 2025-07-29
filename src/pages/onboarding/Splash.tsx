@@ -1,7 +1,55 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { login } from "../../apis/auth";
+import { useAuth } from "../../contexts/AuthContext";
 
 function Splash() {
   const navigate = useNavigate();
+  const { setIsLoggedIn, setUser } = useAuth();
+  
+  // 폼 상태
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      setError("이메일과 비밀번호를 입력해주세요.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError("");
+      
+      const response = await login({ email, password });
+      
+      if (response.isSuccess) {
+        // 로그인 성공
+        setUser({
+          id: response.result.service_id,
+          username: response.result.name,
+          email: response.result.email,
+        });
+        setIsLoggedIn(true);
+        navigate("/feed/feed-main"); // 메인 페이지로 이동
+      }
+    } catch (apiError: any) {
+      console.error("로그인 에러:", apiError);
+      
+      if (apiError.response?.status === 401) {
+        setError("로그인에 실패하였습니다. 이메일이나 비밀번호를 확인해주세요.");
+      } else if (apiError.response?.status === 500) {
+        setError("서버에 오류가 발생하였습니다.");
+      } else {
+        setError("로그인 중 오류가 발생했습니다.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 w-screen h-screen overflow-hidden">
       {/* ✅ 배경 이미지 */}
@@ -32,19 +80,37 @@ function Splash() {
         <input
           type="email"
           placeholder="이메일을 입력해주세요"
-          className="w-full px-4 py-3 mb-4 rounded-md bg-transparent border border-ct-white text-ct-white placeholder:text-ct-white"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          disabled={isLoading}
+          className="w-full px-4 py-3 mb-4 rounded-md bg-transparent border border-ct-white text-ct-white placeholder:text-ct-white disabled:opacity-50"
         />
 
         {/* 비밀번호 입력 */}
         <input
           type="password"
           placeholder="비밀번호를 입력해주세요"
-          className="w-full px-4 py-3 mb-[23px] rounded-md bg-transparent border border-ct-white text-ct-white placeholder:text-ct-white"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          disabled={isLoading}
+          onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+          className="w-full px-4 py-3 mb-2 rounded-md bg-transparent border border-ct-white text-ct-white placeholder:text-ct-white disabled:opacity-50"
         />
 
+        {/* 에러 메시지 */}
+        {error && (
+          <p className="w-full text-red-400 text-body2 mb-4 text-center">
+            {error}
+          </p>
+        )}
+
         {/* 로그인 버튼 */}
-        <button className="w-full py-3 mb-4 rounded-md bg-ct-main-blue-100 text-ct-white text-h2">
-          로그인
+        <button 
+          onClick={handleLogin}
+          disabled={isLoading}
+          className="w-full py-3 mb-4 rounded-md bg-ct-main-blue-100 text-ct-white text-h2 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoading ? "로그인 중..." : "로그인"}
         </button>
 
         {/* 하단 링크 */}

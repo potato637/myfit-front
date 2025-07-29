@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useState } from "react";
 
 interface Suggestion {
   icon: string;
@@ -18,36 +18,89 @@ interface CommentSuggestionsProps {
 }
 
 function CommentSuggestions({ onSelect }: CommentSuggestionsProps) {
-  const isDragging = useRef(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const goToPrevious = () => {
+    setCurrentIndex((prev) => (prev - 1 + SUGGESTIONS.length) % SUGGESTIONS.length);
+  };
+
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % SUGGESTIONS.length);
+  };
+
+  const currentSuggestion = SUGGESTIONS[currentIndex];
 
   return (
-    <div
-      className="-mx-4 px-4 overflow-x-auto scrollbar-hide"
-      style={{
-        touchAction: "pan-x",
-        WebkitOverflowScrolling: "touch",
-        pointerEvents: "auto",
-        overscrollBehaviorX: "contain", // ✅ 핵심
-      }}
-    >
-      <div className="flex gap-2 w-max whitespace-nowrap">
-        {SUGGESTIONS.map((sug) => (
+    <div className="flex items-center gap-3">
+      {/* 이전 버튼 */}
+      <button
+        type="button"
+        onClick={goToPrevious}
+        className="p-2 rounded-full text-blue-500 hover:bg-blue-50 hover:text-blue-700 transition"
+      >
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
+
+      {/* 현재 옵션 */}
+      <div className="flex-1 min-w-0">
+        <button
+          type="button"
+          onClick={() => onSelect(currentSuggestion.label)}
+          className="w-full border border-blue-500 rounded-full py-3 px-4 text-sm font-semibold flex items-center gap-3 hover:bg-blue-500 hover:text-white transition justify-center overflow-hidden"
+        >
+          <img
+            src={currentSuggestion.icon}
+            alt={currentSuggestion.label}
+            className="w-5 h-5 flex-shrink-0"
+          />
+          <span className="whitespace-nowrap overflow-hidden text-ellipsis">
+            {currentSuggestion.label}
+          </span>
+        </button>
+      </div>
+
+      {/* 다음 버튼 */}
+      <button
+        type="button"
+        onClick={goToNext}
+        className="p-2 rounded-full text-blue-500 hover:bg-blue-50 hover:text-blue-700 transition"
+      >
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+      </button>
+
+      {/* 인디케이터 */}
+      <div className="flex gap-1 ml-2">
+        {SUGGESTIONS.map((_, index) => (
           <div
-            key={sug.label}
-            role="button"
-            tabIndex={0}
-            onPointerDown={() => (isDragging.current = false)}
-            onPointerMove={() => (isDragging.current = true)}
-            onPointerUp={() => {
-              if (!isDragging.current) {
-                onSelect(sug.label);
-              }
-            }}
-            className="border border-blue-500 rounded-full py-2 px-4 text-sm font-semibold flex items-center gap-2 hover:bg-blue-500 hover:text-white transition select-none"
-          >
-            <img src={sug.icon} alt={sug.label} className="w-4 h-4" />
-            <span>{sug.label}</span>
-          </div>
+            key={index}
+            className={`w-2 h-2 rounded-full transition ${
+              index === currentIndex ? "bg-blue-500" : "bg-gray-300"
+            }`}
+          />
         ))}
       </div>
     </div>

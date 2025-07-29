@@ -8,14 +8,16 @@ import {
   RegisterEmailFormData,
   registerEmailSchema,
 } from "../../validations/registerEmailSchema";
+import { useSignup } from "../../contexts/SignupContext";
+import { sendVerificationCode, verifyCode } from "../../apis/onboarding";
 
 function RegisterEmail() {
   const navigate = useNavigate();
-  const memberType = localStorage.getItem("memberType");
+  const { signupData, updateEmail, updatePassword, nextStep } = useSignup();
 
   useEffect(() => {
-    if (!memberType) navigate("/onboarding/selectmembers");
-  }, [memberType, navigate]);
+    if (!signupData.division) navigate("/onboarding/selectmembers");
+  }, [signupData.division, navigate]);
 
   const {
     register,
@@ -38,8 +40,6 @@ function RegisterEmail() {
   const [codeVerified, setCodeVerified] = useState(false);
   const [isAuthInvalid, setIsAuthInvalid] = useState(false);
 
-  const expectedCode = "123456";
-
   useEffect(() => {
     if (!emailSent) {
       setCodeVerified(false);
@@ -47,29 +47,66 @@ function RegisterEmail() {
       return;
     }
 
-    if (authCode === expectedCode) {
-      setCodeVerified(true);
-      setIsAuthInvalid(false);
-    } else if (authCode.length > 0) {
-      setCodeVerified(false);
-      setIsAuthInvalid(true);
+    // 6자리 인증코드가 입력되면 자동으로 검증
+    if (authCode.length === 6) {
+      handleVerifyCode(authCode);
     } else {
       setCodeVerified(false);
       setIsAuthInvalid(false);
     }
   }, [authCode, emailSent]);
 
-  const handleSendEmail = () => {
-    setEmailSent(true);
-    setCodeVerified(false);
-    setIsAuthInvalid(false);
+  const handleVerifyCode = async (code: string) => {
+    try {
+      console.log("🔐 인증코드 검증 요청:", { email: fullEmail, code });
+      const response = await verifyCode({ email: fullEmail, code });
+
+      if (response.isSuccess) {
+        setCodeVerified(true);
+        setIsAuthInvalid(false);
+        console.log("✅ 인증코드 검증 성공");
+      } else {
+        setCodeVerified(false);
+        setIsAuthInvalid(true);
+        console.log("❌ 인증코드 불일치");
+      }
+    } catch (error) {
+      console.error("❌ 인증코드 검증 실패:", error);
+      setCodeVerified(false);
+      setIsAuthInvalid(true);
+    }
+  };
+
+  const handleSendEmail = async () => {
+    if (!isEmailValid) return;
+
+    try {
+      console.log("📧 이메일 인증 발송 요청:", fullEmail);
+      await sendVerificationCode({ email: fullEmail });
+      setEmailSent(true);
+      setCodeVerified(false);
+      setIsAuthInvalid(false);
+      console.log("✅ 이메일 인증 발송 완료");
+    } catch (error) {
+      console.error("❌ 이메일 인증 발송 실패:", error);
+      // 에러가 발생해도 일단 진행 (개발 중)
+      setEmailSent(true);
+      setCodeVerified(false);
+      setIsAuthInvalid(false);
+    }
   };
 
   const onSubmit = (data: RegisterEmailFormData) => {
-    if (memberType === "individual") {
-      navigate("/onboarding/profile-register", { state: { data } });
+    // SignupContext에 이메일과 비밀번호 저장
+    const fullEmailAddress = `${data.email}@${data.domain}`;
+    updateEmail(fullEmailAddress);
+    updatePassword(data.password);
+    nextStep();
+
+    if (signupData.division === "personal") {
+      navigate("/onboarding/profile-register");
     } else {
-      navigate("/onboarding/company-profile-register", { state: { data } });
+      navigate("/onboarding/company-profile-register");
     }
   };
 

@@ -92,6 +92,9 @@ function PersonalProfile() {
               label="한줄 소개"
               value={shortIntro}
               onChange={(e) => setShortIntro(e.target.value)}
+              multiline={true}
+              maxLength={50}
+              showCounter={true}
             />
             <span className="text-Body1 text-ct-gray-200 ml-[16px]">
               한줄로 나에 대해 나타내보세요!

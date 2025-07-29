@@ -1,20 +1,19 @@
-import { useState } from "react";
 import BottomCTAButton from "../../components/common/BottomCTAButton";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import { useNavigate } from "react-router-dom";
-
-type MemberType = "individual" | "team";
+import { useSignup } from "../../contexts/SignupContext";
 
 function SelectMembers() {
   const navigate = useNavigate();
-  // 선택된 회원 유형 상태 관리
-  const [selected, setSelected] = useState<MemberType | null>(null);
+  const { signupData, updateDivision, nextStep } = useSignup();
 
-  const handleSelect = (type: MemberType) => setSelected(type);
+  const handleSelect = (type: 'personal' | 'company') => {
+    updateDivision(type);
+  };
+  
   const handleNextStep = () => {
-    if (!selected) return;
-    localStorage.setItem("memberType", selected); // 새로고침 대비
-    // navigate logic 추가
+    if (!signupData.division) return;
+    nextStep();
     navigate("/onboarding/register-method");
   };
 
@@ -32,9 +31,9 @@ function SelectMembers() {
         <div className="mt-[108px] mb-[161px] flex flex-col gap-[24px]">
           {/* 개인 회원 카드 */}
           <div
-            onClick={() => handleSelect("individual")}
+            onClick={() => handleSelect("personal")}
             className={`w-full h-[164px] ct-center gap-[25px] px-[20px] rounded-[10px] border cursor-pointer ${
-              selected === "individual"
+              signupData.division === "personal"
                 ? "border-ct-main-blue-100"
                 : "border-ct-gray-100"
             }`}
@@ -54,9 +53,9 @@ function SelectMembers() {
 
           {/* 회사/팀 회원 카드 */}
           <div
-            onClick={() => handleSelect("team")}
+            onClick={() => handleSelect("company")}
             className={`w-full h-[164px] ct-center gap-[25px] px-[20px] rounded-[10px] border cursor-pointer ${
-              selected === "team"
+              signupData.division === "company"
                 ? "border-ct-main-blue-100"
                 : "border-ct-gray-100"
             }`}
@@ -79,7 +78,7 @@ function SelectMembers() {
         <BottomCTAButton
           text="다음 단계로 이동"
           onClick={handleNextStep}
-          disabled={!selected}
+          disabled={!signupData.division}
         />
       </div>
     </TopBarContainer>

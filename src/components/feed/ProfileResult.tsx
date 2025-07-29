@@ -3,7 +3,6 @@ import ProfileResultSkeleton from "../skeletons/common/ProfileResultSkeleton";
 
 interface Profile {
   name: string;
-  age: number;
   job: string;
   image: string;
 }
@@ -15,25 +14,21 @@ interface Props {
 const mockProfiles: Profile[] = [
   {
     name: "양진경",
-    age: 28,
     job: "게임 개발자",
     image: "/public/assets/feed/profile1.svg",
   },
   {
     name: "양진섭",
-    age: 35,
     job: "프론트 프리랜서 개발자",
     image: "/public/assets/feed/profile2.svg",
   },
   {
     name: "양진주",
-    age: 34,
     job: "브랜드 기획 프리랜서",
     image: "/public/assets/feed/profile3.svg",
   },
   {
     name: "양진호",
-    age: 30,
     job: "게임 개발자",
     image: "/public/assets/feed/profile4.svg",
   },
@@ -73,7 +68,7 @@ const ProfileResult = ({ keyword }: Props) => {
             />
             <div className="flex flex-col">
               <span className="font-medium text-base text-black">
-                {profile.name} / {profile.age}
+                {profile.name}
               </span>
               <span className="text-sm text-gray-500">{profile.job}</span>
             </div>

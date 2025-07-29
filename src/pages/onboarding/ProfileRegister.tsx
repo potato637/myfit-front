@@ -10,6 +10,9 @@ import RegionModal from "../../components/onboarding/RegionModal";
 import SubRegionModal from "../../components/onboarding/SubRegionModal";
 import { useLocation, useNavigate } from "react-router-dom";
 import BottomCTAButton from "../../components/common/BottomCTAButton";
+import { useSignup } from "../../contexts/SignupContext";
+import { signUp } from "../../apis/onboarding";
+import { SignUpRequest } from "../../types/onboarding/signup";
 
 type CategoryWithSkills = {
   category: string;
@@ -18,15 +21,19 @@ type CategoryWithSkills = {
 
 function ProfileRegister() {
   const { isModalOpen, setIsModalOpen } = useModal();
-  const [nickname, setNickname] = useState("");
-  const [shortIntro, setShortIntro] = useState("");
+  const { signupData, updateProfileInfo, nextStep } = useSignup();
+
+  // 로컬 상태는 SignupContext의 데이터로 초기화
+  const [nickname, setNickname] = useState(signupData.name || "");
+  const [shortIntro, setShortIntro] = useState(signupData.oneLineProfile || "");
   const [region, setRegion] = useState("");
   const [subRegion, setSubRegion] = useState("");
   const [subRegionError, setSubRegionError] = useState("");
-  const [birthDate, setBirthDate] = useState("");
-  const [employ, setEmploy] = useState("");
+  const [birthDate, setBirthDate] = useState(signupData.birthdate || "");
+  const [employ, setEmploy] = useState(signupData.recruitingStatus || "");
   const [educationLevel, setEducationLevel] = useState("");
-  const [academic, setAcademic] = useState("");
+  const [academic, setAcademic] = useState(signupData.gradeStatus || "");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalType, setModalType] = useState<
     "region" | "subregion" | "birth" | "academic" | "employment" | null
   >(null);
@@ -92,6 +99,9 @@ function ProfileRegister() {
               label="한줄 소개"
               value={shortIntro}
               onChange={(e) => setShortIntro(e.target.value)}
+              multiline={true}
+              maxLength={50}
+              showCounter={true}
             />{" "}
             <span className="text-Body1 text-ct-gray-200 ml-[16px]">
               한줄로 나에 대해 나타내보세요!
@@ -169,22 +179,63 @@ function ProfileRegister() {
         </div>
         <div className="w-full max-w-[400px] px-[24px] mx-auto mt-[32px]">
           <BottomCTAButton
-            text="다음 단계로 이동"
-            onClick={() => {
-              const profileData = {
-                nickname,
-                shortIntro,
-                region,
-                subRegion,
-                birthDate,
-                employ,
-                academic,
-                educationLevel,
-                selectedSkills,
-              };
-              nav("/onboarding/profile-card-register", {
-                state: { profileData },
-              });
+            text={isSubmitting ? "회원가입 중..." : "첫 카드 등록하러 가기"}
+            disabled={isSubmitting}
+            onClick={async () => {
+              try {
+                setIsSubmitting(true);
+
+                // SignupContext에 프로필 정보 저장
+                updateProfileInfo({
+                  name: nickname,
+                  oneLineProfile: shortIntro,
+                  birthdate: birthDate,
+                  recruitingStatus: employ,
+                  gradeStatus: academic,
+                  highSector: selectedSkills[0]?.category || "",
+                  lowSector:
+                    selectedSkills.flatMap((c) => c.skills).join(", ") || "",
+                });
+
+                // 회원가입 API 호출
+                const signupRequest: SignUpRequest = {
+                  email: signupData.email,
+                  password: signupData.password,
+                  division: "personal",
+                  name: nickname,
+                  one_line_profile: shortIntro,
+                  birth_date: birthDate,
+                  high_area_id: signupData.highAreaId || 1, // 기본값 설정 필요
+                  low_area_id: signupData.lowAreaId || 1, // 기본값 설정 필요
+                  recruiting_status: employ,
+                  high_sector: selectedSkills[0]?.category || "",
+                  low_sector:
+                    selectedSkills.flatMap((c) => c.skills).join(", ") || "",
+                  grade_status: academic,
+                };
+
+                console.log("👤 [ProfileRegister] 개인 회원가입 요청:", signupRequest);
+                const response = await signUp(signupRequest);
+                
+                if (response.isSuccess) {
+                  console.log("✅ [ProfileRegister] 개인 회원가입 성공:", response);
+                  
+                  // service_id를 SignupContext에 저장
+                  updateProfileInfo({
+                    serviceId: response.result.service_id,
+                  });
+                  
+                  nextStep();
+                  nav("/onboarding/profile-card-register");
+                } else {
+                  throw new Error(response.message || "회원가입 실패");
+                }
+              } catch (error) {
+                console.error("회원가입 실패:", error);
+                // 에러 처리 - 사용자에게 알림
+              } finally {
+                setIsSubmitting(false);
+              }
             }}
           />
         </div>

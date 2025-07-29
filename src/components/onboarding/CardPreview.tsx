@@ -1,15 +1,16 @@
-// components/profile/CompanyCardPreview.tsx
+// components/onboarding/CardPreview.tsx
 
-import CardTagContainer from "../profile/CardTagContainer";
-import CompanyLink from "../profile/CompanyLink";
+import OnboardingCardTagContainer from "./OnboardingCardTagContainer";
+import OnboardingCompanyLink from "./OnboardingCompanyLink";
 
 interface CompanyCardPreviewProps {
-  profileImage: string;
+  profileImage: string; // 이제 카드 이미지로 사용
   companyName: string;
   badge: string;
   summary: string;
   description: string;
   link: string;
+  keywords?: string[]; // 키워드 배열 추가 (옵셔널)
 }
 
 export default function CardPreview({
@@ -19,15 +20,15 @@ export default function CardPreview({
   summary,
   description,
   link,
+  keywords = [], // 기본값 빈 배열
 }: CompanyCardPreviewProps) {
   return (
     <div className="w-full h-full bg-ct-white flex flex-col gap-[7px]">
       {/* Header */}
       <div className="w-full h-[61px] flex items-center gap-[7px] bg-ct-white">
         <img
-          src={profileImage}
-          alt={`${companyName} 프로필 이미지`}
-          className="w-[45px] h-[45px] rounded-full"
+          src="/public/assets/onboarding/profilepreview.svg"
+          alt="프로필 이미지"
         />
         <span className="text-sub1 text-ct-black-100">{companyName}</span>
         <span className="text-sub2 text-ct-main-blue-100">{badge}</span>
@@ -40,7 +41,21 @@ export default function CardPreview({
           </span>
         </div>
 
-        <div className="w-full h-[442px] bg-ct-gray-100 rounded-[5px]" />
+        <div className="w-full h-[442px] bg-ct-gray-100 rounded-[5px] overflow-hidden">
+          {profileImage ? (
+            <img
+              src={profileImage}
+              alt="활동 카드 이미지"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <span className="text-ct-gray-300 text-body2">
+                이미지를 추가해주세요
+              </span>
+            </div>
+          )}
+        </div>
 
         <div className="w-full p-[12px] bg-ct-gray-100 flex flex-col rounded-[5px] gap-2">
           <span className="text-sub1 text-ct-black-100">한줄 소개</span>
@@ -52,8 +67,8 @@ export default function CardPreview({
           <span className="text-body3 text-ct-black-200">{description}</span>
         </div>
 
-        <CompanyLink link={link} />
-        <CardTagContainer />
+        <OnboardingCompanyLink link={link} width="w-full" />
+        <OnboardingCardTagContainer keywords={keywords} />
       </div>
     </div>
   );

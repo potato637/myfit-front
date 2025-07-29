@@ -1,7 +1,26 @@
+import { useState } from "react";
 import BottomCTAButton from "../../components/common/BottomCTAButton";
 import TopBarContainer from "../../components/common/TopBarContainer";
+import BusinessDocumentUpload from "../../components/onboarding/BusinessDocumentUpload";
+import { useNavigate } from "react-router-dom";
 
 function CompanyVerification() {
+  const navigate = useNavigate();
+  const [businessDocument, setBusinessDocument] = useState<string>(""); // 사업자등록증 이미지
+  
+  const handleSubmit = () => {
+    // TODO: 사업자등록증과 함께 서버에 저장
+    console.log("🏢 사업자등록증 제출:", businessDocument);
+    // 제출 완료 후 피드로 이동
+    navigate("/feed/feed-main");
+  };
+  
+  const handleSkip = () => {
+    // 건너뛰기 후 피드로 이동 (이미지 없이)
+    console.log("🏢 회사인증 건너뛰기");
+    navigate("/feed/feed-main");
+  };
+  
   const TopBarContent = () => (
     <span className="text-h2 font-sans text-ct-black-300">회사인증(선택)</span>
   );
@@ -24,12 +43,10 @@ function CompanyVerification() {
           <p className="text-body2 text-ct-gray-300 mb-[21px]">
             파일은 최대 10MB까지 가능합니다.
           </p>
-          <div className="w-full h-[132px] rounded-[12px] bg-ct-gray-100 flex flex-col justify-center items-center mb-[20px]">
-            <span className="text-body2 text-ct-gray-300 mb-[8px]">
-              불러오기
-            </span>
-            <img src="/public/assets/setting/plus.svg" alt="" />
-          </div>
+          <BusinessDocumentUpload
+            className="w-full h-[132px] rounded-[12px] bg-ct-gray-100 mb-[20px]"
+            onUploaded={(url) => setBusinessDocument(url)}
+          />
           <div className="space-y-[8px] text-body2 text-ct-gray-300 leading-[150%] mb-[137px]">
             <p>
               사업자 등록 인증 시, 프로필에 인증 배지가 표시되어 신뢰도가
@@ -44,9 +61,13 @@ function CompanyVerification() {
           {/* 하단 버튼 우회 마진 적용 */}
           <div className="flex flex-col gap-[5px]">
             <div className="-mb-[42px]">
-              <BottomCTAButton text="제출하고 완료하기" disabled={true} />
+              <BottomCTAButton 
+                text="제출하고 완료하기" 
+                onClick={handleSubmit} 
+                disabled={!businessDocument} // 이미지 첨부 시에만 활성화
+              />
             </div>
-            <BottomCTAButton text="건너뛰기" />
+            <BottomCTAButton text="건너뛰기" onClick={handleSkip} />
           </div>{" "}
         </div>
       </div>

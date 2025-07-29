@@ -1,14 +1,39 @@
+import { useLocation, useNavigate } from "react-router-dom";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import BottomNavContainer from "../../components/layouts/BottomNavContainer";
 import CardPreview from "../../components/onboarding/CardPreview";
+import { useSignup } from "../../contexts/SignupContext";
 
 function CompanyPreview() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { signupData } = useSignup();
+  
+  // ProfileCardRegister에서 전달된 데이터
+  const cardData = location.state?.cardData || {};
+  const {
+    localImagePreview = "/assets/profile/profileImage.png", // 기본 이미지
+    oneLineIntro = "기본 한줄 소개",
+    detailedDescription = "기본 상세 설명",
+    link = "",
+    keywords = []
+  } = cardData;
+  
+  // SignupContext에서 사용자 정보 가져오기
+  const userName = signupData.name || "사용자";
+  const userJobTitle = signupData.highSector || keywords[0] || "키워드";
+  
   const TopBarContent = () => {
     return (
       <div className="relative w-full ct-center">
         <span className="text-ct-black-100 text-h1">미리보기 </span>
         <div className="absolute right-[22px]">
-          <span className="text-sub2 text-ct-gray-200">완료</span>
+          <button 
+            onClick={() => navigate(-1)} // 이전 페이지로 돌아가기
+            className="text-sub2 text-ct-main-blue-100 cursor-pointer"
+          >
+            완료
+          </button>
         </div>
       </div>
     );
@@ -28,12 +53,13 @@ function CompanyPreview() {
           </div>
           {/* 카드 미리보기 */}
           <CardPreview
-            profileImage="/assets/profile/profileImage.png"
-            companyName="서인재"
-            badge="개발자"
-            summary="기획자의 기본기, 논리적 흐름과 구조를 갖춘 서비스 기획서 작성 경험"
-            description="사용자 페르소나 설정부터~협업을 고려한 구조로 구성했습니다.."
-            link="notion.so/plan-structure-case-study"
+            profileImage={localImagePreview} // 로컬 이미지 사용
+            companyName={userName} // SignupContext에서 가져온 사용자 이름
+            badge={userJobTitle} // SignupContext의 희망직무 또는 첫 번째 키워드
+            summary={oneLineIntro} // 전달된 한줄 소개
+            description={detailedDescription} // 전달된 상세 설명
+            link={link} // 전달된 링크
+            keywords={keywords} // 키워드 배열 전달
           />{" "}
         </div>
       </TopBarContainer>
