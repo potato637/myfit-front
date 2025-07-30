@@ -3,7 +3,9 @@ interface PersonalInputFieldProps {
   placeholder?: string;
   value?: string;
   onClick?: () => void;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange?: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   error?: string;
   multiline?: boolean;
   maxLength?: number;
@@ -24,7 +26,7 @@ function PersonalInputField({
   const currentLength = value?.length || 0;
 
   return (
-    <div className="flex flex-col gap-[11px] w-full mb-[27px]">
+    <div className="flex flex-col gap-[11px] w-full mb-[10px]">
       <div className="flex justify-between items-center">
         <label className="ml-1 text-sub1 text-ct-black-200">{label}</label>
         {showCounter && maxLength && (
@@ -44,7 +46,7 @@ function PersonalInputField({
           onChange={onChange}
           onInput={(e) => {
             const target = e.target as HTMLTextAreaElement;
-            target.style.height = '44px';
+            target.style.height = "44px";
             target.style.height = `${Math.min(target.scrollHeight, 88)}px`;
           }}
         />

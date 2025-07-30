@@ -7,13 +7,16 @@ import {
   RecruitmentItem,
   useGetRecruitmentsQuery,
 } from "../../apis/recruiting/recruiting";
+import RecruitCardSkeleton from "../../components/skeletons/recruiting/RecruitCardSkeleton";
 
 function Recruiting() {
   const [selectedCategory, setSelectedCategory] = useState("기획/PM");
+
   const [selectedSkill, setSelectedSkill] = useState<string>("서비스 기획자");
   const [recruitList, setRecruitList] = useState<RecruitmentItem[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
+  const [delayedLoading, setDelayedLoading] = useState(true);
   const nav = useNavigate();
 
   const { data, isLoading, isError } = useGetRecruitmentsQuery(
@@ -21,16 +24,35 @@ function Recruiting() {
     selectedSkill,
     page
   );
+
   useEffect(() => {
     if (data) {
       setRecruitList(data.result.recruitments);
       setTotalPages(Math.ceil(data.result.pagination.total_page));
     }
   }, [data]);
-  if (isLoading) return <div>로딩 중...</div>;
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+
+    if (isLoading) {
+      setDelayedLoading(true);
+    } else {
+      timeout = setTimeout(() => {
+        setDelayedLoading(false);
+      }, 300);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [isLoading]);
+
   if (isError) return <div>공고 데이터를 불러오는 중 오류가 발생했습니다.</div>;
 
   const currentCategory = jobs.find((j) => j.category === selectedCategory);
+  const handleCardClick = (id: number) => {
+    nav(`/recruit/announcement/${id}`);
+  };
+
   return (
     <div className="flex flex-col px-4 py-2 bg-white">
       <div className="fixed h-[118px] top-0 left-0 right-0 py-[16.5px] z-10 bg-ct-white">
@@ -73,6 +95,7 @@ function Recruiting() {
           ))}
         </div>
       </div>
+
       <div className="mt-[118px] mb-[21px] flex justify-between items-center w-full max-w-[401px]">
         <button
           className="w-[70px] h-[24px] text-body1 font-Pretendard font-[500] text-ct-white bg-ct-main-blue-200 rounded-[5px]"
@@ -92,15 +115,24 @@ function Recruiting() {
           />
         </div>
       </div>
+
       <div className="flex flex-col mt-[6px] gap-[11px] items-center mb-[89px]">
-        {recruitList.length === 0 ? (
+        {delayedLoading ? (
+          Array.from({ length: 3 }).map((_, idx) => (
+            <RecruitCardSkeleton key={idx} />
+          ))
+        ) : recruitList.length === 0 ? (
           <div className="absolute top-[50%] text-sub2 text-ct-gray-200">
             현재 업로드된 공고가 없습니다.
           </div>
         ) : (
           <>
             {recruitList.map((item) => (
-              <RecruitCard key={item.recruitment_id} data={item} />
+              <RecruitCard
+                key={item.recruitment_id}
+                data={item}
+                onClick={() => handleCardClick(item.recruitment_id)}
+              />
             ))}
             {totalPages >= 1 && (
               <div className="flex justify-center gap-2 mt-4">
@@ -136,6 +168,7 @@ function Recruiting() {
           </>
         )}
       </div>
+
       <BottomNav />
     </div>
   );

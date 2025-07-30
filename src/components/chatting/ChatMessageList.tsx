@@ -17,7 +17,6 @@ function ChatMessageList({ bottomRef }: Props) {
   const { myId, senderId, name } = useUser();
   const { data } = useChatMessageQuery(roomId);
   const [statusMap, setStatusMap] = useState<Record<number, ChatBoxStatus>>({});
-
   useEffect(() => {
     if (data?.messages) prependMessages(data.messages);
   }, [data]);

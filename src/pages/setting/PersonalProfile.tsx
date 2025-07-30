@@ -10,11 +10,6 @@ import RegionModal from "../../components/onboarding/RegionModal";
 import SubRegionModal from "../../components/onboarding/SubRegionModal";
 import { useLocation, useNavigate } from "react-router-dom";
 
-type CategoryWithSkills = {
-  category: string;
-  skills: string[];
-};
-
 function PersonalProfile() {
   const { isModalOpen, setIsModalOpen } = useModal();
   const [nickname, setNickname] = useState("");
@@ -25,6 +20,8 @@ function PersonalProfile() {
   const [birthDate, setBirthDate] = useState("");
   const [employ, setEmploy] = useState("");
   const [educationLevel, setEducationLevel] = useState("");
+  const [highSector, setHighSector] = useState<string[]>([]);
+  const [lowSector, setLowSector] = useState<string[]>([]);
   const [academic, setAcademic] = useState("");
   const [modalType, setModalType] = useState<
     "region" | "subregion" | "birth" | "academic" | "employment" | null
@@ -37,10 +34,6 @@ function PersonalProfile() {
   };
   const nav = useNavigate();
   const location = useLocation();
-
-  const [selectedSkills, setSelectedSkills] = useState<CategoryWithSkills[]>(
-    []
-  );
 
   useEffect(() => {
     const state = location.state;
@@ -55,13 +48,12 @@ function PersonalProfile() {
       setEmploy(data.employ || "");
       setAcademic(data.academic || "");
 
-      if (state?.selectedSkills) {
-        setSelectedSkills(state.selectedSkills);
-      }
+      if (state.high_sector) setHighSector(state.high_sector);
+      if (state.low_sector) setLowSector(state.low_sector);
     }
   }, [location.state]);
 
-  const selectedSkillLabel = selectedSkills.flatMap((c) => c.skills).join(", ");
+  const selectedSkillLabel = lowSector.join(", ");
 
   const TopBarContent = () => {
     return (
@@ -96,7 +88,7 @@ function PersonalProfile() {
               maxLength={50}
               showCounter={true}
             />
-            <span className="text-Body1 text-ct-gray-200 ml-[16px]">
+            <span className="text-body1 text-ct-gray-200 ml-[10px]">
               한줄로 나에 대해 나타내보세요!
               <br />
               EX. 저는 워라밸보다 연봉에 더 욕심이 있어요.
@@ -152,7 +144,8 @@ function PersonalProfile() {
                     shortIntro,
                     educationLevel,
                   },
-                  selectedSkills: selectedSkills,
+                  high_sector: highSector,
+                  low_sector: lowSector,
                 },
               })
             }

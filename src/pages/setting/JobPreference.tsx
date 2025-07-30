@@ -3,8 +3,6 @@ import TopBarContainer from "../../components/common/TopBarContainer";
 import { jobs } from "../../data/jobs";
 import { useLocation, useNavigate } from "react-router-dom";
 
-type Sector = { category: string; skills: string[] };
-
 function JobPreference() {
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -13,44 +11,41 @@ function JobPreference() {
   const prevData = state?.prevData;
 
   const [selectedCategory, setSelectedCategory] = useState("개발/엔지니어링");
-  const [selectedSkills, setSelectedSkills] = useState<Sector[]>(
-    () => state?.prevData?.selectedJob ?? []
+
+  const [highSector, setHighSector] = useState<string[]>(
+    state?.high_sector ?? []
   );
+  const [lowSector, setLowSector] = useState<string[]>(state?.low_sector ?? []);
 
   const currentCategory = jobs.find((j) => j.category === selectedCategory);
 
   const toggleSkill = (category: string, skill: string) => {
-    setSelectedSkills((prev) => {
-      const t = prev.find((p) => p.category === category);
+    const isSelected = lowSector.includes(skill);
 
-      if (t) {
-        const exists = t.skills.includes(skill);
-        const next = exists
-          ? t.skills.filter((s) => s !== skill)
-          : [...t.skills, skill];
+    if (isSelected) {
+      setLowSector((prev) => prev.filter((s) => s !== skill));
 
-        if (next.length === 0)
-          return prev.filter((p) => p.category !== category);
+      const stillHasOther = lowSector
+        .filter((s) => s !== skill)
+        .some((s) => {
+          return jobs.some(
+            (j) => j.category === category && j.skills.includes(s)
+          );
+        });
 
-        return prev.map((p) =>
-          p.category === category ? { ...p, skills: next } : p
-        );
+      if (!stillHasOther) {
+        setHighSector((prev) => prev.filter((c) => c !== category));
       }
-      return [...prev, { category, skills: [skill] }];
-    });
+    } else {
+      setLowSector((prev) => [...prev, skill]);
+
+      if (!highSector.includes(category)) {
+        setHighSector((prev) => [...prev, category]);
+      }
+    }
   };
 
   const handleComplete = () => {
-    const high_sector: string[] = [];
-    const low_sector: string[] = [];
-
-    selectedSkills.forEach(({ category, skills }) =>
-      skills.forEach((skill) => {
-        high_sector.push(category);
-        low_sector.push(skill);
-      })
-    );
-
     const dest =
       from === "onboarding"
         ? "/onboarding/profile-register"
@@ -60,9 +55,9 @@ function JobPreference() {
 
     navigate(dest, {
       state: {
-        ...prevData,
-        high_sector,
-        low_sector,
+        prevData: prevData,
+        high_sector: highSector,
+        low_sector: lowSector,
       },
     });
   };
@@ -107,6 +102,7 @@ function JobPreference() {
             ))}
           </div>
         </div>
+
         <div className="flex flex-col gap-[18px] mt-[43px]">
           {currentCategory?.skills.map((skill) => (
             <div key={skill} className="flex justify-between">
@@ -115,10 +111,7 @@ function JobPreference() {
                 className="w-[19px] h-[19px] rounded-full bg-ct-gray-100 ct-center"
                 onClick={() => toggleSkill(selectedCategory, skill)}
               >
-                {selectedSkills.some(
-                  (c) =>
-                    c.category === selectedCategory && c.skills.includes(skill)
-                ) && (
+                {lowSector.includes(skill) && (
                   <div className="w-[13px] h-[13px] rounded-full bg-ct-main-blue-200" />
                 )}
               </button>

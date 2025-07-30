@@ -11,11 +11,15 @@ interface RecruitCardProps {
       profile_img: string;
     };
   };
+  onClick: () => void;
 }
 
-function RecruitCard({ data }: RecruitCardProps) {
+function RecruitCard({ data, onClick }: RecruitCardProps) {
   return (
-    <div className="w-[360px] min-h-[123px] rounded-[10px] ct-center border border-ct-white px-2 py-1 shadow-[0px_0px_5px_rgba(0,0,0,0.15)] ">
+    <div
+      className="w-auto min-h-[123px] rounded-[10px] ct-center border border-ct-white px-2 py-1 shadow-[0px_0px_5px_rgba(0,0,0,0.15)] "
+      onClick={onClick}
+    >
       <div className="w-[332.64px] my-[15px]">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-[8px]">
@@ -24,12 +28,12 @@ function RecruitCard({ data }: RecruitCardProps) {
               alt="프로필 이미지"
               className="w-[32px] h-[32px] rounded-[10px] object-cover"
             />
-            <span className="text-sub1 font-Pretendard text-ct-black-100">
+            <span className="text-sub1 text-ct-black-100">
               {data.writer.name}
             </span>
           </div>
           <span className="text-body1 text-ct-main-blue-200">
-            마감일자 : {data.dead_line.substring(0, 1)}
+            마감일자 : {data.dead_line.split("T")[0]}
           </span>
         </div>
 

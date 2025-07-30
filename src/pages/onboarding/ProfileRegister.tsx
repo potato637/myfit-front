@@ -14,11 +14,6 @@ import { useSignup } from "../../contexts/SignupContext";
 import { signUp } from "../../apis/onboarding";
 import { SignUpRequest } from "../../types/onboarding/signup";
 
-type CategoryWithSkills = {
-  category: string;
-  skills: string[];
-};
-
 function ProfileRegister() {
   const { isModalOpen, setIsModalOpen } = useModal();
   const { signupData, updateProfileInfo, nextStep } = useSignup();
@@ -32,6 +27,8 @@ function ProfileRegister() {
   const [birthDate, setBirthDate] = useState(signupData.birthdate || "");
   const [employ, setEmploy] = useState(signupData.recruitingStatus || "");
   const [educationLevel, setEducationLevel] = useState("");
+  const [highSector, setHighSector] = useState<string[]>([]);
+  const [lowSector, setLowSector] = useState<string[]>([]);
   const [academic, setAcademic] = useState(signupData.gradeStatus || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalType, setModalType] = useState<
@@ -46,10 +43,6 @@ function ProfileRegister() {
   const nav = useNavigate();
   const location = useLocation();
 
-  const [selectedSkills, setSelectedSkills] = useState<CategoryWithSkills[]>(
-    []
-  );
-
   useEffect(() => {
     const state = location.state;
     if (state?.prevData) {
@@ -63,13 +56,12 @@ function ProfileRegister() {
       setEmploy(data.employ || "");
       setAcademic(data.academic || "");
 
-      if (state?.selectedSkills) {
-        setSelectedSkills(state.selectedSkills);
-      }
+      if (state.high_sector) setHighSector(state.high_sector);
+      if (state.low_sector) setLowSector(state.low_sector);
     }
   }, [location.state]);
 
-  const selectedSkillLabel = selectedSkills.flatMap((c) => c.skills).join(", ");
+  const selectedSkillLabel = lowSector.join(", ");
 
   const TopBarContent = () => {
     return (
@@ -103,7 +95,7 @@ function ProfileRegister() {
               maxLength={50}
               showCounter={true}
             />{" "}
-            <span className="text-Body1 text-ct-gray-200 ml-[16px]">
+            <span className="text-body1 text-ct-gray-200 ml-[10px]">
               한줄로 나에 대해 나타내보세요!
               <br />
               EX. 저는 워라밸보다 연봉에 더 욕심이 있어요.
@@ -159,7 +151,8 @@ function ProfileRegister() {
                     shortIntro,
                     educationLevel,
                   },
-                  selectedSkills: selectedSkills,
+                  high_sector: highSector,
+                  low_sector: lowSector,
                 },
               })
             }
@@ -192,9 +185,8 @@ function ProfileRegister() {
                   birthdate: birthDate,
                   recruitingStatus: employ,
                   gradeStatus: academic,
-                  highSector: selectedSkills[0]?.category || "",
-                  lowSector:
-                    selectedSkills.flatMap((c) => c.skills).join(", ") || "",
+                  highSector: highSector.join(", ") || "",
+                  lowSector: lowSector.join(", ") || "",
                 });
 
                 // 회원가입 API 호출
@@ -208,23 +200,28 @@ function ProfileRegister() {
                   high_area_id: signupData.highAreaId || 1, // 기본값 설정 필요
                   low_area_id: signupData.lowAreaId || 1, // 기본값 설정 필요
                   recruiting_status: employ,
-                  high_sector: selectedSkills[0]?.category || "",
-                  low_sector:
-                    selectedSkills.flatMap((c) => c.skills).join(", ") || "",
+                  high_sector: highSector[0] || "",
+                  low_sector: lowSector.join(", ") || "",
                   grade_status: academic,
                 };
 
-                console.log("👤 [ProfileRegister] 개인 회원가입 요청:", signupRequest);
+                console.log(
+                  "👤 [ProfileRegister] 개인 회원가입 요청:",
+                  signupRequest
+                );
                 const response = await signUp(signupRequest);
-                
+
                 if (response.isSuccess) {
-                  console.log("✅ [ProfileRegister] 개인 회원가입 성공:", response);
-                  
+                  console.log(
+                    "✅ [ProfileRegister] 개인 회원가입 성공:",
+                    response
+                  );
+
                   // service_id를 SignupContext에 저장
                   updateProfileInfo({
                     serviceId: response.result.service_id,
                   });
-                  
+
                   nextStep();
                   nav("/onboarding/profile-card-register");
                 } else {
