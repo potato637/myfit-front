@@ -4,23 +4,21 @@ import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-id
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import { awsBucketName, awsIdentityPoolId, awsRegion } from "../../config/aws";
 
-interface ImageUploadBoxProps {
+interface VerifiedUploadBoxProps {
   className?: string;
   textClassName?: string;
   disabled?: boolean;
   initialPreview?: string | null;
   onUploadSuccess?: (fileUrl: string) => void;
-  S3Folder?: string | null;
 }
 
-function ImageUploadBox({
+function VerifiedUploadBox({
   className = "",
   textClassName = "",
   disabled = false,
   initialPreview,
   onUploadSuccess,
-  S3Folder = "",
-}: ImageUploadBoxProps) {
+}: VerifiedUploadBoxProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -48,8 +46,7 @@ function ImageUploadBox({
       const objectURL = URL.createObjectURL(file);
       setPreview(objectURL);
 
-      const trimmed = S3Folder?.replace(/^\/|\/$/g, "");
-      const key = trimmed ? `${trimmed}/${file.name}` : file.name;
+      const key = `businesslicense/${file.name}`;
 
       const s3 = new S3Client({
         region: awsRegion,
@@ -106,21 +103,18 @@ function ImageUploadBox({
         />
       ) : (
         <>
-          <img
-            src="/public/assets/common/pluswhite.svg"
-            alt="사진 추가 아이콘"
-          />
-          <div
-            className={`mt-[9.29px] text-center leading-normal ${textClassName}`}
-          >
-            클릭하여 사진을
-            <br />
-            추가해보세요!
+          <div className={`text-center leading-normal ${textClassName}`}>
+            불러오기
           </div>
+          <img
+            src="/assets/setting/plus.svg"
+            alt="plus"
+            className="mt-[10px] w-[24px] h-[24px]"
+          />
         </>
       )}
     </div>
   );
 }
 
-export default ImageUploadBox;
+export default VerifiedUploadBox;

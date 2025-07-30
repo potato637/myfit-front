@@ -6,7 +6,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useChatting } from "../../contexts/ChattingContext";
 import { useCoffeeChatModal } from "../../contexts/CoffeeChatModalContext";
 import { useCoffeeChat } from "../../contexts/coffeeChatContext";
-import { sendChatMessage } from "../../apis/chatting/chatting";
+import {
+  sendChatMessage,
+  useSendChatMessageMutation,
+} from "../../apis/chatting/chatting";
 
 function Chatting() {
   const { messages, addMessage, prependMessages } = useChatting();
@@ -16,9 +19,17 @@ function Chatting() {
   const nav = useNavigate();
   const { chattingRoomId } = useParams();
   const numericRoomId = Number(chattingRoomId);
-  const handleSend = async (text: string) => {};
-  const bottomRef = useRef<HTMLDivElement>(null);
 
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const { mutate: sendMessage, isPending } =
+    useSendChatMessageMutation(numericRoomId);
+
+  const handleSend = (text: string) => {
+    sendMessage({
+      detail_message: text,
+      type: "TEXT",
+    });
+  };
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);

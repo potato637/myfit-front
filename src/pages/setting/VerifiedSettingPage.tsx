@@ -1,6 +1,6 @@
 import BottomCTAButton from "../../components/common/BottomCTAButton";
 import TopBarContainer from "../../components/common/TopBarContainer";
-import VerfiedUploadBox from "../../components/setting/VerifiedUploadBox";
+import VerifiedUploadBox from "../../components/common/VerifiedUploadBox";
 
 function VerifiedSettingPage() {
   const TopBarContent = () => {
@@ -20,7 +20,7 @@ function VerifiedSettingPage() {
           파일은 최대 10MB까지 가능합니다.
         </span>
         <div className="flex items-center">
-          <VerfiedUploadBox
+          <VerifiedUploadBox
             className="mt-[21px] w-[334px] h-[107px] rounded-[10px] bg-[#D9D9D9]"
             textClassName="text-body2 text-[#797979] font-Pretendard"
           />

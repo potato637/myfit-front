@@ -10,9 +10,7 @@ import {
 
 function Recruiting() {
   const [selectedCategory, setSelectedCategory] = useState("기획/PM");
-  const [selectedSkill, setSelectedSkill] = useState<string>(
-    selectedCategory[0]
-  );
+  const [selectedSkill, setSelectedSkill] = useState<string>("서비스 기획자");
   const [recruitList, setRecruitList] = useState<RecruitmentItem[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
@@ -45,7 +43,15 @@ function Recruiting() {
                   ? "border-b-[4px] border-ct-gray-300 text-ct-black-300"
                   : "text-ct-gray-200"
               }`}
-              onClick={() => setSelectedCategory(item.category)}
+              onClick={() => {
+                setSelectedCategory(item.category);
+                const firstSkill = jobs.find(
+                  (j) => j.category === item.category
+                )?.skills[0];
+                if (firstSkill) {
+                  setSelectedSkill(firstSkill);
+                }
+              }}
             >
               {item.category}
             </button>

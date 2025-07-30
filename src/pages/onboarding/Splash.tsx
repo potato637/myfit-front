@@ -6,7 +6,7 @@ import { useAuth } from "../../contexts/AuthContext";
 function Splash() {
   const navigate = useNavigate();
   const { setIsLoggedIn, setUser } = useAuth();
-  
+
   // 폼 상태
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,9 +22,9 @@ function Splash() {
     try {
       setIsLoading(true);
       setError("");
-      
+
       const response = await login({ email, password });
-      
+
       if (response.isSuccess) {
         // 로그인 성공
         setUser({
@@ -35,13 +35,22 @@ function Splash() {
         setIsLoggedIn(true);
         navigate("/feed/feed-main"); // 메인 페이지로 이동
       }
-    } catch (apiError: any) {
+    } catch (apiError) {
       console.error("로그인 에러:", apiError);
-      
-      if (apiError.response?.status === 401) {
-        setError("로그인에 실패하였습니다. 이메일이나 비밀번호를 확인해주세요.");
-      } else if (apiError.response?.status === 500) {
-        setError("서버에 오류가 발생하였습니다.");
+
+      // Axios 에러인지 확인
+      if (apiError && typeof apiError === "object" && "response" in apiError) {
+        const axiosError = apiError as { response?: { status: number } };
+
+        if (axiosError.response?.status === 401) {
+          setError(
+            "로그인에 실패하였습니다. 이메일이나 비밀번호를 확인해주세요."
+          );
+        } else if (axiosError.response?.status === 500) {
+          setError("서버에 오류가 발생하였습니다.");
+        } else {
+          setError("로그인 중 오류가 발생했습니다.");
+        }
       } else {
         setError("로그인 중 오류가 발생했습니다.");
       }
@@ -93,7 +102,7 @@ function Splash() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={isLoading}
-          onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+          onKeyDown={(e) => e.key === "Enter" && handleLogin()}
           className="w-full px-4 py-3 mb-2 rounded-md bg-transparent border border-ct-white text-ct-white placeholder:text-ct-white disabled:opacity-50"
         />
 
@@ -105,7 +114,7 @@ function Splash() {
         )}
 
         {/* 로그인 버튼 */}
-        <button 
+        <button
           onClick={handleLogin}
           disabled={isLoading}
           className="w-full py-3 mb-4 rounded-md bg-ct-main-blue-100 text-ct-white text-h2 disabled:opacity-50 disabled:cursor-not-allowed"

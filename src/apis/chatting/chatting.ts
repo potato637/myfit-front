@@ -52,11 +52,9 @@ export const useSendChatMessageMutation = (chattingRoomId: number) => {
   const { addMessage } = useChatting();
 
   return useMutation({
-    mutationFn: (text: string) =>
-      sendChatMessage(chattingRoomId, {
-        detail_message: text,
-        type: "TEXT",
-      }),
+    mutationKey: ["sendMessage", chattingRoomId],
+    mutationFn: (data: SendChatMessageRequest) =>
+      sendChatMessage(chattingRoomId, data),
     onSuccess: (response) => {
       addMessage(response);
     },

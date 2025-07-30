@@ -9,75 +9,65 @@ import SalaryModal from "../../components/recruiting/SalaryModal";
 import CalendarModal from "../../components/recruiting/CalandarModal";
 import { useCoffeeChat } from "../../contexts/coffeeChatContext";
 import { useLocation, useNavigate } from "react-router-dom";
-import { RegisterRecruitPost } from "../../apis/recruiting/recruiting";
-
-type CategoryWithSkills = {
-  category: string;
-  skills: string[];
-};
+import { useRegisterRecruitPost } from "../../apis/recruiting/recruiting";
 
 function RegisterAnnouncement() {
-  const location = useLocation();
-  const nav = useNavigate();
+  const { state } = useLocation();
+  const navigate = useNavigate();
   const { isModalOpen, setIsModalOpen } = useModal();
   const { selectedDate } = useCoffeeChat();
 
   const [title, setTitle] = useState("");
-  const [locationText, setLocationText] = useState("");
+  const [area, setArea] = useState("");
   const [require, setRequire] = useState("");
   const [salary, setSalary] = useState("");
   const [workType, setWorkType] = useState("");
-  const [modalType, setModalType] = useState("");
-  const [imageFile, setImageFile] = useState<string | null>(null);
-  const [selectedSkills, setSelectedSkills] = useState<CategoryWithSkills[]>(
-    []
-  );
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-  const formatedDate = selectedDate
+  const [highSector, setHighSector] = useState<string[]>([]);
+  const [lowSector, setLowSector] = useState<string[]>([]);
+
+  const [modalType, setModalType] = useState<"" | "salary" | "calendar">("");
+
+  const { mutate: registerPost, isPending } = useRegisterRecruitPost();
+
+  const formattedDate = selectedDate
     ? `${selectedDate.year}-${selectedDate.month}-${selectedDate.date}`
     : "";
 
   useEffect(() => {
-    const state = location.state;
-    if (state?.prevData) {
+    if (!state) return;
+    if (state.prevData) {
       const d = state.prevData;
-      setTitle(d.title || "");
-      setLocationText(d.location || "");
-      setRequire(d.require || "");
-      setSalary(d.salary || "");
-      setWorkType(d.workType || "");
-      setImageFile(d.recruiting_img || "");
+      setTitle(d.title ?? "");
+      setArea(d.location ?? "");
+      setRequire(d.require ?? "");
+      setSalary(d.salary ?? "");
+      setWorkType(d.workType ?? "");
+      setImageUrl(d.recruiting_img ?? "");
     }
-    if (state?.selectedSkills) {
-      setSelectedSkills(state.selectedSkills);
-    }
-  }, [location.state]);
+    if (state.high_sector) setHighSector(state.high_sector);
+    if (state.low_sector) setLowSector(state.low_sector);
+  }, [state]);
 
-  const selectedSkillLabel = selectedSkills.flatMap((c) => c.skills).join(", ");
+  const selectedSkillLabel = lowSector.join(", ");
 
-  const handleSubmit = async () => {
-    if (!imageFile) {
+  const handleSubmit = () => {
+    if (!imageUrl) {
       alert("이미지를 선택해주세요.");
       return;
     }
-    const data = {
-      title: title,
-      sectors: selectedSkills,
-      area: locationText,
+    registerPost({
+      title,
+      high_sector: highSector,
+      low_sector: lowSector,
+      area,
       require,
       salary,
       work_type: workType,
-      dead_line: formatedDate,
-      recruiting_img: imageFile,
-    };
-    try {
-      const response = await RegisterRecruitPost(data);
-      alert("공고가 성공적으로 등록되었습니다!");
-      nav("/recruit"); // 예시: 등록 후 공고 목록 페이지로 이동
-    } catch (error) {
-      console.error("공고 등록 실패:", error);
-      alert("공고 등록에 실패했습니다.");
-    }
+      dead_line: formattedDate,
+      recruiting_img: imageUrl,
+    });
   };
 
   const openModal = (type: "salary" | "calendar") => {
@@ -100,22 +90,23 @@ function RegisterAnnouncement() {
         />
         <InputField
           label="구인 직무"
-          placeholder="입력해주세요"
+          placeholder="선택해주세요"
           value={selectedSkillLabel}
           onClick={() =>
-            nav("/personalsetting/profile/jobpreference", {
+            navigate("/personalsetting/profile/jobpreference", {
               state: {
                 from: "recruit",
                 prevData: {
                   title,
-                  location: locationText,
+                  location: area,
                   require,
                   salary,
                   workType,
-                  deadline: formatedDate,
-                  recruiting_img: imageFile,
+                  deadline: formattedDate,
+                  recruiting_img: imageUrl,
                 },
-                selectedSkills: selectedSkills,
+                high_sector: highSector,
+                low_sector: lowSector,
               },
             })
           }
@@ -123,8 +114,8 @@ function RegisterAnnouncement() {
         <InputField
           label="근무 지역"
           placeholder="입력해주세요"
-          value={locationText}
-          onChange={(e) => setLocationText(e.target.value)}
+          value={area}
+          onChange={(e) => setArea(e.target.value)}
         />
         <InputField
           label="지원 조건"
@@ -134,40 +125,43 @@ function RegisterAnnouncement() {
         />
         <InputField
           label="급여"
-          placeholder="입력해주세요"
+          placeholder="선택"
           value={salary}
           onClick={() => openModal("salary")}
         />
         <InputField
           label="근무 형태"
-          placeholder="선택"
+          placeholder="입력해주세요"
           value={workType}
           onChange={(e) => setWorkType(e.target.value)}
         />
         <InputField
           label="마감 일자"
-          value={formatedDate}
-          placeholder="입력해주세요"
+          placeholder="선택"
+          value={formattedDate}
           onClick={() => openModal("calendar")}
         />
         <div className="flex flex-col gap-[13.15px] mt-[25px]">
           <span className="pl-[7px] text-sub1 text-ct-black-200">
             공고사진 첨부
           </span>
-          <div className="flex items-center">
-            <ImageUploadBox
-              className="w-[349px] h-[384px] rounded-[16px] bg-ct-gray-100"
-              textClassName="text-body2 text-ct-gray-300"
-              initialPreview={imageFile}
-              onFileSelected={(file) => setImageFile(file)}
-            />
-          </div>
+          <ImageUploadBox
+            className="w-[349px] h-[384px] rounded-[16px] bg-ct-gray-100"
+            textClassName="text-body2 text-ct-gray-300"
+            initialPreview={imageUrl}
+            onUploadSuccess={(url) => setImageUrl(url)}
+            S3Folder="recruit"
+          />
         </div>
-        <span className="mt-[25px] mb-[23.29px] text-body1 text-ct-gray-300 ">
+        <span className="mt-[25px] mb-[23.29px] text-body1 text-ct-gray-300">
           등록된 공고는 ‘마이페이지’, ‘공고 관리’ 탭에서 확인 가능합니다.
         </span>
         <div className="flex justify-center mb-[42px]">
-          <BottomCTAButton text="공고 등록하기" onClick={handleSubmit} />
+          <BottomCTAButton
+            text={isPending ? "등록 중..." : "공고 등록하기"}
+            disabled={isPending}
+            onClick={handleSubmit}
+          />
         </div>
       </div>
       <Modal>

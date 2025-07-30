@@ -29,7 +29,7 @@ function RecruitCard({ data }: RecruitCardProps) {
             </span>
           </div>
           <span className="text-body1 text-ct-main-blue-200">
-            마감일자 : {data.dead_line}
+            마감일자 : {data.dead_line.substring(0, 1)}
           </span>
         </div>
 

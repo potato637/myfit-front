@@ -37,7 +37,6 @@ import FeedSearch from "../pages/feed/FeedSearch";
 import MyAlarm from "../pages/feed/MyAlarm";
 import PostFeed from "../pages/feed/PostFeed";
 import KeywordSelectorPage from "../pages/onboarding/KeywordSelector";
-import Search from "../pages/recruiting/Search";
 import JobPreference from "../pages/setting/JobPreference";
 import Networking from "../pages/profile/Networking";
 import MypageSetting from "../pages/profile/MypageSetting";
@@ -58,23 +57,23 @@ const router = createBrowserRouter([
           { path: "mypage/card", element: <CardDetail /> },
           { path: "mypage/feed", element: <FeedDetail /> },
           { path: "mypage/status", element: <ProfileStatus /> },
-          {
-            path: "recruit/announcement",
-            element: <RecruitAnnouncement />,
-          },
-          {
-            path: "recruit/savedannouncement",
-            element: <SavedAnnouncement />,
-          },
-          {
-            path: "recruit/registerannouncement",
-            element: <RegisterAnnouncement />,
-          },
         ],
+      },
+      {
+        path: "recruit/registerannouncement",
+        element: <RegisterAnnouncement />,
+      },
+      {
+        path: "recruit/announcement/:recruitment_id",
+        element: <RecruitAnnouncement />,
       },
       {
         path: "recruit",
         element: <Recruiting />,
+      },
+      {
+        path: "recruit/savedannouncement",
+        element: <SavedAnnouncement />,
       },
       {
         path: "onboarding",
@@ -192,10 +191,6 @@ const router = createBrowserRouter([
       {
         path: "chatting/coffeechatstorage",
         element: <CoffeeChatStorage />,
-      },
-      {
-        path: "recruit/search",
-        element: <Search />,
       },
       {
         path: "personalsetting/profile/jobpreference",
