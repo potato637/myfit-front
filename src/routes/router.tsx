@@ -48,17 +48,20 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       // 공개 경로 (로그인 여부와 관계 없이 접근 가능한 경로를 넣으시면 됩니다.)
-      {
-        element: <ProtectedRoute />,
-        children: [
-          // 이곳에는 보호된 경로 (로그인 필요)를 넣으시면 됩니다.
-          // 각 페이지 별로 <Outlet />을 자유롭게 사용할 수 있습니다.
-          { path: "mypage", element: <Profile /> },
-          { path: "mypage/card", element: <CardDetail /> },
-          { path: "mypage/feed", element: <FeedDetail /> },
-          { path: "mypage/status", element: <ProfileStatus /> },
-        ],
-      },
+      // {
+      //   element: <ProtectedRoute />,
+      //   children: [
+      //     // 이곳에는 보호된 경로 (로그인 필요)를 넣으시면 됩니다.
+      //     // 각 페이지 별로 <Outlet />을 자유롭게 사용할 수 있습니다.
+      //     { path: "mypage/card", element: <CardDetail /> },
+      //     { path: "mypage/feed", element: <FeedDetail /> },
+      //     { path: "mypage/status", element: <ProfileStatus /> },
+      //   ],
+      // },
+      { path: "mypage/card", element: <CardDetail /> },
+      { path: "mypage/feed", element: <FeedDetail /> },
+      { path: "mypage/status", element: <ProfileStatus /> },
+      { path: "mypage", element: <Profile /> },
       {
         path: "recruit/registerannouncement",
         element: <RegisterAnnouncement />,

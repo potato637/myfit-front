@@ -12,7 +12,6 @@ export default defineConfig({
         target: "http://3.36.59.150:3000",
         changeOrigin: true,
         secure: false,
-        // preserve cookie path/domain
       },
     },
   },

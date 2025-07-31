@@ -18,7 +18,7 @@ function Calendar() {
   };
 
   return (
-    <div className="w-[330px] ct-center flex-col">
+    <div className="w-[330px] ct-center flex-col mt-[40px]">
       <div className="w-full flex flex-col gap-[10px] mb-[57px]">
         <span className="text-sub1 text-ct-black-100">커피챗 제목</span>
         <input
