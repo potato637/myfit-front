@@ -1,17 +1,25 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { login } from "../../apis/auth";
 import { useAuth } from "../../contexts/AuthContext";
 
 function Splash() {
   const navigate = useNavigate();
-  const { setIsLoggedIn, setUser } = useAuth();
-
+  const location = useLocation();
+  const { login: authLogin } = useAuth();
   // 폼 상태
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  // 카드 등록 완료 후 전달된 메시지 표시
+  useEffect(() => {
+    if (location.state?.message) {
+      setSuccessMessage(location.state.message);
+    }
+  }, [location.state]);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -26,26 +34,23 @@ function Splash() {
       const response = await login({ email, password });
 
       if (response.isSuccess) {
-        // 로그인 성공
-        setUser({
+        // 로그인 성공 - 세션 기반 인증이므로 사용자 정보만 저장
+        authLogin({
           id: response.result.service_id,
           username: response.result.name,
           email: response.result.email,
         });
-        setIsLoggedIn(true);
         navigate("/feed/feed-main"); // 메인 페이지로 이동
       }
     } catch (apiError) {
       console.error("로그인 에러:", apiError);
-
+      
       // Axios 에러인지 확인
       if (apiError && typeof apiError === "object" && "response" in apiError) {
         const axiosError = apiError as { response?: { status: number } };
-
+        
         if (axiosError.response?.status === 401) {
-          setError(
-            "로그인에 실패하였습니다. 이메일이나 비밀번호를 확인해주세요."
-          );
+          setError("로그인에 실패하였습니다. 이메일이나 비밀번호를 확인해주세요.");
         } else if (axiosError.response?.status === 500) {
           setError("서버에 오류가 발생하였습니다.");
         } else {
@@ -105,6 +110,13 @@ function Splash() {
           onKeyDown={(e) => e.key === "Enter" && handleLogin()}
           className="w-full px-4 py-3 mb-2 rounded-md bg-transparent border border-ct-white text-ct-white placeholder:text-ct-white disabled:opacity-50"
         />
+
+        {/* 성공 메시지 */}
+        {successMessage && (
+          <p className="w-full text-green-400 text-body2 mb-4 text-center">
+            {successMessage}
+          </p>
+        )}
 
         {/* 에러 메시지 */}
         {error && (

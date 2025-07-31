@@ -11,14 +11,20 @@ interface CommentModalProps {
   postId: string;
   comments: Comment[];
   onClose: () => void;
+  onCommentCreate: (commentText: string) => void;
+  onReplyCreate: (commentText: string, parentCommentId: number) => void;
 }
 
 export default function CommentModal({
   postId,
   comments,
   onClose,
+  onCommentCreate,
+  onReplyCreate,
 }: CommentModalProps) {
   const [closing, setClosing] = useState(false);
+  const [replyToCommentId, setReplyToCommentId] = useState<number | null>(null);
+  const [replyToUserName, setReplyToUserName] = useState<string>("");
 
   const handleRequestClose = () => setClosing(true);
 
@@ -84,7 +90,14 @@ export default function CommentModal({
           ref={modalRef}
           className="flex-1 overflow-y-auto px-4 pt-6 pb-[160px] scrollbar-hide"
         >
-          <CommentList comments={comments} />
+          <CommentList 
+            comments={comments} 
+            onReplyClick={(commentId, userName) => {
+              setReplyToCommentId(commentId);
+              setReplyToUserName(userName);
+              inputRef.current?.focus();
+            }}
+          />
         </div>
         <div className="fixed bottom-0 left-0 right-0 z-50 bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200">
           <CommentSuggestions
@@ -92,8 +105,21 @@ export default function CommentModal({
           />
           <CommentInputField
             ref={inputRef}
-            onSend={(text) => console.log(`[${postId}] 댓글 작성:`, text)}
+            onSend={(text) => {
+              if (replyToCommentId) {
+                onReplyCreate(text, replyToCommentId);
+                setReplyToCommentId(null);
+                setReplyToUserName("");
+              } else {
+                onCommentCreate(text);
+              }
+            }}
           />
+          {replyToCommentId && (
+            <div className="text-sm text-ct-gray-300 mb-2">
+              {replyToUserName}님에게 답글 작성 중...
+            </div>
+          )}
         </div>{" "}
       </motion.div>
     </motion.section>

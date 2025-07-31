@@ -11,14 +11,18 @@ function CompanyVerification() {
   const handleSubmit = () => {
     // TODO: 사업자등록증과 함께 서버에 저장
     console.log("🏢 사업자등록증 제출:", businessDocument);
-    // 제출 완료 후 피드로 이동
-    navigate("/feed/feed-main");
+    // 제출 완료 후 로그인 페이지로 이동
+    navigate("/onboarding", { 
+      state: { message: "회사 인증이 완료되었습니다! 로그인해주세요." }
+    });
   };
   
   const handleSkip = () => {
-    // 건너뛰기 후 피드로 이동 (이미지 없이)
+    // 건너뛰기 후 로그인 페이지로 이동 (이미지 없이)
     console.log("🏢 회사인증 건너뛰기");
-    navigate("/feed/feed-main");
+    navigate("/onboarding", { 
+      state: { message: "회사 등록이 완료되었습니다! 로그인해주세요." }
+    });
   };
   
   const TopBarContent = () => (

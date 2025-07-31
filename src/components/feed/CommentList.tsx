@@ -4,25 +4,26 @@ import CommentItem from "./CommentItem";
 
 interface Props {
   comments: Comment[];
+  onReplyClick?: (commentId: number, userName: string) => void;
 }
 
-function CommentList({ comments }: Props) {
+function CommentList({ comments, onReplyClick }: Props) {
   return (
     <div className="flex flex-col gap-6">
       {comments.map((comment) => (
-        <CommentThread key={comment.id} comment={comment} />
+        <CommentThread key={comment.id} comment={comment} onReplyClick={onReplyClick} />
       ))}
     </div>
   );
 }
 
-function CommentThread({ comment }: { comment: Comment }) {
+function CommentThread({ comment, onReplyClick }: { comment: Comment; onReplyClick?: (commentId: number, userName: string) => void }) {
   const [isOpen, setIsOpen] = useState(false);
   const hasReplies = comment.replies.length > 0;
 
   return (
     <div className="flex flex-col gap-4 ">
-      <CommentItem comment={comment} />
+      <CommentItem comment={comment} onReplyClick={onReplyClick} />
 
       {hasReplies && !isOpen && (
         <div className="mt-2 flex items-center justify-center gap-2">

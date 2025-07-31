@@ -3,7 +3,7 @@ export interface VerifyCodeRequest {
   /** 이메일 */
   email: string;
   /** 인증 코드 (6자리) */
-  code: string;
+  authCode: string;
 }
 
 /** 인증번호 검증 응답 */

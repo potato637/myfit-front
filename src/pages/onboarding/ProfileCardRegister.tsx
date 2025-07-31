@@ -14,7 +14,7 @@ function ProfileCardRegister() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   // 폼 데이터 상태
-  const [localImagePreview, setLocalImagePreview] = useState<string>(""); // 로컬 이미지 미리보기
+  const [cardImageUrl, setCardImageUrl] = useState<string>(""); // S3 업로드된 이미지 URL
   const [oneLineIntro, setOneLineIntro] = useState("");
   const [detailedDescription, setDetailedDescription] = useState("");
   const [link, setLink] = useState("");
@@ -29,7 +29,7 @@ function ProfileCardRegister() {
       if (location.state.detailedDescription) setDetailedDescription(location.state.detailedDescription);
       if (location.state.link) setLink(location.state.link);
       // 이미지 정보도 복원
-      if (location.state.localImagePreview) setLocalImagePreview(location.state.localImagePreview);
+      if (location.state.cardImageUrl) setCardImageUrl(location.state.cardImageUrl);
     }
   }, [location.state]);
   
@@ -60,21 +60,16 @@ function ProfileCardRegister() {
         return;
       }
       
-      // 이미지 URL 처리 (TODO: 실제 이미지 업로드 API 구현 필요)
-      const imageUrl = localImagePreview;
-      if (!imageUrl) {
-        alert("카드 이미지를 선택해주세요.");
+      // 이미지 URL 처리
+      if (!cardImageUrl) {
+        alert("카드 이미지를 업로드해주세요.");
         return;
-      }
-      
-      if (imageUrl.startsWith('blob:')) {
-        console.warn('⚠️ [개발주의] Blob URL을 서버에 전송 중. 실제 환경에서는 이미지 업로드 API 필요');
       }
       
       // 이력/활동 카드 등록 API 호출
       const cardRequest: ActivityCardRequest = {
         service_id: signupData.serviceId!, // 위에서 null 체크 완료
-        card_img: imageUrl,
+        card_img: cardImageUrl,
         card_one_line_profile: oneLineIntro.trim(),
         detailed_profile: detailedDescription.trim(),
         link: link.trim(),
@@ -88,7 +83,9 @@ function ProfileCardRegister() {
       
       if (response.message) {
         console.log("✅ [ProfileCardRegister] 카드 등록 성공:", response);
-        navigate("/feed/feed-main");
+        navigate("/onboarding", { 
+          state: { message: "카드 등록이 완료되었습니다! 로그인해주세요." }
+        });
       } else {
         throw new Error(response.message || "카드 등록 실패");
       }
@@ -130,10 +127,12 @@ function ProfileCardRegister() {
           <ImageUploadBox
             className="w-full h-[407.5px] rounded-[5px] bg-ct-gray-100"
             textClassName="text-body2 font-Pretendard text-ct-gray-300"
-            initialImage={localImagePreview} // 복원된 이미지 전달
-            onUploaded={(url) => {
-              setLocalImagePreview(url); // 로컬 미리보기 URL 저장
+            initialPreview={cardImageUrl} // 복원된 이미지 전달
+            onUploadSuccess={(url) => {
+              setCardImageUrl(url); // S3 업로드된 URL 저장
+              console.log("✅ 카드 이미지 업로드 성공:", url);
             }}
+            S3Folder="cards/profile" // 개인 카드 이미지용 폴더
           />
         </div>
         <InputField
@@ -190,7 +189,7 @@ function ProfileCardRegister() {
                     link
                   },
                   selectedKeywords: keywords,
-                  localImagePreview: localImagePreview // 이미지 정보도 전달
+                  cardImageUrl: cardImageUrl // 이미지 정보도 전달
                 }
               })}
               className="min-w-[50px] h-[28px] px-[12px] rounded-[9px] bg-ct-gray-100 text-ct-gray-200 text-[24px] flex items-center justify-center"
@@ -219,7 +218,7 @@ function ProfileCardRegister() {
             navigate("/onboarding/profile-preview", {
               state: {
                 cardData: {
-                  localImagePreview, // 로컬 이미지 전달
+                  cardImageUrl, // S3 이미지 URL 전달
                   oneLineIntro,
                   detailedDescription,
                   link,

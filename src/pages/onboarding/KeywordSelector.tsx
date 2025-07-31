@@ -29,7 +29,7 @@ function KeywordSelectorPage() {
         state: {
           ...location.state.currentData,
           selectedKeywords: finalKeywords,
-          localImagePreview: location.state.localImagePreview // 이미지 정보도 함께 전달
+          cardImageUrl: location.state.cardImageUrl // 이미지 정보도 함께 전달
         }
       });
     } else if (location.state?.from === "company-card-register") {
@@ -37,7 +37,7 @@ function KeywordSelectorPage() {
         state: {
           ...location.state.currentData,
           selectedKeywords: finalKeywords,
-          localImagePreview: location.state.localImagePreview // 이미지 정보도 함께 전달
+          cardImageUrl: location.state.cardImageUrl // 이미지 정보도 함께 전달
         }
       });
     } else {

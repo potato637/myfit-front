@@ -15,8 +15,7 @@ function CompanyCardRegister() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 폼 데이터 상태
-  // const [cardImageUrl] = useState<string>(""); // 서버 URL (나중 구현)
-  const [localImagePreview, setLocalImagePreview] = useState<string>(""); // 로컬 이미지 미리보기
+  const [cardImageUrl, setCardImageUrl] = useState<string>(""); // S3 업로드된 이미지 URL
   const [oneLineIntro, setOneLineIntro] = useState("");
   const [detailedDescription, setDetailedDescription] = useState("");
   const [link, setLink] = useState("");
@@ -33,8 +32,8 @@ function CompanyCardRegister() {
         setDetailedDescription(location.state.detailedDescription);
       if (location.state.link) setLink(location.state.link);
       // 이미지 정보도 복원
-      if (location.state.localImagePreview)
-        setLocalImagePreview(location.state.localImagePreview);
+      if (location.state.cardImageUrl)
+        setCardImageUrl(location.state.cardImageUrl);
     }
   }, [location.state]);
 
@@ -63,20 +62,15 @@ function CompanyCardRegister() {
         return;
       }
       
-      if (!localImagePreview) {
-        alert("카드 이미지를 선택해주세요.");
+      if (!cardImageUrl) {
+        alert("카드 이미지를 업로드해주세요.");
         return;
-      }
-
-      // 이미지 URL 처리 (TODO: 실제 이미지 업로드 API 구현 필요)
-      if (localImagePreview.startsWith('blob:')) {
-        console.warn('⚠️ [개발주의] Blob URL을 서버에 전송 중. 실제 환경에서는 이미지 업로드 API 필요');
       }
       
       // 이력/활동 카드 등록 API 호출
       const cardRequest: ActivityCardRequest = {
         service_id: signupData.serviceId!, // 위에서 null 체크 완료
-        card_img: localImagePreview,
+        card_img: cardImageUrl,
         card_one_line_profile: oneLineIntro.trim(),
         detailed_profile: detailedDescription.trim(),
         link: link.trim(),
@@ -131,10 +125,12 @@ function CompanyCardRegister() {
           <ImageUploadBox
             className="w-full h-[407.5px] rounded-[5px] bg-ct-gray-100"
             textClassName="text-body2 font-Pretendard text-ct-gray-300"
-            initialImage={localImagePreview} // 복원된 이미지 전달
-            onUploaded={(url) => {
-              setLocalImagePreview(url); // 로컬 미리보기 URL 저장
+            initialPreview={cardImageUrl} // 복원된 이미지 전달
+            onUploadSuccess={(url) => {
+              setCardImageUrl(url); // S3 업로드된 URL 저장
+              console.log("✅ 회사 카드 이미지 업로드 성공:", url);
             }}
+            S3Folder="cards/company" // 회사 카드 이미지용 폴더
           />
         </div>
         <InputField
@@ -192,7 +188,7 @@ function CompanyCardRegister() {
                       link,
                     },
                     selectedKeywords: keywords,
-                    localImagePreview: localImagePreview, // 이미지 정보도 전달
+                    cardImageUrl: cardImageUrl, // 이미지 정보도 전달
                   },
                 })
               }
@@ -222,7 +218,7 @@ function CompanyCardRegister() {
             navigate("/onboarding/company-preview", {
               state: {
                 cardData: {
-                  localImagePreview, // 로컬 이미지 전달
+                  cardImageUrl, // S3 이미지 URL 전달
                   oneLineIntro,
                   detailedDescription,
                   link,

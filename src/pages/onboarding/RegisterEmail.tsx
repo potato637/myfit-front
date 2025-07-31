@@ -9,7 +9,7 @@ import {
   registerEmailSchema,
 } from "../../validations/registerEmailSchema";
 import { useSignup } from "../../contexts/SignupContext";
-import { sendVerificationCode, verifyCode } from "../../apis/onboarding";
+import { sendVerificationCode, validateAuthCode } from "../../apis/onboarding";
 
 function RegisterEmail() {
   const navigate = useNavigate();
@@ -58,20 +58,20 @@ function RegisterEmail() {
 
   const handleVerifyCode = async (code: string) => {
     try {
-      console.log("🔐 인증코드 검증 요청:", { email: fullEmail, code });
-      const response = await verifyCode({ email: fullEmail, code });
+      console.log("🔐 인증코드 자동 검증 요청:", { email: fullEmail, authCode: code });
+      const response = await validateAuthCode({ email: fullEmail, authCode: code });
 
       if (response.isSuccess) {
         setCodeVerified(true);
         setIsAuthInvalid(false);
-        console.log("✅ 인증코드 검증 성공");
+        console.log("✅ 인증코드 자동 검증 성공:", response.message);
       } else {
         setCodeVerified(false);
         setIsAuthInvalid(true);
-        console.log("❌ 인증코드 불일치");
+        console.log("❌ 인증코드 자동 검증 실패:", response.message);
       }
     } catch (error) {
-      console.error("❌ 인증코드 검증 실패:", error);
+      console.error("❌ 인증코드 자동 검증 에러:", error);
       setCodeVerified(false);
       setIsAuthInvalid(true);
     }

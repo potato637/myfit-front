@@ -54,20 +54,26 @@ function CompanyProfileRegister() {
         division: "team",
         name: companyName,
         one_line_profile: shortIntro,
-        high_area: region,
-        low_area: subRegion,
+        high_area_id: signupData.highAreaId || 1, // ID로 전송
+        low_area_id: signupData.lowAreaId || 1,   // ID로 전송
         recruiting_status: employmentStatus,
         team_division: division,
         industry: industry,
         link: website,
       };
 
-      console.log("🏢 [CompanyProfileRegister] 회사 회원가입 요청:", companyRequest);
+      console.log(
+        "🏢 [CompanyProfileRegister] 회사 회원가입 요청:",
+        companyRequest
+      );
       const response = await companySignUp(companyRequest);
 
       if (response.isSuccess) {
-        console.log("✅ [CompanyProfileRegister] 회사 회원가입 성공:", response);
-        
+        console.log(
+          "✅ [CompanyProfileRegister] 회사 회원가입 성공:",
+          response
+        );
+
         // SignupContext에 회사 정보 업데이트
         updateProfileInfo({
           name: companyName,
@@ -86,9 +92,6 @@ function CompanyProfileRegister() {
       }
     } catch (error) {
       console.error("회사 회원가입 실패:", error);
-      // 에러가 발생해도 일단 다음 단계로 진행 (개발 중이므로)
-      nextStep();
-      navigate("/onboarding/company-card-register");
     } finally {
       setIsSubmitting(false);
     }

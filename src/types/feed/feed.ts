@@ -14,3 +14,13 @@ export interface FeedItem {
   is_liked: boolean;
   comment_count: number;
 }
+
+export interface FeedResponse {
+  result: {
+    feeds: FeedItem[];
+    pagination: {
+      next_cursor: number | null;
+      has_next: boolean;
+    };
+  };
+}

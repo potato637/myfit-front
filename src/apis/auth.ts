@@ -16,3 +16,14 @@ export const login = async (request: LoginRequest): Promise<LoginResponse> => {
     throw error;
   }
 };
+
+// 토큰 검증 (로그인 상태 확인)
+export const checkAuthStatus = async () => {
+  try {
+    const response = await apiClient.get("/api/users/check");
+    return response.data;
+  } catch (error) {
+    console.error("❌ [API] 토큰 검증 실패:", error);
+    throw error;
+  }
+};

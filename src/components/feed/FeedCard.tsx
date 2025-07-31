@@ -18,6 +18,7 @@ interface Post {
   comments: number;
   content: string;
   tags: string[];
+  isLiked: boolean;
 }
 
 function FeedTagContainer({ tags }: { tags: string[] }) {
@@ -100,8 +101,8 @@ function FeedCard({
           <div className="flex items-center gap-1">
             <button type="button" onClick={onLikeClick}>
               <img
-                src="/assets/profile/heart.svg"
-                alt="좋아요"
+                src={post.isLiked ? "/assets/feed/filled-heart.svg" : "/assets/feed/empty-heart.svg"}
+                alt={post.isLiked ? "좋아요 취소" : "좋아요"}
                 className="w-5 h-5"
               />
             </button>

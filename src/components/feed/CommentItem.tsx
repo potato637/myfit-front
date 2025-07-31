@@ -4,35 +4,42 @@ import getTimeAgo from "../../utils/timeAgo";
 interface Props {
   comment: Comment | Reply;
   isReply?: boolean;
+  onReplyClick?: (commentId: number, userName: string) => void;
 }
 
-function CommentItem({ comment, isReply = false }: Props) {
+function CommentItem({ comment, isReply = false, onReplyClick }: Props) {
   return (
     <div className={`flex gap-2 ${isReply ? "ml-10" : ""}`}>
       {/* 프로필 이미지 */}
       <img
-        src={comment.writer.profile_image_url}
-        alt={comment.writer.name}
+        src={comment.service.profile_img}
+        alt={comment.service.name}
         className="w-10 h-10 rounded-full object-cover"
       />
 
       <div className="flex flex-col text-sm w-full">
         {/* 이름 / 직무 */}
         <p className="text-sub3 text-ct-black-200">
-          <span>{comment.writer.name}</span>
-          <span> / {comment.writer.job}</span>
+          <span>{comment.service.name}</span>
+          <span> / {comment.service.high_sector}</span>
         </p>
 
         {/* 댓글 텍스트 */}
-        <p className="mt-1 text-ct-black-100">{comment.comment_text}</p>
+        <p className="mt-1 text-ct-black-100">{comment.content}</p>
 
         {/* 하단 정보: 시간 / 답글달기 / 삭제 */}
         <div className="flex justify-between items-center mt-1 text-body2 text-ct-gray-300">
           <div className="flex gap-3">
             <span>{getTimeAgo(comment.created_at)}</span>{" "}
-            <button type="button" className="hover:underline">
-              답글달기
-            </button>
+            {!isReply && onReplyClick && (
+              <button 
+                type="button" 
+                className="hover:underline"
+                onClick={() => onReplyClick(comment.id, comment.service.name)}
+              >
+                답글달기
+              </button>
+            )}
           </div>
           <button type="button" className="hover:underline">
             삭제

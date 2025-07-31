@@ -19,6 +19,10 @@ import {
   ActivityCardRequest,
   ActivityCardSuccessResponse
 } from "../types/common/activityCard";
+import {
+  ValidateCredentialsRequest,
+  ValidateCredentialsResponse
+} from "../types/onboarding/validateCredentials";
 
 // 이메일 인증 코드 전송
 export const sendVerificationCode = async (request: SendCodeRequest): Promise<SendCodeResponse> => {
@@ -63,7 +67,7 @@ export const signUp = async (request: SignUpRequest): Promise<SignUpResponse> =>
 export const companySignUp = async (request: CompanyProfileRequest): Promise<CompanyProfileResponse> => {
   try {
     console.log("🔵 [API] 회사/팀 회원가입 요청:", request);
-    const response = await apiClient.post<CompanyProfileResponse>("/api/users", request);
+    const response = await apiClient.post<CompanyProfileResponse>("/api/users/team", request);
     console.log("✅ [API] 회사/팀 회원가입 응답:", response.data);
     return response.data;
   } catch (error) {
@@ -81,6 +85,32 @@ export const createActivityCard = async (request: ActivityCardRequest): Promise<
     return response.data;
   } catch (error) {
     console.error("❌ [API] 이력/활동 카드 등록 실패:", error);
+    throw error;
+  }
+};
+
+// 이메일/비밀번호 유효성 확인
+export const validateCredentials = async (request: ValidateCredentialsRequest): Promise<ValidateCredentialsResponse> => {
+  try {
+    console.log("🔵 [API] 이메일/비밀번호 유효성 확인 요청:", request);
+    const response = await apiClient.post<ValidateCredentialsResponse>("/api/users/validate-credentials", request);
+    console.log("✅ [API] 이메일/비밀번호 유효성 확인 응답:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("❌ [API] 이메일/비밀번호 유효성 확인 실패:", error);
+    throw error;
+  }
+};
+
+// 인증번호 자동 검증 (6자리 입력 시)
+export const validateAuthCode = async (request: VerifyCodeRequest): Promise<VerifyCodeResponse> => {
+  try {
+    console.log("🔵 [API] 인증번호 자동 검증 요청:", request);
+    const response = await apiClient.post<VerifyCodeResponse>("/api/users/verify-code", request);
+    console.log("✅ [API] 인증번호 자동 검증 응답:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("❌ [API] 인증번호 자동 검증 실패:", error);
     throw error;
   }
 };

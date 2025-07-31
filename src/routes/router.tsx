@@ -48,35 +48,108 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       // 공개 경로 (로그인 여부와 관계 없이 접근 가능한 경로를 넣으시면 됩니다.)
-      // {
-      //   element: <ProtectedRoute />,
-      //   children: [
-      //     // 이곳에는 보호된 경로 (로그인 필요)를 넣으시면 됩니다.
-      //     // 각 페이지 별로 <Outlet />을 자유롭게 사용할 수 있습니다.
-      //     { path: "mypage/card", element: <CardDetail /> },
-      //     { path: "mypage/feed", element: <FeedDetail /> },
-      //     { path: "mypage/status", element: <ProfileStatus /> },
-      //   ],
-      // },
-      { path: "mypage/card", element: <CardDetail /> },
-      { path: "mypage/feed", element: <FeedDetail /> },
-      { path: "mypage/status", element: <ProfileStatus /> },
-      { path: "mypage", element: <Profile /> },
       {
-        path: "recruit/registerannouncement",
-        element: <RegisterAnnouncement />,
-      },
-      {
-        path: "recruit/announcement/:recruitment_id",
-        element: <RecruitAnnouncement />,
+        element: <ProtectedRoute />,
+        children: [
+          // 이곳에는 보호된 경로 (로그인 필요)를 넣으시면 됩니다.
+          // 각 페이지 별로 <Outlet />을 자유롭게 사용할 수 있습니다.
+          { path: "mypage", element: <Profile /> },
+          { path: "mypage/card", element: <CardDetail /> },
+          { path: "mypage/feed", element: <FeedDetail /> },
+          { path: "mypage/status", element: <ProfileStatus /> },
+          {
+            path: "recruit/registerannouncement",
+            element: <RegisterAnnouncement />,
+          },
+          {
+            path: "recruit/announcement/:recruitment_id",
+            element: <RecruitAnnouncement />,
+          },
+          {
+            path: "recruit/savedannouncement",
+            element: <SavedAnnouncement />,
+          },
+          {
+            path: "companysetting",
+            element: <CompanySetting />,
+          },
+          {
+            path: "personalsetting",
+            element: <PersonalSetting />,
+          },
+          {
+            path: "feed/feed-main",
+            element: <FeedPage />,
+          },
+          {
+            path: "feed/feed-search",
+            element: <FeedSearch />,
+          },
+          {
+            path: "feed/my-alarm",
+            element: <MyAlarm />,
+          },
+          {
+            path: "feed/post-feed",
+            element: <PostFeed />,
+          },
+          {
+            path: "companysetting/alarmsetting",
+            element: <AlarmSetting />,
+          },
+          {
+            path: "companysetting/verifiedsetting",
+            element: <VerifiedSettingPage />,
+          },
+          {
+            path: "personalsetting/account",
+            element: <Account />,
+          },
+          {
+            path: "personalsetting/resetpassword",
+            element: <ResetPasssword />,
+          },
+          {
+            path: "coffeechat/request",
+            element: <RequestCoffeeChat />,
+          },
+          {
+            path: "companysetting/profile",
+            element: <CompanyProfile />,
+          },
+          {
+            path: "personalsetting/profile",
+            element: <PersonalProfile />,
+          },
+          {
+            path: "chatting/:chattingRoomId",
+            element: <Chatting />,
+          },
+          {
+            path: "chatting/chattinglist",
+            element: <ChattingList />,
+          },
+          {
+            path: "chatting/coffeechatlist",
+            element: <CoffeeChatList />,
+          },
+          {
+            path: "chatting/coffeechatstorage",
+            element: <CoffeeChatStorage />,
+          },
+          {
+            path: "mypage/networking",
+            element: <Networking />,
+          },
+          {
+            path: "mypage/setting",
+            element: <MypageSetting />,
+          },
+        ],
       },
       {
         path: "recruit",
         element: <Recruiting />,
-      },
-      {
-        path: "recruit/savedannouncement",
-        element: <SavedAnnouncement />,
       },
       {
         path: "onboarding",
@@ -85,14 +158,6 @@ const router = createBrowserRouter([
       {
         path: "onboarding/selectmembers",
         element: <SelectMembers />,
-      },
-      {
-        path: "companysetting",
-        element: <CompanySetting />,
-      },
-      {
-        path: "personalsetting",
-        element: <PersonalSetting />,
       },
       {
         path: "onboarding/register-method",
@@ -135,77 +200,8 @@ const router = createBrowserRouter([
         element: <KeywordSelectorPage />,
       },
       {
-        path: "feed/feed-main",
-        element: <FeedPage />,
-      },
-      {
-        path: "feed/feed-search",
-        element: <FeedSearch />,
-      },
-      {
-        path: "feed/my-alarm",
-        element: <MyAlarm />,
-      },
-      {
-        path: "feed/post-feed",
-        element: <PostFeed />,
-      },
-
-      {
-        path: "companysetting/alarmsetting",
-        element: <AlarmSetting />,
-      },
-      {
-        path: "companysetting/verifiedsetting",
-        element: <VerifiedSettingPage />,
-      },
-      {
-        path: "personalsetting/account",
-        element: <Account />,
-      },
-      {
-        path: "personalsetting/resetpassword",
-        element: <ResetPasssword />,
-      },
-      {
-        path: "coffeechat/request",
-        element: <RequestCoffeeChat />,
-      },
-      {
-        path: "companysetting/profile",
-        element: <CompanyProfile />,
-      },
-      {
-        path: "personalsetting/profile",
-        element: <PersonalProfile />,
-      },
-      {
-        path: "chatting/:chattingRoomId",
-        element: <Chatting />,
-      },
-      {
-        path: "chatting/chattinglist",
-        element: <ChattingList />,
-      },
-      {
-        path: "chatting/coffeechatlist",
-        element: <CoffeeChatList />,
-      },
-      {
-        path: "chatting/coffeechatstorage",
-        element: <CoffeeChatStorage />,
-      },
-      {
         path: "personalsetting/profile/jobpreference",
         element: <JobPreference />,
-      },
-      {
-        path: "mypage/networking",
-        element: <Networking />,
-      },
-      {
-        path: "mypage/setting",
-        element: <MypageSetting />,
       },
     ],
   },
