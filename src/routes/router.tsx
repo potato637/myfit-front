@@ -41,6 +41,12 @@ import JobPreference from "../pages/setting/JobPreference";
 import Networking from "../pages/profile/Networking";
 import MypageSetting from "../pages/profile/MypageSetting";
 import ProtectedRoute from "./ProtectedRoute";
+import FeedProfile from "../pages/feed/FeedProfile";
+import MypageContainer from "../pages/outlets/MypageContainer";
+import OnboardingContainer from "../pages/outlets/OnboardingContainer";
+import FeedContainer from "../pages/outlets/FeedContainer";
+import ChattingContainer from "../pages/outlets/ChattingContainer";
+import RecruitingContainer from "../pages/outlets/RecruitingContainer";
 
 const router = createBrowserRouter([
   {
@@ -49,8 +55,9 @@ const router = createBrowserRouter([
     children: [
       {
         path: "onboarding",
-        element: <Splash />,
+        element: <OnboardingContainer />,
         children: [
+          { index: true, element: <Splash /> },
           { path: "selectmembers", element: <SelectMembers /> },
           { path: "register-method", element: <RegisterMethod /> },
           { path: "register-email", element: <RegisterEmail /> },
@@ -75,18 +82,21 @@ const router = createBrowserRouter([
         children: [
           {
             path: "feed",
-            element: <FeedPage />,
+            element: <FeedContainer />,
             children: [
+              { index: true, element: <FeedPage /> },
               { path: "search", element: <FeedSearch /> },
               { path: "alarm", element: <MyAlarm /> },
               { path: "post", element: <PostFeed /> },
+              { path: "profile", element: <FeedProfile /> },
             ],
           },
 
           {
             path: "mypage",
-            element: <Profile />,
+            element: <MypageContainer />,
             children: [
+              { index: true, element: <Profile /> },
               { path: "card", element: <CardDetail /> },
               { path: "feed", element: <FeedDetail /> },
               { path: "status", element: <ProfileStatus /> },
@@ -97,8 +107,9 @@ const router = createBrowserRouter([
 
           {
             path: "chatting",
-            element: <ChattingList />,
+            element: <ChattingContainer />,
             children: [
+              { index: true, element: <ChattingList /> },
               {
                 path: "coffeechatrequest/:chattingRoomId",
                 element: <RequestCoffeeChat />,
@@ -111,8 +122,9 @@ const router = createBrowserRouter([
 
           {
             path: "recruiting",
-            element: <Recruiting />,
+            element: <RecruitingContainer />,
             children: [
+              { index: true, element: <Recruiting /> },
               { path: "jobpreference", element: <JobPreference /> },
               { path: "register", element: <RegisterAnnouncement /> },
               { path: ":recruitment_id", element: <RecruitAnnouncement /> },
