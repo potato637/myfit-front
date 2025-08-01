@@ -12,13 +12,13 @@ function FixedHeader() {
           className="w-[68px]"
         />
         <div className="flex gap-[19px]">
-          <button onClick={() => navigate("/feed/feed-search")}>
+          <button onClick={() => navigate("/feed/search")}>
             <img src="/assets/feed/search.svg" alt="검색" />
           </button>
-          <button onClick={() => navigate("/feed/post-feed")}>
+          <button onClick={() => navigate("/feed/post")}>
             <img src="/assets/feed/plus.svg" alt="피드 작성" />
           </button>
-          <button onClick={() => navigate("/feed/my-alarm")}>
+          <button onClick={() => navigate("/feed/alarm")}>
             <img src="/assets/feed/ringbell.svg" alt="알림" />
           </button>
         </div>

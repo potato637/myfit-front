@@ -60,7 +60,7 @@ function FeedCard({
           alt="프로필 이미지"
           className="w-10 h-10 rounded-full object-cover"
         />
-        <div className="flex flex-col">
+        <div className="flex gap-3">
           <span className="text-sub1 text-ct-black-100">{user.name}</span>
           <span className="text-sub2 text-ct-blue-gray-100">{user.job}</span>
         </div>
@@ -96,12 +96,16 @@ function FeedCard({
       </div>{" "}
       {/* 좋아요 / 댓글 */}
       <div className="flex justify-between items-center px-3">
-        <span className="text-sub2 text-ct-gray-300">{post.timeAgo}</span>
+        <span className="text-body2 text-ct-gray-300">{post.timeAgo}</span>
         <div className="flex gap-4">
           <div className="flex items-center gap-1">
             <button type="button" onClick={onLikeClick}>
               <img
-                src={post.isLiked ? "/assets/feed/filled-heart.svg" : "/assets/feed/empty-heart.svg"}
+                src={
+                  post.isLiked
+                    ? "/assets/feed/filled-heart.svg"
+                    : "/assets/feed/empty-heart.svg"
+                }
                 alt={post.isLiked ? "좋아요 취소" : "좋아요"}
                 className="w-5 h-5"
               />

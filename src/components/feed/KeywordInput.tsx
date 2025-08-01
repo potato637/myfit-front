@@ -1,8 +1,12 @@
 import { useState } from "react";
 
-function KeywordInput() {
+interface KeywordInputProps {
+  keywords: string[];
+  setKeywords: (keywords: string[]) => void;
+}
+
+function KeywordInput({ keywords, setKeywords }: KeywordInputProps) {
   const [inputValue, setInputValue] = useState("");
-  const [keywords, setKeywords] = useState<string[]>([]);
   const [error, setError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +36,7 @@ function KeywordInput() {
   };
 
   const handleDelete = (keyword: string) => {
-    setKeywords((prev) => prev.filter((k) => k !== keyword));
+    setKeywords(keywords.filter((k) => k !== keyword));
   };
 
   return (

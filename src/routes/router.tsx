@@ -72,8 +72,6 @@ const router = createBrowserRouter([
           { path: "company-preview", element: <CompanyPreview /> },
           { path: "company-verification", element: <CompanyVerification /> },
           { path: "keyword-selector", element: <KeywordSelectorPage /> },
-          { path: "company-verification", element: <CompanyVerification /> },
-          { path: "keyword-selector", element: <KeywordSelectorPage /> },
           { path: "jobpreference", element: <JobPreference /> },
         ],
       },

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import BottomCTAButton from "../../components/common/BottomCTAButton";
 import TopBarContainer from "../../components/common/TopBarContainer";
-import BusinessDocumentUpload from "../../components/onboarding/BusinessDocumentUpload";
+import VerifiedUploadBox from "../../components/common/VerifiedUploadBox";
 import { useNavigate } from "react-router-dom";
 
 function CompanyVerification() {
@@ -47,9 +47,10 @@ function CompanyVerification() {
           <p className="text-body2 text-ct-gray-300 mb-[21px]">
             파일은 최대 10MB까지 가능합니다.
           </p>
-          <BusinessDocumentUpload
+          <VerifiedUploadBox
             className="w-full h-[132px] rounded-[12px] bg-ct-gray-100 mb-[20px]"
-            onUploaded={(url) => setBusinessDocument(url)}
+            textClassName="text-body2 text-ct-gray-300"
+            onUploadSuccess={(url) => setBusinessDocument(url)}
           />
           <div className="space-y-[8px] text-body2 text-ct-gray-300 leading-[150%] mb-[137px]">
             <p>

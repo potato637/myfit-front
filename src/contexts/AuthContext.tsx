@@ -31,6 +31,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // 세션 기반 인증 - 쿠키로 세션 관리되므로 서버에 상태 확인 요청
   useEffect(() => {
     const initializeAuth = async () => {
+      // 공개 페이지 경로 목록
+      const publicPaths = ['/onboarding', '/recruiting'];
+      const currentPath = window.location.pathname;
+      
+      // 공개 페이지에서는 세션 확인 스킵
+      const isPublicPath = publicPaths.some(path => 
+        currentPath.startsWith(path)
+      );
+      
+      if (isPublicPath) {
+        console.log("공개 페이지 - 세션 확인 스킵:", currentPath);
+        setIsLoading(false);
+        return;
+      }
+
       try {
         const response = await checkAuthStatus();
         console.log("세션 확인 응답:", response);

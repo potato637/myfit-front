@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useInfiniteQuery, useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import FeedCard from "../../components/feed/FeedCard";
 import FixedHeader from "../../components/feed/FixedHeader";
@@ -13,6 +13,7 @@ import getTimeAgo from "../../utils/timeAgo";
 export default function FeedPage() {
   const [activePostId, setActivePostId] = useState<string | null>(null);
   const queryClient = useQueryClient();
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
   // 좋아요 추가 mutation
   const addLikeMutation = useMutation({
@@ -112,6 +113,35 @@ export default function FeedPage() {
 
   const allFeeds = data?.pages.flatMap((page: FeedResponse) => page.result.feeds) || [];
 
+  // 무한스크롤 Intersection Observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          console.log('🔄 무한스크롤: 다음 페이지 로드');
+          fetchNextPage();
+        }
+      },
+      {
+        root: null,
+        rootMargin: '100px', // 하단 100px 전에 미리 로드
+        threshold: 0.1
+      }
+    );
+
+    const currentRef = loadMoreRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
   // 활성화된 댓글 모달의 댓글 데이터
   const { data: commentsData } = useQuery({
     queryKey: ['comments', activePostId],
@@ -149,15 +179,14 @@ export default function FeedPage() {
               />
             ))}
         
-        {hasNextPage && (
-          <button
-            onClick={() => fetchNextPage()}
-            disabled={isFetchingNextPage}
-            className="py-3 text-ct-main-blue font-medium"
-          >
-            {isFetchingNextPage ? "로딩 중..." : "더보기"}
-          </button>
-        )}
+        {/* 무한스크롤 트리거 */}
+        <div ref={loadMoreRef} className="h-10 flex items-center justify-center">
+          {isFetchingNextPage && (
+            <div className="text-ct-gray-300 text-body2">
+              더 많은 피드를 불러오는 중...
+            </div>
+          )}
+        </div>
 
         {error && (
           <div className="text-center py-4 text-red-500">

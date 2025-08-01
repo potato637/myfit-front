@@ -1,56 +1,155 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import PostResultSkeleton from "../skeletons/feed/PostResultSkeleton";
+import { searchFeedsByKeyword } from "../../apis/feed";
+import { SearchFeed } from "../../types/feed/searchKeyword";
 
 interface Props {
   keyword: string;
 }
 
-const mockPosts = [
-  "/public/assets/feed/post1.svg",
-  "/public/assets/feed/post2.svg",
-  "/public/assets/feed/post3.svg",
-  "/public/assets/feed/post1.svg",
-  "/public/assets/feed/post2.svg",
-  "/public/assets/feed/post3.svg",
-  "/public/assets/feed/post4.svg",
-  "/public/assets/feed/post5.svg",
-  "/public/assets/feed/post6.svg",
-  "/public/assets/feed/post4.svg",
-  "/public/assets/feed/post5.svg",
-  "/public/assets/feed/post6.svg",
-  "/public/assets/feed/post4.svg",
-  "/public/assets/feed/post5.svg",
-  "/public/assets/feed/post6.svg",
-  "/public/assets/feed/post4.svg",
-  "/public/assets/feed/post5.svg",
-  "/public/assets/feed/post6.svg",
-  "/public/assets/feed/post4.svg",
-  "/public/assets/feed/post5.svg",
-  "/public/assets/feed/post6.svg",
-];
-
-const PostResult = ({ keyword }: Props) => {
-  // keyword를 이용해 실제 필터링하려면 여기에 조건 추가 가능
-  const filteredPosts = mockPosts; // 현재는 전부 사용
-  const [isLoading, setIsLoading] = useState(true);
+// 디바운스 훅
+const useDebounce = (value: string, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 3000);
-    return () => clearTimeout(timer);
-  }, [keyword]);
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
 
-  if (isLoading) return <PostResultSkeleton />;
+  return debouncedValue;
+};
+
+const PostResult = ({ keyword }: Props) => {
+  const debouncedKeyword = useDebounce(keyword, 300);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  // 키워드로 피드 검색 무한 쿼리
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    error
+  } = useInfiniteQuery({
+    queryKey: ['searchFeedsByKeyword', debouncedKeyword],
+    queryFn: ({ pageParam }: { pageParam?: number }) => 
+      searchFeedsByKeyword({ keyword: debouncedKeyword, last_feed_id: pageParam }),
+    initialPageParam: undefined as number | undefined,
+    getNextPageParam: (lastPage) => {
+      // pagination 정보가 있으면 사용, 없으면 fallback
+      if (lastPage.result.pagination) {
+        return lastPage.result.pagination.has_next 
+          ? lastPage.result.pagination.next_cursor 
+          : undefined;
+      }
+      // pagination 정보가 없는 경우 fallback (임시)
+      const feeds = lastPage.result.feeds;
+      return feeds.length > 0 ? feeds[feeds.length - 1].feed_id : undefined;
+    },
+    enabled: !!debouncedKeyword.trim(), // 검색어가 있을 때만 실행
+  });
+
+  const allFeeds = data?.pages.flatMap(page => page.result.feeds) || [];
+
+  // 무한스크롤 Intersection Observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          console.log('🔄 피드 검색 무한스크롤: 다음 페이지 로드');
+          fetchNextPage();
+        }
+      },
+      {
+        root: null,
+        rootMargin: '100px',
+        threshold: 0.1
+      }
+    );
+
+    const currentRef = loadMoreRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // 검색어가 없을 때
+  if (!debouncedKeyword.trim()) {
+    return (
+      <div className="-mx-[22px] text-center py-8 text-gray-400 text-sm">
+        키워드를 입력해주세요.
+      </div>
+    );
+  }
+
+  // 로딩 중
+  if (isLoading) {
+    return <PostResultSkeleton />;
+  }
+
+  // 에러 발생
+  if (error) {
+    return (
+      <div className="-mx-[22px] text-center py-8 text-red-500 text-sm">
+        검색 중 오류가 발생했습니다.
+      </div>
+    );
+  }
 
   return (
-    <div className="-mx-[22px] grid grid-cols-3 gap-2">
-      {filteredPosts.map((src, idx) => (
-        <img
-          key={idx}
-          src={src}
-          alt={`post-${idx}`}
-          className="aspect-square object-cover w-full rounded-sm"
-        />
-      ))}
+    <div className="-mx-[22px]">
+      {allFeeds.length > 0 ? (
+        <>
+          <div className="grid grid-cols-3 gap-2">
+            {allFeeds.map((feed: SearchFeed) => (
+              <div key={feed.feed_id} className="aspect-square relative">
+                {feed.images.length > 0 ? (
+                  <img
+                    src={feed.images[0]} // 첫 번째 이미지만 표시
+                    alt={`피드 ${feed.feed_id}`}
+                    className="w-full h-full object-cover rounded-sm"
+                  />
+                ) : (
+                  // 이미지가 없는 경우 텍스트로 대체
+                  <div className="w-full h-full bg-gray-100 rounded-sm flex items-center justify-center p-2">
+                    <p className="text-xs text-gray-600 line-clamp-3 text-center">
+                      {feed.feed_text}
+                    </p>
+                  </div>
+                )}
+                {/* 다중 이미지 표시 */}
+                {feed.images.length > 1 && (
+                  <div className="absolute top-1 right-1 bg-black/50 text-white text-xs px-1 rounded">
+                    +{feed.images.length - 1}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* 무한스크롤 트리거 */}
+          <div ref={loadMoreRef} className="h-10 flex items-center justify-center mt-4">
+            {isFetchingNextPage && (
+              <div className="text-gray-400 text-sm">
+                더 많은 피드를 불러오는 중...
+              </div>
+            )}
+          </div>
+        </>
+      ) : (
+        <div className="text-center py-8 text-gray-400 text-sm">
+          '{debouncedKeyword}'에 대한 검색 결과가 없습니다.
+        </div>
+      )}
     </div>
   );
 };

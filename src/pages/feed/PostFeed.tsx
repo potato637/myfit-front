@@ -1,44 +1,73 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ImageUploadBox from "../../components/common/ImageUploadBox";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import MultiImageUploadBox from "../../components/common/MultiImageUploadBox";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import KeywordInput from "../../components/feed/KeywordInput";
 import BottomNav from "../../components/layouts/BottomNav";
+import { createFeed } from "../../apis/feed";
+import { useAuth } from "../../contexts/AuthContext";
 
 function PostFeed() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [content, setContent] = useState("");
-  const [image, setImage] = useState("");
+  const [images, setImages] = useState<string[]>([]);
   const [keywords, setKeywords] = useState<string[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // textarea 자동 높이 조절
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${Math.max(48, textarea.scrollHeight)}px`;
+    }
+  };
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [content]);
+
+  // 피드 작성 mutation
+  const createFeedMutation = useMutation({
+    mutationFn: createFeed,
+    onSuccess: (data) => {
+      console.log("✅ [PostFeed] 피드 작성 성공:", data);
+      alert("게시글이 작성되었습니다!");
+      // 피드 목록 새로고침
+      queryClient.invalidateQueries({ queryKey: ['feeds'] });
+      navigate("/feed");
+    },
+    onError: (error) => {
+      console.error("❌ [PostFeed] 피드 작성 실패:", error);
+      alert("게시글 작성에 실패했습니다. 다시 시도해주세요.");
+    }
+  });
 
   const handleSubmit = async () => {
-    try {
-      setIsSubmitting(true);
-      
-      // 기본 검증
-      if (!content.trim()) {
-        alert("내용을 입력해주세요.");
-        return;
-      }
-      
-      // TODO: 피드 게시 API 호출
-      console.log("🎯 [PostFeed] 게시글 작성:", {
-        content: content.trim(),
-        image,
-        keywords
-      });
-      
-      // 임시: 성공 시 피드 메인으로 이동
-      alert("게시글이 작성되었습니다!");
-      navigate("/feed/feed-main");
-      
-    } catch (error) {
-      console.error("❌ [PostFeed] 게시글 작성 실패:", error);
-      alert("게시글 작성에 실패했습니다. 다시 시도해주세요.");
-    } finally {
-      setIsSubmitting(false);
+    // 기본 검증
+    if (!content.trim()) {
+      alert("내용을 입력해주세요.");
+      return;
     }
+    
+    if (!user?.id) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
+    // API 요청 데이터 구성
+    const requestData = {
+      images: images, // 이미지 배열 그대로 전달
+      feed_text: content.trim(),
+      hashtag: keywords,
+      service_id: user.id
+    };
+
+    console.log("🎯 [PostFeed] 게시글 작성 요청:", requestData);
+    createFeedMutation.mutate(requestData);
   };
 
   const TopBarContent = () => {
@@ -48,14 +77,14 @@ function PostFeed() {
         <div className="absolute right-[22px]">
           <button
             onClick={handleSubmit}
-            disabled={isSubmitting || !content.trim()}
+            disabled={createFeedMutation.isPending || !content.trim()}
             className={`text-sub2 cursor-pointer ${
-              isSubmitting || !content.trim() 
+              createFeedMutation.isPending || !content.trim() 
                 ? "text-ct-gray-200" 
                 : "text-ct-main-blue-100"
             }`}
           >
-            {isSubmitting ? "작성중..." : "완료"}
+            {createFeedMutation.isPending ? "작성중..." : "완료"}
           </button>
         </div>
       </div>
@@ -65,28 +94,35 @@ function PostFeed() {
   return (
     <>
       <TopBarContainer TopBarContent={<TopBarContent />}>
-        <div className="flex flex-col px-[16px] ">
-          {/* ✅ 이미지 업로드 영역 */}
+        <div className="flex flex-col px-[16px] overflow-y-auto max-h-screen pb-[100px]">
+          {/* ✅ 다중 이미지 업로드 영역 */}
           <div className="flex flex-col mb-[19px]">
-            <ImageUploadBox
-              className="w-full mt-4 aspect-square rounded-[5px] bg-ct-gray-100 overflow-hidden"
-              textClassName="text-body3 text-ct-gray-300"
-              onUploaded={(url) => setImage(url)}
+            <MultiImageUploadBox
+              className="w-full mt-4"
+              images={images}
+              onImagesChange={setImages}
+              maxImages={10}
+              S3Folder="feeds"
             />
           </div>
           {/* ✅ 내용 입력 영역 */}
-          <div className="mb-[29px] pl-3">
-            <p className="text-sub1 font-semibold text-ct-black-200 mb-[11px]">
+          <div className="mb-[29px]">
+            <p className="text-sub1 font-semibold text-ct-black-200 mb-[11px] ml-3">
               내용 입력
             </p>
             <textarea
+              ref={textareaRef}
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              maxLength={1000}
-              placeholder="내용을 아침엔 트렌드 체크, 점심 전엔 경쟁 서비스 분석, 오후엔 사용 자 리서치 인터뷰. 집중하려면 역시 인사동 카페 자유로운 시간을 보내며 루틴 채워가기!"
-              className="w-full h-[112px] text-body1 text-ct-black-200 resize-none outline-none placeholder:text-ct-gray-300 bg-transparent"
+              maxLength={2200}
+              className="w-full min-h-[48px] text-body1 text-ct-black-200 resize-none outline-none bg-[#F7F7F7] rounded-[8px] p-[12px] mb-[16px]"
             />
-            <KeywordInput />
+            <div className="ml-3">
+              <KeywordInput 
+                keywords={keywords}
+                setKeywords={setKeywords}
+              />
+            </div>
           </div>
         </div>
         <BottomNav />
