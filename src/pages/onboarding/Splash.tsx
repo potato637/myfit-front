@@ -40,17 +40,19 @@ function Splash() {
           username: response.result.name,
           email: response.result.email,
         });
-        navigate("/feed/feed-main"); // 메인 페이지로 이동
+        navigate("/feed"); // 메인 페이지로 이동
       }
     } catch (apiError) {
       console.error("로그인 에러:", apiError);
-      
+
       // Axios 에러인지 확인
       if (apiError && typeof apiError === "object" && "response" in apiError) {
         const axiosError = apiError as { response?: { status: number } };
-        
+
         if (axiosError.response?.status === 401) {
-          setError("로그인에 실패하였습니다. 이메일이나 비밀번호를 확인해주세요.");
+          setError(
+            "로그인에 실패하였습니다. 이메일이나 비밀번호를 확인해주세요."
+          );
         } else if (axiosError.response?.status === 500) {
           setError("서버에 오류가 발생하였습니다.");
         } else {

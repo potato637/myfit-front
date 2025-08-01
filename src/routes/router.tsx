@@ -97,12 +97,12 @@ const router = createBrowserRouter([
 
           {
             path: "chatting",
+            element: <ChattingList />,
             children: [
               {
                 path: "coffeechatrequest/:chattingRoomId",
                 element: <RequestCoffeeChat />,
               },
-              { path: "chattinglist", element: <ChattingList /> },
               { path: "coffeechatlist", element: <CoffeeChatList /> },
               { path: "coffeechatstorage", element: <CoffeeChatStorage /> },
               { path: ":chattingRoomId", element: <Chatting /> },

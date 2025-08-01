@@ -1,11 +1,15 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function BottomNav() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   return (
     <div className="w-full h-[89px] fixed bottom-0 left-0 right-0 z-50 ct-center bg-ct-white pb-safe">
-      <div className="flex-1 ct-center flex-col gap-1">
+      <div
+        className="flex-1 ct-center flex-col gap-1"
+        onClick={() => navigate("/feed")}
+      >
         <img
           src={
             pathname.startsWith("/feed")
@@ -25,7 +29,10 @@ function BottomNav() {
           피드
         </span>
       </div>
-      <div className="flex-1 ct-center flex-col gap-1">
+      <div
+        className="flex-1 ct-center flex-col gap-1"
+        onClick={() => navigate("/searching")}
+      >
         <img
           src={
             pathname.startsWith("/searching")
@@ -45,7 +52,10 @@ function BottomNav() {
           카드 검색
         </span>
       </div>
-      <div className="flex-1 ct-center flex-col gap-1">
+      <div
+        className="flex-1 ct-center flex-col gap-1"
+        onClick={() => navigate("/chatting")}
+      >
         <img
           src={
             pathname.startsWith("/chatting")
@@ -65,7 +75,10 @@ function BottomNav() {
           채팅
         </span>
       </div>
-      <div className="flex-1 ct-center flex-col gap-1">
+      <div
+        className="flex-1 ct-center flex-col gap-1"
+        onClick={() => navigate("/recruiting")}
+      >
         <img
           src={
             pathname.startsWith("/recruiting")
@@ -85,7 +98,10 @@ function BottomNav() {
           리크루팅
         </span>
       </div>
-      <div className="flex-1 ct-center flex-col gap-1">
+      <div
+        className="flex-1 ct-center flex-col gap-1"
+        onClick={() => navigate("/mypage")}
+      >
         <img
           src={
             pathname.startsWith("/mypage")
