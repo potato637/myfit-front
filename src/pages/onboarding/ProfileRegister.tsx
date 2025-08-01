@@ -138,7 +138,7 @@ function ProfileRegister() {
             value={selectedSkillLabel}
             placeholder="희망직무 입력"
             onClick={() =>
-              nav("/personalsetting/profile/jobpreference", {
+              nav("/onboarding/jobpreference", {
                 state: {
                   from: "onboarding",
                   prevData: {

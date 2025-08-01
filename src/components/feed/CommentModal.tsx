@@ -13,6 +13,8 @@ interface CommentModalProps {
   onClose: () => void;
   onCommentCreate: (commentText: string) => void;
   onReplyCreate: (commentText: string, parentCommentId: number) => void;
+  onCommentDelete?: (commentId: number) => void;
+  currentUserId?: number;
 }
 
 export default function CommentModal({
@@ -21,6 +23,8 @@ export default function CommentModal({
   onClose,
   onCommentCreate,
   onReplyCreate,
+  onCommentDelete,
+  currentUserId,
 }: CommentModalProps) {
   const [closing, setClosing] = useState(false);
   const [replyToCommentId, setReplyToCommentId] = useState<number | null>(null);
@@ -95,8 +99,13 @@ export default function CommentModal({
             onReplyClick={(commentId, userName) => {
               setReplyToCommentId(commentId);
               setReplyToUserName(userName);
+              // 답글 대상 사용자명을 입력 필드에 미리 채우기
+              inputRef.current?.setText(`@${userName} `);
+              // 입력 필드에 포커스
               inputRef.current?.focus();
             }}
+            onDeleteClick={onCommentDelete}
+            currentUserId={currentUserId}
           />
         </div>
         <div className="fixed bottom-0 left-0 right-0 z-50 bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200">
@@ -113,11 +122,23 @@ export default function CommentModal({
               } else {
                 onCommentCreate(text);
               }
+              // 전송 후 입력 필드 초기화 (CommentInputField에서 이미 처리되지만 명시적으로)
+              inputRef.current?.setText("");
             }}
           />
           {replyToCommentId && (
-            <div className="text-sm text-ct-gray-300 mb-2">
-              {replyToUserName}님에게 답글 작성 중...
+            <div className="flex items-center justify-between text-sm text-ct-gray-300 mb-2">
+              <span>{replyToUserName}님에게 답글 작성 중...</span>
+              <button
+                onClick={() => {
+                  setReplyToCommentId(null);
+                  setReplyToUserName("");
+                  inputRef.current?.setText("");
+                }}
+                className="text-ct-main-blue-100 hover:underline"
+              >
+                취소
+              </button>
             </div>
           )}
         </div>{" "}

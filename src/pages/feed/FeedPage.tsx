@@ -1,19 +1,23 @@
 import { useState, useEffect, useRef } from "react";
 import { useInfiniteQuery, useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import FeedCard from "../../components/feed/FeedCard";
 import FixedHeader from "../../components/feed/FixedHeader";
 import BottomNavContainer from "../../components/layouts/BottomNavContainer";
 import FeedCardSkeleton from "../../components/skeletons/feed/FeedCardSkeleton";
-import { getFeedsWithCursor, addFeedLike, removeFeedLike, getFeedComments, createComment } from "../../apis/feed";
+import { getFeedsWithCursor, addFeedLike, removeFeedLike, getFeedComments, createComment, deleteComment } from "../../apis/feed";
 import { FeedResponse } from "../../types/feed/feed";
 import CommentModal from "../../components/feed/CommentModal";
 import { motion, AnimatePresence } from "framer-motion";
 import getTimeAgo from "../../utils/timeAgo";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function FeedPage() {
   const [activePostId, setActivePostId] = useState<string | null>(null);
   const queryClient = useQueryClient();
   const loadMoreRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth(); // 현재 사용자 정보
+  const navigate = useNavigate();
 
   // 좋아요 추가 mutation
   const addLikeMutation = useMutation({
@@ -95,6 +99,25 @@ export default function FeedPage() {
     }
   };
 
+  // 댓글 삭제 mutation
+  const deleteCommentMutation = useMutation({
+    mutationFn: ({ commentId }: { commentId: number }) => 
+      deleteComment(Number(activePostId), commentId),
+    onSuccess: () => {
+      // 댓글 삭제 성공 시 댓글 목록과 피드 목록 모두 새로고침
+      queryClient.invalidateQueries({ queryKey: ['comments', activePostId] });
+      queryClient.invalidateQueries({ queryKey: ['feeds'] }); // 댓글 개수 업데이트
+    },
+    onError: (error) => {
+      console.error('댓글 삭제 실패:', error);
+    }
+  });
+
+  // 댓글 삭제 핸들러
+  const handleCommentDelete = (commentId: number) => {
+    deleteCommentMutation.mutate({ commentId });
+  };
+
   const {
     data,
     fetchNextPage,
@@ -162,6 +185,7 @@ export default function FeedPage() {
                   name: feed.user?.name || "알 수 없음",
                   job: feed.user?.sector || "알 수 없음",
                   profileImage: feed.user?.profile_img || "",
+                  serviceId: feed.user?.id,
                 }}
                 post={{
                   images: feed.images || [],
@@ -176,6 +200,13 @@ export default function FeedPage() {
                 }}
                 onCommentClick={() => setActivePostId(feed.feed_id.toString())}
                 onLikeClick={() => handleLikeToggle(feed.feed_id, feed.is_liked)}
+                onProfileClick={() => {
+                  console.log('프로필 클릭됨:', feed.user);
+                  if (feed.user?.id) {
+                    console.log('프로필 페이지로 이동:', `/feed/profile/${feed.user.id}`);
+                    navigate(`/feed/profile/${feed.user.id}`);
+                  }
+                }}
               />
             ))}
         
@@ -211,6 +242,8 @@ export default function FeedPage() {
               onClose={() => setActivePostId(null)}
               onCommentCreate={handleCommentCreate}
               onReplyCreate={handleReplyCreate}
+              onCommentDelete={handleCommentDelete}
+              currentUserId={user?.id}
             />
           </>
         )}

@@ -53,3 +53,10 @@ export interface CreateCommentResponse {
   message: string;
   comment_id: number;
 }
+
+// 댓글 삭제 응답
+export interface DeleteCommentResponse {
+  isSuccess: boolean;
+  code: number;
+  message: string;
+}

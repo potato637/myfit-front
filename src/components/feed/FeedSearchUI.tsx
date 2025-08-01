@@ -42,7 +42,7 @@ function FeedSearchUI() {
           onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
         <button onClick={handleSearch} className="text-gray-500 px-2">
-          <img src="/public/assets/feed/searchfeed.svg" alt="검색 아이콘" />
+          <img src="/assets/feed/searchfeed.svg" alt="검색 아이콘" />
         </button>
       </div>
 

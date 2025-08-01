@@ -73,6 +73,7 @@ const router = createBrowserRouter([
           { path: "company-verification", element: <CompanyVerification /> },
           { path: "keyword-selector", element: <KeywordSelectorPage /> },
           { path: "jobpreference", element: <JobPreference /> },
+          { path: "reset-password", element: <ResetPasssword /> },
         ],
       },
       {
@@ -86,7 +87,7 @@ const router = createBrowserRouter([
               { path: "search", element: <FeedSearch /> },
               { path: "alarm", element: <MyAlarm /> },
               { path: "post", element: <PostFeed /> },
-              { path: "profile", element: <FeedProfile /> },
+              { path: "profile/:id", element: <FeedProfile /> },
             ],
           },
 
@@ -150,10 +151,6 @@ const router = createBrowserRouter([
           {
             path: "personalsetting/account",
             element: <Account />,
-          },
-          {
-            path: "personalsetting/resetpassword",
-            element: <ResetPasssword />,
           },
           {
             path: "companysetting/profile",

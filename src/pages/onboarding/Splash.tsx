@@ -138,7 +138,7 @@ function Splash() {
 
         {/* 하단 링크 */}
         <div className="ct-center gap-[32px] text-ct-white text-sub2 mb-[57px]">
-          <button onClick={() => navigate("/personalsetting/resetpassword")}>
+          <button onClick={() => navigate("/onboarding/reset-password")}>
             비밀번호 재설정
           </button>
           <div className="w-px h-[12px] bg-ct-white" />

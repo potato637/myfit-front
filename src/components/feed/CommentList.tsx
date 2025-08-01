@@ -5,25 +5,48 @@ import CommentItem from "./CommentItem";
 interface Props {
   comments: Comment[];
   onReplyClick?: (commentId: number, userName: string) => void;
+  onDeleteClick?: (commentId: number) => void;
+  currentUserId?: number;
 }
 
-function CommentList({ comments, onReplyClick }: Props) {
+function CommentList({ comments, onReplyClick, onDeleteClick, currentUserId }: Props) {
   return (
     <div className="flex flex-col gap-6">
       {comments.map((comment) => (
-        <CommentThread key={comment.id} comment={comment} onReplyClick={onReplyClick} />
+        <CommentThread 
+          key={comment.id} 
+          comment={comment} 
+          onReplyClick={onReplyClick}
+          onDeleteClick={onDeleteClick}
+          currentUserId={currentUserId}
+        />
       ))}
     </div>
   );
 }
 
-function CommentThread({ comment, onReplyClick }: { comment: Comment; onReplyClick?: (commentId: number, userName: string) => void }) {
+function CommentThread({ 
+  comment, 
+  onReplyClick, 
+  onDeleteClick, 
+  currentUserId 
+}: { 
+  comment: Comment; 
+  onReplyClick?: (commentId: number, userName: string) => void;
+  onDeleteClick?: (commentId: number) => void;
+  currentUserId?: number;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const hasReplies = comment.replies.length > 0;
 
   return (
     <div className="flex flex-col gap-4 ">
-      <CommentItem comment={comment} onReplyClick={onReplyClick} />
+      <CommentItem 
+        comment={comment} 
+        onReplyClick={onReplyClick}
+        onDeleteClick={onDeleteClick}
+        currentUserId={currentUserId}
+      />
 
       {hasReplies && !isOpen && (
         <div className="mt-2 flex items-center justify-center gap-2">
@@ -44,7 +67,13 @@ function CommentThread({ comment, onReplyClick }: { comment: Comment; onReplyCli
       {hasReplies && isOpen && (
         <>
           {comment.replies.map((reply) => (
-            <CommentItem key={reply.id} comment={reply} isReply />
+            <CommentItem 
+              key={reply.id} 
+              comment={reply} 
+              isReply
+              onDeleteClick={onDeleteClick}
+              currentUserId={currentUserId}
+            />
           ))}
 
           <div className="mt-2 flex items-center justify-center gap-2">

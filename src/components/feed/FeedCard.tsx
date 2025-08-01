@@ -9,6 +9,7 @@ interface User {
   name: string;
   profileImage: string;
   job: string;
+  serviceId?: number;
 }
 
 interface Post {
@@ -36,11 +37,13 @@ function FeedCard({
   post,
   onCommentClick,
   onLikeClick,
+  onProfileClick,
 }: {
   user: User;
   post: Post;
   onCommentClick?: () => void;
   onLikeClick?: () => void;
+  onProfileClick?: () => void;
 }) {
   const paginationRef = useRef<HTMLDivElement>(null);
   const [isReady, setIsReady] = useState(false);
@@ -58,10 +61,16 @@ function FeedCard({
         <img
           src={user.profileImage}
           alt="프로필 이미지"
-          className="w-10 h-10 rounded-full object-cover"
+          className="w-10 h-10 rounded-full object-cover cursor-pointer"
+          onClick={onProfileClick}
         />
         <div className="flex gap-3">
-          <span className="text-sub1 text-ct-black-100">{user.name}</span>
+          <span 
+            className="text-sub1 text-ct-black-100 cursor-pointer"
+            onClick={onProfileClick}
+          >
+            {user.name}
+          </span>
           <span className="text-sub2 text-ct-blue-gray-100">{user.job}</span>
         </div>
       </div>

@@ -5,9 +5,13 @@ interface Props {
   comment: Comment | Reply;
   isReply?: boolean;
   onReplyClick?: (commentId: number, userName: string) => void;
+  onDeleteClick?: (commentId: number) => void;
+  currentUserId?: number; // 현재 사용자 ID (삭제 권한 확인용)
 }
 
-function CommentItem({ comment, isReply = false, onReplyClick }: Props) {
+function CommentItem({ comment, isReply = false, onReplyClick, onDeleteClick, currentUserId }: Props) {
+  // 현재 사용자가 작성한 댓글인지 확인
+  const isMyComment = currentUserId && comment.service.id === currentUserId;
   return (
     <div className={`flex gap-2 ${isReply ? "ml-10" : ""}`}>
       {/* 프로필 이미지 */}
@@ -41,9 +45,19 @@ function CommentItem({ comment, isReply = false, onReplyClick }: Props) {
               </button>
             )}
           </div>
-          <button type="button" className="hover:underline">
-            삭제
-          </button>
+          {isMyComment && onDeleteClick && (
+            <button 
+              type="button" 
+              className="hover:underline text-red-500"
+              onClick={() => {
+                if (window.confirm("댓글을 삭제하시겠습니까?")) {
+                  onDeleteClick(comment.id);
+                }
+              }}
+            >
+              삭제
+            </button>
+          )}
         </div>
       </div>
     </div>

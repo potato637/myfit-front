@@ -12,93 +12,98 @@ function ProfileCardRegister() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // 폼 데이터 상태
   const [cardImageUrl, setCardImageUrl] = useState<string>(""); // S3 업로드된 이미지 URL
   const [oneLineIntro, setOneLineIntro] = useState("");
   const [detailedDescription, setDetailedDescription] = useState("");
   const [link, setLink] = useState("");
   const [keywords, setKeywords] = useState<string[]>([]);
-  
+
   // KeywordSelector에서 돌아온 데이터 처리
   useEffect(() => {
     if (location.state?.selectedKeywords) {
       setKeywords(location.state.selectedKeywords);
       // 다른 폼 데이터도 복원
-      if (location.state.oneLineIntro) setOneLineIntro(location.state.oneLineIntro);
-      if (location.state.detailedDescription) setDetailedDescription(location.state.detailedDescription);
+      if (location.state.oneLineIntro)
+        setOneLineIntro(location.state.oneLineIntro);
+      if (location.state.detailedDescription)
+        setDetailedDescription(location.state.detailedDescription);
       if (location.state.link) setLink(location.state.link);
       // 이미지 정보도 복원
-      if (location.state.cardImageUrl) setCardImageUrl(location.state.cardImageUrl);
+      if (location.state.cardImageUrl)
+        setCardImageUrl(location.state.cardImageUrl);
     }
   }, [location.state]);
-  
+
   const TopBarContent = () => {
     return <span className="text-h2 font-sans text-ct-black-300">프로필</span>;
   };
-  
+
   const { signupData } = useSignup();
 
   const handleSubmit = async () => {
     try {
       setIsSubmitting(true);
-      
+
       // 필수 데이터 검증
       if (!signupData.serviceId) {
-        console.error("❌ [ProfileCardRegister] service_id가 없습니다:", signupData);
+        console.error(
+          "❌ [ProfileCardRegister] service_id가 없습니다:",
+          signupData
+        );
         alert("회원가입 정보가 없습니다. 다시 로그인해주세요.");
         return;
       }
-      
+
       if (!oneLineIntro.trim() || !detailedDescription.trim()) {
         alert("한줄 소개와 상세 설명을 모두 입력해주세요.");
         return;
       }
-      
+
       if (keywords.length === 0) {
         alert("키워드를 최소 1개 이상 선택해주세요.");
         return;
       }
-      
+
       // 이미지 URL 처리
       if (!cardImageUrl) {
         alert("카드 이미지를 업로드해주세요.");
         return;
       }
-      
+
       // 이력/활동 카드 등록 API 호출
       const cardRequest: ActivityCardRequest = {
-        service_id: signupData.serviceId!, // 위에서 null 체크 완료
+        service_id: signupData.serviceId as number, // 위에서 null 체크 완료
         card_img: cardImageUrl,
         card_one_line_profile: oneLineIntro.trim(),
         detailed_profile: detailedDescription.trim(),
         link: link.trim(),
-        keyword_text: keywords
+        keyword_text: keywords,
       };
-      
+
       console.log("🎯 [ProfileCardRegister] 카드 등록 요청:", cardRequest);
       console.log("🔍 [ProfileCardRegister] SignupData 상태:", signupData);
-      
+
       const response = await createActivityCard(cardRequest);
-      
+
       if (response.message) {
         console.log("✅ [ProfileCardRegister] 카드 등록 성공:", response);
-        navigate("/onboarding", { 
-          state: { message: "카드 등록이 완료되었습니다! 로그인해주세요." }
+        navigate("/onboarding", {
+          state: { message: "카드 등록이 완료되었습니다! 로그인해주세요." },
         });
       } else {
-        throw new Error(response.message || "카드 등록 실패");
+        throw new Error("카드 등록 실패");
       }
-      
     } catch (error: any) {
       console.error("❌ [ProfileCardRegister] 카드 등록 실패:", error);
-      
+
       // 구체적인 에러 메시지 표시
       if (error.response?.status === 400) {
         alert("입력 정보를 다시 확인해주세요.");
       } else if (error.response?.status === 401) {
         alert("로그인이 필요합니다. 다시 로그인해주세요.");
-        navigate("/onboarding/splash");
+        navigate("/onboarding/");
         return;
       } else if (error.response?.status === 500) {
         alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
@@ -180,23 +185,25 @@ function ProfileCardRegister() {
           <div className="flex flex-wrap items-center gap-[8px] mb-[9px]">
             <button
               type="button"
-              onClick={() => navigate("/onboarding/keyword-selector", {
-                state: {
-                  from: "profile-card-register",
-                  currentData: {
-                    oneLineIntro,
-                    detailedDescription,
-                    link
+              onClick={() =>
+                navigate("/onboarding/keyword-selector", {
+                  state: {
+                    from: "profile-card-register",
+                    currentData: {
+                      oneLineIntro,
+                      detailedDescription,
+                      link,
+                    },
+                    selectedKeywords: keywords,
+                    cardImageUrl: cardImageUrl, // 이미지 정보도 전달
                   },
-                  selectedKeywords: keywords,
-                  cardImageUrl: cardImageUrl // 이미지 정보도 전달
-                }
-              })}
+                })
+              }
               className="min-w-[50px] h-[28px] px-[12px] rounded-[9px] bg-ct-gray-100 text-ct-gray-200 text-[24px] flex items-center justify-center"
             >
               +
             </button>
-            
+
             {/* 선택된 키워드 +버튼 옆에 렌더링 */}
             {keywords.map((keyword, index) => (
               <span
@@ -207,7 +214,7 @@ function ProfileCardRegister() {
               </span>
             ))}
           </div>
-          
+
           <span className="text-ct-gray-300 text-body2">
             카드에 대한 키워드를 추가해주세요! (최대 3개)
           </span>
@@ -222,17 +229,17 @@ function ProfileCardRegister() {
                   oneLineIntro,
                   detailedDescription,
                   link,
-                  keywords
+                  keywords,
                 },
-                from: "profile-card-register"
-              }
+                from: "profile-card-register",
+              },
             });
           }}
           className="text-center text-sub1 text-ct-main-blue-100 my-[24px] cursor-pointer"
         >
           미리보기
         </button>
-        <BottomCTAButton 
+        <BottomCTAButton
           text={isSubmitting ? "등록 중..." : "카드 등록 완료"}
           onClick={handleSubmit}
           disabled={isSubmitting || !oneLineIntro || !detailedDescription}

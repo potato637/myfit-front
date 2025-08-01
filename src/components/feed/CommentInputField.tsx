@@ -2,6 +2,7 @@ import React, { useImperativeHandle, useState, forwardRef } from "react";
 
 export interface CommentInputFieldRef {
   setText: (value: string) => void;
+  focus: () => void;
 }
 
 interface CommentInputFieldProps {
@@ -13,6 +14,7 @@ const CommentInputField = forwardRef<
   CommentInputFieldProps
 >(({ onSend }, ref) => {
   const [text, setText] = useState("");
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleSubmit = () => {
     if (text.trim() === "") return;
@@ -29,12 +31,14 @@ const CommentInputField = forwardRef<
 
   useImperativeHandle(ref, () => ({
     setText: (value: string) => setText(value),
+    focus: () => inputRef.current?.focus(),
   }));
 
   return (
     <div className="w-full bg-white px-0">
       <div className="relative">
         <input
+          ref={inputRef}
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}

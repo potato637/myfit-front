@@ -1,10 +1,18 @@
 import apiClient from "./apiClient";
 import { FeedResponse } from "../types/feed/feed";
 import { LikeFeedResponse } from "../types/feed/like";
-import { CommentsResponse, GetCommentsParams, CreateCommentRequest, CreateCommentResponse } from "../types/feed/comment";
+import { CommentsResponse, GetCommentsParams, CreateCommentRequest, CreateCommentResponse, DeleteCommentResponse } from "../types/feed/comment";
 import { CreateFeedRequest, CreateFeedResponse } from "../types/feed/createFeed";
-import { SearchUsersResponse, SearchUsersParams } from "../types/feed/search";
-import { SearchKeywordResponse, SearchKeywordParams } from "../types/feed/searchKeyword";
+import { 
+  SearchUsersResponse, 
+  SearchUsersParams,
+  SearchHashtagParams,
+  SearchHashtagResponse,
+  SearchKeywordResponse,
+  SearchKeywordParams,
+  AnalyzeHashtagParams,
+  AnalyzeHashtagResponse
+} from "../types/feed/search";
 
 export const getFeedsWithCursor = async (cursor?: number): Promise<FeedResponse> => {
   const params = cursor ? { last_feed_id: cursor } : {};
@@ -63,5 +71,35 @@ export const searchFeedsByKeyword = async ({ keyword, last_feed_id }: SearchKeyw
   if (last_feed_id) params.last_feed_id = last_feed_id;
   
   const response = await apiClient.get<SearchKeywordResponse>("/api/feeds/search/keyword", { params });
+  return response.data;
+};
+
+// 키워드로 해시태그 분석
+export const analyzeHashtags = async ({ keyword, last_hashtag_id }: AnalyzeHashtagParams): Promise<AnalyzeHashtagResponse> => {
+  const params: Record<string, string | number> = { keyword };
+  if (last_hashtag_id) params.last_hashtag_id = last_hashtag_id;
+  
+  console.log('🔄 [API] 해시태그 분석 요청:', params);
+  const response = await apiClient.get<AnalyzeHashtagResponse>("/api/feeds/search/hashtag/analyze", { params });
+  console.log('✅ [API] 해시태그 분석 응답:', response.data);
+  return response.data;
+};
+
+// 해시태그로 피드 검색
+export const searchFeedsByHashtag = async ({ hashtag, last_feed_id }: SearchHashtagParams): Promise<SearchHashtagResponse> => {
+  const params: Record<string, string | number> = { hashtag };
+  if (last_feed_id) params.last_feed_id = last_feed_id;
+  
+  console.log('🔄 [API] 해시태그 검색 요청:', params);
+  const response = await apiClient.get<SearchHashtagResponse>("/api/feeds/search/hashtag", { params });
+  console.log('✅ [API] 해시태그 검색 응답:', response.data);
+  return response.data;
+};
+
+// 댓글 삭제
+export const deleteComment = async (feedId: number, commentId: number): Promise<DeleteCommentResponse> => {
+  console.log('🗑️ [API] 댓글 삭제 요청:', { feedId, commentId });
+  const response = await apiClient.delete<DeleteCommentResponse>(`/api/feeds/${feedId}/comments/${commentId}`);
+  console.log('✅ [API] 댓글 삭제 응답:', response.data);
   return response.data;
 };
