@@ -47,28 +47,80 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
-      // 공개 경로 (로그인 여부와 관계 없이 접근 가능한 경로를 넣으시면 됩니다.)
+      {
+        path: "onboarding",
+        element: <Splash />,
+        children: [
+          { path: "selectmembers", element: <SelectMembers /> },
+          { path: "register-method", element: <RegisterMethod /> },
+          { path: "register-email", element: <RegisterEmail /> },
+          { path: "profile-register", element: <ProfileRegister /> },
+          { path: "profile-card-register", element: <ProfileCardRegister /> },
+          { path: "profile-preview", element: <ProfilePreview /> },
+          {
+            path: "company-profile-register",
+            element: <CompanyProfileRegister />,
+          },
+          { path: "company-card-register", element: <CompanyCardRegister /> },
+          { path: "company-preview", element: <CompanyPreview /> },
+          { path: "company-verification", element: <CompanyVerification /> },
+          { path: "keyword-selector", element: <KeywordSelectorPage /> },
+          { path: "company-verification", element: <CompanyVerification /> },
+          { path: "keyword-selector", element: <KeywordSelectorPage /> },
+          { path: "jobpreference", element: <JobPreference /> },
+        ],
+      },
       {
         element: <ProtectedRoute />,
         children: [
-          // 이곳에는 보호된 경로 (로그인 필요)를 넣으시면 됩니다.
-          // 각 페이지 별로 <Outlet />을 자유롭게 사용할 수 있습니다.
-          { path: "mypage", element: <Profile /> },
-          { path: "mypage/card", element: <CardDetail /> },
-          { path: "mypage/feed", element: <FeedDetail /> },
-          { path: "mypage/status", element: <ProfileStatus /> },
           {
-            path: "recruit/registerannouncement",
-            element: <RegisterAnnouncement />,
+            path: "feed",
+            element: <FeedPage />,
+            children: [
+              { path: "search", element: <FeedSearch /> },
+              { path: "alarm", element: <MyAlarm /> },
+              { path: "post", element: <PostFeed /> },
+            ],
           },
+
           {
-            path: "recruit/announcement/:recruitment_id",
-            element: <RecruitAnnouncement />,
+            path: "mypage",
+            element: <Profile />,
+            children: [
+              { path: "card", element: <CardDetail /> },
+              { path: "feed", element: <FeedDetail /> },
+              { path: "status", element: <ProfileStatus /> },
+              { path: "networking", element: <Networking /> },
+              { path: "setting", element: <MypageSetting /> },
+            ],
           },
+
           {
-            path: "recruit/savedannouncement",
-            element: <SavedAnnouncement />,
+            path: "chatting",
+            children: [
+              {
+                path: "coffeechatrequest/:chattingRoomId",
+                element: <RequestCoffeeChat />,
+              },
+              { path: "chattinglist", element: <ChattingList /> },
+              { path: "coffeechatlist", element: <CoffeeChatList /> },
+              { path: "coffeechatstorage", element: <CoffeeChatStorage /> },
+              { path: ":chattingRoomId", element: <Chatting /> },
+            ],
           },
+
+          {
+            path: "recruiting",
+            element: <Recruiting />,
+            children: [
+              { path: "jobpreference", element: <JobPreference /> },
+              { path: "register", element: <RegisterAnnouncement /> },
+              { path: ":recruitment_id", element: <RecruitAnnouncement /> },
+              { path: "saved", element: <SavedAnnouncement /> },
+            ],
+          },
+
+          // 민수 정리
           {
             path: "companysetting",
             element: <CompanySetting />,
@@ -78,27 +130,11 @@ const router = createBrowserRouter([
             element: <PersonalSetting />,
           },
           {
-            path: "feed/feed-main",
-            element: <FeedPage />,
-          },
-          {
-            path: "feed/feed-search",
-            element: <FeedSearch />,
-          },
-          {
-            path: "feed/my-alarm",
-            element: <MyAlarm />,
-          },
-          {
-            path: "feed/post-feed",
-            element: <PostFeed />,
-          },
-          {
-            path: "companysetting/alarmsetting",
+            path: "alarmsetting",
             element: <AlarmSetting />,
           },
           {
-            path: "companysetting/verifiedsetting",
+            path: "verifiedsetting",
             element: <VerifiedSettingPage />,
           },
           {
@@ -110,10 +146,6 @@ const router = createBrowserRouter([
             element: <ResetPasssword />,
           },
           {
-            path: "coffeechat/request",
-            element: <RequestCoffeeChat />,
-          },
-          {
             path: "companysetting/profile",
             element: <CompanyProfile />,
           },
@@ -122,86 +154,11 @@ const router = createBrowserRouter([
             element: <PersonalProfile />,
           },
           {
-            path: "chatting/:chattingRoomId",
-            element: <Chatting />,
+            path: "personalsetting/profile/jobpreference",
+            element: <JobPreference />,
           },
-          {
-            path: "chatting/chattinglist",
-            element: <ChattingList />,
-          },
-          {
-            path: "chatting/coffeechatlist",
-            element: <CoffeeChatList />,
-          },
-          {
-            path: "chatting/coffeechatstorage",
-            element: <CoffeeChatStorage />,
-          },
-          {
-            path: "mypage/networking",
-            element: <Networking />,
-          },
-          {
-            path: "mypage/setting",
-            element: <MypageSetting />,
-          },
+          // 민수 정리
         ],
-      },
-      {
-        path: "recruit",
-        element: <Recruiting />,
-      },
-      {
-        path: "onboarding",
-        element: <Splash />,
-      },
-      {
-        path: "onboarding/selectmembers",
-        element: <SelectMembers />,
-      },
-      {
-        path: "onboarding/register-method",
-        element: <RegisterMethod />,
-      },
-      {
-        path: "onboarding/register-email",
-        element: <RegisterEmail />,
-      },
-      {
-        path: "onboarding/profile-register",
-        element: <ProfileRegister />,
-      },
-      {
-        path: "onboarding/profile-card-register",
-        element: <ProfileCardRegister />,
-      },
-      {
-        path: "onboarding/profile-preview",
-        element: <ProfilePreview />,
-      },
-      {
-        path: "onboarding/company-profile-register",
-        element: <CompanyProfileRegister />,
-      },
-      {
-        path: "onboarding/company-card-register",
-        element: <CompanyCardRegister />,
-      },
-      {
-        path: "onboarding/company-preview",
-        element: <CompanyPreview />,
-      },
-      {
-        path: "onboarding/company-verification",
-        element: <CompanyVerification />,
-      },
-      {
-        path: "onboarding/keyword-selector",
-        element: <KeywordSelectorPage />,
-      },
-      {
-        path: "personalsetting/profile/jobpreference",
-        element: <JobPreference />,
       },
     ],
   },

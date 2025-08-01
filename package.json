@@ -31,6 +31,7 @@
     "swiper": "^11.2.10",
     "tailwind-scrollbar-hide": "^4.0.0",
     "tanstack": "^1.0.3",
+    "uuid": "^11.1.0",
     "zod": "^4.0.5"
   },
   "devDependencies": {

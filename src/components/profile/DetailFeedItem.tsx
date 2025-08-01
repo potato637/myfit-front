@@ -6,20 +6,8 @@ import "swiper/css/navigation";
 import FeedTagContainer from "./FeedTagContainer";
 import { useEffect, useRef, useState } from "react";
 
-const imgList = [
-  "/assets/profile/feed.jpg",
-  "/assets/profile/profileImage.png",
-  "/assets/profile/feed.jpg",
-  "/assets/profile/feed.jpg",
-  "/assets/profile/feed.jpg",
-  "/assets/profile/feed.jpg",
-  "/assets/profile/feed.jpg",
-  "/assets/profile/feed.jpg",
-  "/assets/profile/feed.jpg",
-  "/assets/profile/feed.jpg",
-];
-
-function DetailFeedItem() {
+import { FeedItem } from "../../apis/mypageAPI";
+function DetailFeedItem({ item }: { item: FeedItem }) {
   const [_, setIsReady] = useState(false);
   const paginationRef = useRef<HTMLDivElement>(null);
 
@@ -44,8 +32,8 @@ function DetailFeedItem() {
         }}
         className="mySwiper w-[343px] h-[359px]"
       >
-        {imgList.map((img, index) => (
-          <SwiperSlide key={index}>
+        {item.images.map((img) => (
+          <SwiperSlide key={img}>
             <img
               className="w-[343px] h-[359px] rounded-[5px] object-cover"
               src={img}
@@ -81,10 +69,7 @@ function DetailFeedItem() {
         </div>
       </div>
       <div className="w-full">
-        <p className="text-ct-black-300 text-body2">
-          아침엔 트렌드 체크, 점심 전엔 경쟁 서비스 분석,오후엔 사용자 리서치
-          인터뷰. 집중하려면 역시 인사동 카페 자유로운
-        </p>
+        <p className="text-ct-black-300 text-body2">{item.feed_text}</p>
       </div>
       <FeedTagContainer />
     </div>

@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useContext, useState, useEffect } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 import { checkAuthStatus } from "../apis/auth";
 
 interface UserType {
@@ -27,20 +33,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const initializeAuth = async () => {
       try {
         const response = await checkAuthStatus();
-        console.log('세션 확인 응답:', response);
+        console.log("세션 확인 응답:", response);
         if (response.isSuccess) {
           setUser({
             id: response.result.service_id,
             username: response.result.name,
-            email: response.result.email || ''
+            email: response.result.email || "",
           });
           setIsLoggedIn(true);
-          console.log('로그인 상태로 설정됨');
+          console.log("로그인 상태로 설정됨");
         } else {
-          console.log('로그인되지 않은 상태');
+          console.log("로그인되지 않은 상태");
         }
       } catch (error) {
-        console.error('세션 확인 실패:', error);
+        console.error("세션 확인 실패:", error);
       } finally {
         setIsLoading(false);
       }
@@ -52,11 +58,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoggedIn(false);
     };
 
-    window.addEventListener('auth:logout', handleAutoLogout);
+    window.addEventListener("auth:logout", handleAutoLogout);
     initializeAuth();
 
     return () => {
-      window.removeEventListener('auth:logout', handleAutoLogout);
+      window.removeEventListener("auth:logout", handleAutoLogout);
     };
   }, []);
 
@@ -71,7 +77,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, isLoading }}>
+    <AuthContext.Provider
+      value={{ isLoggedIn, user, login, logout, isLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -1,9 +1,10 @@
 import TopBarContainer from "../../components/common/TopBarContainer";
 import DetailIntroduction from "../../components/profile/DetailIntroduction";
 import DetailFeedItem from "../../components/profile/DetailFeedItem";
-import { useState, useEffect } from "react";
 import DetailIntroductionSkeleton from "../../components/skeletons/mypage/DetailIntroductionSkeleton";
 import DetailFeedItemSkeleton from "../../components/skeletons/mypage/DetailFeedItemSkeleton";
+import { useGetFeeds } from "../../hooks/mypageQueries";
+import { useAuth } from "../../contexts/AuthContext";
 
 const TopBarContent = () => {
   return (
@@ -16,29 +17,25 @@ const TopBarContent = () => {
 };
 
 function FeedDetail() {
-  const createList = Array.from({ length: 10 }, (_, i) => i + 1);
-  const [isReady, setIsReady] = useState<boolean>(false);
+  const { user } = useAuth();
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsReady(true);
-    }, 3000);
-  }, []);
+  const isFetching = false;
+  // const allFeeds = feed?.pages.flatMap((page) => page.result.feeds);
 
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
       <div className="w-full h-full bg-ct-gray-100 flex flex-col gap-[7px]">
-        {isReady ? (
-          <>
-            <DetailIntroduction />
-            {createList.map((_, index) => (
-              <DetailFeedItem key={index} />
-            ))}
-          </>
-        ) : (
+        {isFetching ? (
           <>
             <DetailIntroductionSkeleton />
             <DetailFeedItemSkeleton />
+          </>
+        ) : (
+          <>
+            <DetailIntroduction />
+            {/* {allFeeds?.map((feed) => (
+              <DetailFeedItem key={feed.feed_id} item={feed} />
+            ))} */}
           </>
         )}
       </div>

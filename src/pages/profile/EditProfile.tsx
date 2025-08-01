@@ -1,7 +1,11 @@
+import ProfileImgUploader from "../../components/profile/ProfileImgUploader";
+
 function EditProfile({
   setEditProfile,
+  imageUrl,
 }: {
   setEditProfile: React.Dispatch<React.SetStateAction<boolean>>;
+  imageUrl: string;
 }) {
   const handleCancelClick = () => {
     setEditProfile(false);
@@ -29,18 +33,7 @@ function EditProfile({
           </button>
         </div>
         <div className="ct-center flex-col gap-[36px]">
-          <img
-            src="/assets/profile/profileImage.png"
-            alt="프로필 이미지"
-            className="w-[251px] h-[251px] rounded-full object-cover"
-          />
-          <div className="ct-center gap-[10px] w-[135px] h-[38px] bg-ct-main-blue-100 rounded-[50px]">
-            <img
-              src="/assets/profile/profileImgChange.svg"
-              alt="프로필 이미지 수정"
-            />
-            <span className="text-sub1 text-ct-white">수정</span>
-          </div>
+          <ProfileImgUploader imageUrl={imageUrl} />
         </div>
       </div>
     </div>

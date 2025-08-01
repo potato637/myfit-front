@@ -1,6 +1,6 @@
 import apiClient from "./apiClient";
 
-export interface BaseResponse {
+interface BaseResponse {
   isSuccess: boolean;
   code: number;
   message: string;
@@ -8,23 +8,31 @@ export interface BaseResponse {
 
 export interface GetProfileResponse extends BaseResponse {
   result: {
-    id: string;
-    name: string;
-    one_line_profile: string;
-    birth_data: string;
-    Highest_grade: string;
-    link: string;
-    division: string;
-    grade_status: string;
-    created_at: string;
-    updated_at: string;
-    is_profile_completed: boolean;
-  } | null;
+    service: {
+      id: number;
+      recruiting_status: string;
+      profile_img: string;
+      high_sector: string;
+      low_sector: string;
+    };
+    user: {
+      id: number;
+      name: string;
+      one_line_profile: string;
+      Highest_grade: string | null;
+      link: string | null;
+      inc_AuthN_file: string | null;
+      division: string;
+      grade_status: string;
+      industry: string | null;
+      team_division: string | null;
+    };
+  };
 }
 export const getProfile = async (): Promise<GetProfileResponse> => {
   try {
     const { data } = await apiClient.get<GetProfileResponse>(
-      `mypage/profile_info`
+      `api/mypage/profile_info`
     );
     return data;
   } catch (error) {
@@ -37,7 +45,7 @@ export interface UpdateProfileImageResponse extends BaseResponse {
   result: {
     user_id: string;
     profile_img: string;
-  } | null;
+  };
 }
 export const updateProfileImage = async ({
   profile_img,
@@ -61,7 +69,7 @@ export interface UpdateProfileStatusResponse extends BaseResponse {
     user_id: string;
     service_id: string;
     recruiting_status: string;
-  } | null;
+  };
 }
 export const updateProfileStatus = async ({
   recruiting_status,
@@ -86,10 +94,11 @@ export interface FeedItem {
   user: {
     id: string;
     name: string;
+    sector: string;
     profile_img: string;
   };
   created_at: string;
-  image: string[];
+  images: string[];
   feed_text: string;
   hashtags: string;
   heart: number;
@@ -107,11 +116,9 @@ export interface GetFeedsResponse extends BaseResponse {
 export const getFeeds = async ({
   service_id,
   cursor,
-  limit = "10",
 }: {
   service_id: string;
   cursor: string;
-  limit: string;
 }): Promise<GetFeedsResponse> => {
   try {
     const { data } = await apiClient.get<GetFeedsResponse>(
@@ -119,7 +126,7 @@ export const getFeeds = async ({
       {
         params: {
           cursor,
-          limit,
+          limit: "10",
         },
       }
     );
@@ -143,16 +150,18 @@ export interface CardItem {
 export interface GetCardsResponse extends BaseResponse {
   result: {
     cards: CardItem[];
+    pagination: {
+      hasMore: boolean;
+      nextCursorId: string;
+    };
   };
 }
 export const getCards = async ({
   service_id,
   cursor,
-  limit = "10",
 }: {
   service_id: string;
   cursor: string;
-  limit: string;
 }): Promise<GetCardsResponse> => {
   try {
     const { data } = await apiClient.get<GetCardsResponse>(
@@ -160,7 +169,7 @@ export const getCards = async ({
       {
         params: {
           cursor,
-          limit,
+          limit: "10",
         },
       }
     );

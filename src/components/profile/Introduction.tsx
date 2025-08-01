@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useGetProfile } from "../../hooks/mypageQueries";
 
 function Introduction({
   setEditProfile,
@@ -7,6 +8,12 @@ function Introduction({
 }) {
   const certificated = true;
   const navigate = useNavigate();
+
+  const { data: profile, isLoading } = useGetProfile();
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <div className="w-[335px]">
@@ -17,15 +24,17 @@ function Introduction({
       />
       <div className="w-full flex justify-between items-center mt-4 h-[80px]">
         <img
-          src="/assets/profile/profileImage.png"
+          src={profile?.result.service.profile_img}
           alt="프로필 이미지"
           className="w-[70px] h-[70px] rounded-full"
           onClick={() => setEditProfile(true)}
         />
         <div className="w-[160px] h-full flex flex-col justify-between">
           <div className="h-[20px] flex items-center gap-1">
-            <span className="text-sub1 text-ct-black-100">장예솔 / 30</span>
-            {certificated && (
+            <span className="text-sub1 text-ct-black-100">
+              {profile?.result.user.name}
+            </span>
+            {profile?.result.user.inc_AuthN_file && (
               <img
                 src="/assets/profile/badge.svg"
                 alt="인증"
