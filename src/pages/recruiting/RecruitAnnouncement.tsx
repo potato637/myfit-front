@@ -3,11 +3,12 @@ import ImageDisplay from "../../components/common/ImageDisplay";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import BottomNav from "../../components/layouts/BottomNav";
 import {
+  useCreateChattingRoomMutation,
   usegetRecruitmentDetailQuery,
   useSubscribeRecruitmentMutation,
   useUnSubscribeRecruitmentMutation,
-} from "../../apis/recruiting/recruiting";
-import { useParams } from "react-router-dom";
+} from "../../hooks/recruiting/recruiting";
+import { useNavigate, useParams } from "react-router-dom";
 
 function RecruitAnnouncement() {
   const { recruitment_id } = useParams();
@@ -18,8 +19,10 @@ function RecruitAnnouncement() {
   const { mutate: subscribe } = useSubscribeRecruitmentMutation(recruitmentId);
   const { mutate: unsubscribe } =
     useUnSubscribeRecruitmentMutation(recruitmentId);
+  const { mutate: createChattingRoom } = useCreateChattingRoomMutation();
 
   const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null);
+  const nav = useNavigate();
 
   const handleSubscribe = () => {
     subscribe(undefined, {
@@ -37,10 +40,24 @@ function RecruitAnnouncement() {
     });
   };
 
+  const targetServiceId = data?.result.recruitment.writer.id;
+  console.log(targetServiceId);
+  const handleClick = () => {
+    if (!targetServiceId) return;
+    createChattingRoom(targetServiceId, {
+      onSuccess: (res) => {
+        nav(`/chatting/${res.result.chatting_room_id}`);
+      },
+    });
+  };
+
   const TopBarContent = () => {
     return (
       <div className="flex items-center gap-[6px]">
-        <div className="w-[24px] h-[24px] bg-[#d9d9d9] rounded-[10px]" />
+        <img
+          className="w-[24px] h-[24px]"
+          src={data?.result.recruitment.writer.profile_img}
+        />
         <span className="text-h1 font-Pretendard text-ct-black-100 tracking-[-0.31px]">
           {data?.result.recruitment.writer.name}
         </span>
@@ -50,9 +67,9 @@ function RecruitAnnouncement() {
 
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
-      <div className="flex flex-col px-[19px] overflow-y-scroll">
-        <div className="text-sub2 px-[5px] text-ct-main-blue-100">
-          {data?.result.recruitment.dead_line}
+      <div className="flex flex-col px-[19px] overflow-y-scroll pb-[100px]">
+        <div className="text-sub2 px-[5px] text-ct-main-blue-100 mt-[10px]">
+          마감일자 : {data?.result.recruitment.dead_line.split("T")[0]}
         </div>
         <ul className="flex flex-col mt-[12.5px]">
           <li className="flex gap-[24px] px-[5px] py-[13px] border-y border-ct-gray-200">
@@ -109,26 +126,31 @@ function RecruitAnnouncement() {
           <ImageDisplay
             imageUrl={data?.result.recruitment.recruiting_img}
             alt="팀 상세 페이지"
-            className="w-full max-w-[349px] max-h-[300px] object-contain rounded-[16px] mx-auto"
+            className="w-full object-contain rounded-[16px] mx-auto mt-[17px]"
           />
         )}
 
         <div className="mt-[26px] flex justify-between">
-          {isSubscribed ? (
+          {data?.result.recruitment.is_subscribed ? (
             <img
               src="/assets/recruit/bookmark(on).svg"
               alt="bookmark"
               onClick={handleUnSubscribe}
+              className="ml-[11px] h-[24px] w-[24px]"
             />
           ) : (
             <img
               src="/assets/recruit/bookmark(off).svg"
               alt="bookmark"
               onClick={handleSubscribe}
+              className="ml-[10px] h-[25px] w-[25px]"
             />
           )}
 
-          <button className="w-[132px] h-[34px] rounded-[16px] bg-ct-main-blue-100 text-sub2 font-Pretendard text-ct-white">
+          <button
+            className="w-[132px] h-[34px] rounded-[16px] bg-ct-main-blue-100 text-sub2 font-Pretendard text-ct-white"
+            onClick={handleClick}
+          >
             채팅으로 문의
           </button>
         </div>

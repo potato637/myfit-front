@@ -1,6 +1,5 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
 import apiInstance from "../apiClient";
-import { useChatting } from "../../contexts/ChattingContext";
+
 export interface SendChatMessageRequest {
   detail_message: string;
   type: "TEXT" | "COFFEECHAT" | "SYSTEM";
@@ -18,21 +17,26 @@ export interface ChatMessageResponse {
 export interface ChatMessage {
   id: number;
   sender_id: number;
+  sender_name?: string;
   detail_message: string;
   created_at: string;
   type: "TEXT" | "COFFEECHAT" | "SYSTEM";
+  isTemp?: boolean;
+  coffeechat_id?: number;
 }
 
 export interface FetchChatMessageResponse {
-  chatting_room_id: number;
-  created_at: string;
-  messages: ChatMessage[];
-  next_cursor: number;
-  has_next: boolean;
+  result: {
+    chatting_room_id: number;
+    created_at: string;
+    messages: ChatMessage[];
+    next_cursor: number;
+    has_next: boolean;
+  };
 }
 
 export const sendChatMessage = async (
-  chattingRoomId: number,
+  chattingRoomId: number | null,
   data: SendChatMessageRequest
 ): Promise<ChatMessage> => {
   const response = await apiInstance.post(
@@ -42,41 +46,22 @@ export const sendChatMessage = async (
   const res = response.data;
   return {
     id: res.message_id,
+    sender_name: res.name,
     sender_id: res.sender_id,
     detail_message: res.message,
     created_at: res.created_at,
     type: res.type,
   };
 };
-export const useSendChatMessageMutation = (chattingRoomId: number) => {
-  const { addMessage } = useChatting();
-
-  return useMutation({
-    mutationKey: ["sendMessage", chattingRoomId],
-    mutationFn: (data: SendChatMessageRequest) =>
-      sendChatMessage(chattingRoomId, data),
-    onSuccess: (response) => {
-      addMessage(response);
-    },
-  });
-};
 
 export const getChatMessage = async (
   chatting_room_id: number | null,
   cursor?: number
 ): Promise<FetchChatMessageResponse> => {
-  const params = { ...(cursor !== undefined ? { cursor } : {}) };
+  const params = cursor !== undefined ? { cursor } : {};
   const response = await apiInstance.get(
     `/api/chatting-rooms/${chatting_room_id}/messages`,
     { params }
   );
   return response.data;
-};
-
-export const useChatMessageQuery = (roomId: number | null, cursor?: number) => {
-  return useQuery({
-    queryKey: ["chatMessages", roomId, cursor],
-    queryFn: () => getChatMessage(roomId, cursor),
-    enabled: !!roomId,
-  });
 };

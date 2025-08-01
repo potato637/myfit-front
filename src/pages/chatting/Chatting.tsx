@@ -7,22 +7,37 @@ import { useChatting } from "../../contexts/ChattingContext";
 import { useCoffeeChatModal } from "../../contexts/CoffeeChatModalContext";
 import { useCoffeeChat } from "../../contexts/coffeeChatContext";
 import {
-  sendChatMessage,
+  useChatMessageInfiniteQuery,
   useSendChatMessageMutation,
-} from "../../apis/chatting/chatting";
+} from "../../hooks/chatting/chatting";
+import { useLocation } from "react-router-dom";
 
 function Chatting() {
-  const { messages, addMessage, prependMessages } = useChatting();
+  const { messages, addMessage, prependMessages, clearMessages } =
+    useChatting();
   const { setEditMode } = useCoffeeChatModal();
   const { resetSelections } = useCoffeeChat();
-  const { setRoomId } = useChatting();
   const nav = useNavigate();
   const { chattingRoomId } = useParams();
   const numericRoomId = Number(chattingRoomId);
-
   const bottomRef = useRef<HTMLDivElement>(null);
-  const { mutate: sendMessage, isPending } =
-    useSendChatMessageMutation(numericRoomId);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useChatMessageInfiniteQuery(numericRoomId);
+  const location = useLocation();
+  const targetServiceId = location.state?.targetServiceId;
+
+  useEffect(() => {
+    if (data) {
+      const allMessages = data.pages
+        .flatMap((page) =>
+          Array.isArray(page.result.messages) ? page.result.messages : []
+        )
+        .reverse();
+      clearMessages();
+      prependMessages(allMessages);
+    }
+  }, [data]);
+  const { mutate: sendMessage } = useSendChatMessageMutation(numericRoomId);
 
   const handleSend = (text: string) => {
     sendMessage({
@@ -34,15 +49,6 @@ function Chatting() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  useEffect(() => {
-    if (!isNaN(numericRoomId)) {
-      setRoomId(numericRoomId);
-    }
-    return () => {
-      setRoomId(null);
-    };
-  }, [chattingRoomId]);
-
   const TopBarContent = () => {
     return (
       <div className="w-full h-[70px] bg-white">
@@ -53,7 +59,7 @@ function Chatting() {
             alt="남성프로필"
             className="w-[49px] h-[49px]"
           />
-          <span className="text-h2 text-ct-black-100">임호현</span>
+          <span className="text-h2 text-ct-black-100">김기업</span>
           <img
             src="/assets/chatting/calender.svg"
             alt="캘린더 아이콘"
@@ -61,7 +67,7 @@ function Chatting() {
             onClick={() => {
               resetSelections();
               setEditMode(false);
-              nav("/coffeechat/request");
+              nav(`/chatting/coffeechatrequest/${numericRoomId}`);
             }}
           />
         </div>

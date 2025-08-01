@@ -9,7 +9,8 @@ import SalaryModal from "../../components/recruiting/SalaryModal";
 import CalendarModal from "../../components/recruiting/CalandarModal";
 import { useCoffeeChat } from "../../contexts/coffeeChatContext";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRegisterRecruitPost } from "../../apis/recruiting/recruiting";
+import { useRegisterRecruitPost } from "../../hooks/recruiting/recruiting";
+import WorkTypeModal from "../../components/recruiting/WorkTypeModal";
 
 function RegisterAnnouncement() {
   const { state } = useLocation();
@@ -27,7 +28,9 @@ function RegisterAnnouncement() {
   const [highSector, setHighSector] = useState<string[]>([]);
   const [lowSector, setLowSector] = useState<string[]>([]);
 
-  const [modalType, setModalType] = useState<"" | "salary" | "calendar">("");
+  const [modalType, setModalType] = useState<
+    "" | "salary" | "calendar" | "worktype"
+  >("");
 
   const { mutate: registerPost, isPending } = useRegisterRecruitPost();
 
@@ -70,7 +73,7 @@ function RegisterAnnouncement() {
     });
   };
 
-  const openModal = (type: "salary" | "calendar") => {
+  const openModal = (type: "salary" | "calendar" | "worktype") => {
     setModalType(type);
     setIsModalOpen(true);
   };
@@ -133,7 +136,7 @@ function RegisterAnnouncement() {
           label="근무 형태"
           placeholder="입력해주세요"
           value={workType}
-          onChange={(e) => setWorkType(e.target.value)}
+          onClick={() => openModal("worktype")}
         />
         <InputField
           label="마감 일자"
@@ -167,6 +170,9 @@ function RegisterAnnouncement() {
       <Modal>
         {isModalOpen && modalType === "salary" && (
           <SalaryModal onConfirm={(val) => setSalary(val)} />
+        )}
+        {isModalOpen && modalType === "worktype" && (
+          <WorkTypeModal onConfirm={(val) => setWorkType(val)} />
         )}
         {isModalOpen && modalType === "calendar" && <CalendarModal />}
       </Modal>

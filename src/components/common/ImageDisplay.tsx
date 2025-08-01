@@ -10,7 +10,7 @@ function ImageDisplay({
   className = "",
 }: ImageDisplayProps) {
   return (
-    <div className={` ct-center ${className} `}>
+    <div className={`ct-center ${className} `}>
       <img src={imageUrl} alt={alt} className="w-full h-auto object-contain" />
     </div>
   );

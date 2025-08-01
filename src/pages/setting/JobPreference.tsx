@@ -50,7 +50,7 @@ function JobPreference() {
       from === "onboarding"
         ? "/onboarding/profile-register"
         : from === "recruit"
-        ? "/recruit/registerannouncement"
+        ? "/recruiting/register"
         : "/personalsetting/profile";
 
     navigate(dest, {

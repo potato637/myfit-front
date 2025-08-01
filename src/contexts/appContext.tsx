@@ -18,13 +18,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             <BottomSheetProvider>
               <UserProvider>
                 <ModalProvider>
-                  <ChattingProvider>
-                    <CoffeeChatModalProvider>
-                      <ProfileImgModalProvider>
-                        {children}
-                      </ProfileImgModalProvider>
-                    </CoffeeChatModalProvider>
-                  </ChattingProvider>
+                  <CoffeeChatModalProvider>
+                    <ProfileImgModalProvider>
+                      {children}
+                    </ProfileImgModalProvider>
+                  </CoffeeChatModalProvider>
                 </ModalProvider>
               </UserProvider>
             </BottomSheetProvider>

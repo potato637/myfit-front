@@ -47,6 +47,8 @@ import OnboardingContainer from "../pages/outlets/OnboardingContainer";
 import FeedContainer from "../pages/outlets/FeedContainer";
 import ChattingContainer from "../pages/outlets/ChattingContainer";
 import RecruitingContainer from "../pages/outlets/RecruitingContainer";
+import { ChattingProvider } from "../contexts/ChattingContext";
+import ChattingWrapper from "../pages/chatting/ChattingWrapper";
 
 const router = createBrowserRouter([
   {
@@ -106,7 +108,7 @@ const router = createBrowserRouter([
 
           {
             path: "chatting",
-            element: <ChattingContainer />,
+            element: <ChattingWrapper />,
             children: [
               { index: true, element: <ChattingList /> },
               {

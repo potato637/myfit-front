@@ -3,11 +3,9 @@ import BottomNav from "../../components/layouts/BottomNav";
 import RecruitCard from "../../components/recruiting/RecruitCard";
 import { jobs } from "../../data/jobs";
 import { useNavigate } from "react-router-dom";
-import {
-  RecruitmentItem,
-  useGetRecruitmentsQuery,
-} from "../../apis/recruiting/recruiting";
+import { RecruitmentItem } from "../../apis/recruiting/recruiting";
 import RecruitCardSkeleton from "../../components/skeletons/recruiting/RecruitCardSkeleton";
+import { useGetRecruitmentsQuery } from "../../hooks/recruiting/recruiting";
 
 function Recruiting() {
   const [selectedCategory, setSelectedCategory] = useState("기획/PM");
@@ -50,7 +48,7 @@ function Recruiting() {
 
   const currentCategory = jobs.find((j) => j.category === selectedCategory);
   const handleCardClick = (id: number) => {
-    nav(`/recruit/announcement/${id}`);
+    nav(`/recruiting/${id}`);
   };
 
   return (
@@ -99,13 +97,13 @@ function Recruiting() {
       <div className="mt-[118px] mb-[21px] flex justify-between items-center w-full max-w-[401px]">
         <button
           className="w-[70px] h-[24px] text-body1 font-Pretendard font-[500] text-ct-white bg-ct-main-blue-200 rounded-[5px]"
-          onClick={() => nav("/recruit/registerannouncement")}
+          onClick={() => nav("/recruiting/register")}
         >
           공고 등록
         </button>
         <div
           className="flex gap-[4px] w-[105px] h-[24px] bg-ct-gray-100 rounded-[5px] ct-center"
-          onClick={() => nav("/recruit/savedannouncement")}
+          onClick={() => nav("/recruiting/saved")}
         >
           <span className="text-body1 text-ct-black-100">저장된 공고</span>
           <img

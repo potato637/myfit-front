@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useChatting } from "../../../contexts/ChattingContext";
 import { useCoffeeChat } from "../../../contexts/coffeeChatContext";
 import { useModal } from "../../../contexts/ui/modalContext";
@@ -68,7 +68,7 @@ function AcceptModal() {
             id: Date.now(),
             text: "",
             sender: "me",
-            type: "coffeechat",
+            type: "COFFEECHAT",
             status: "rejected",
           });
           nav("/chatting");

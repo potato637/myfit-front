@@ -2,23 +2,33 @@ import { useNavigate } from "react-router-dom";
 import { useCoffeeChatModal } from "../../../contexts/CoffeeChatModalContext";
 import InformationBox from "../InformationBox";
 import { useModal } from "../../../contexts/ui/modalContext";
-import { useCoffeeChat } from "../../../contexts/coffeeChatContext";
 import { formatDateWithDay } from "../../../utils/format";
+import { CoffeeChatDetailResponse } from "../../../apis/chatting/coffeechat";
+import { useChatting } from "../../../contexts/ChattingContext";
 
-function PendingModal() {
+interface Props {
+  data: CoffeeChatDetailResponse["result"];
+}
+
+function PendingModal({ data }: Props) {
   const { setEditMode } = useCoffeeChatModal();
   const { setIsModalOpen } = useModal();
-  const { selectedTitle, selectedDate, selectedTime, selectedPlace } =
-    useCoffeeChat();
-
-  const formattedDate = selectedDate
-    ? formatDateWithDay(
-        selectedDate.year,
-        selectedDate.month,
-        selectedDate.date
-      )
-    : "";
+  const { roomId } = useChatting();
   const nav = useNavigate();
+
+  const formattedDate = formatDateWithDay(
+    new Date(data.scheduled_at).getFullYear(),
+    new Date(data.scheduled_at).getMonth() + 1,
+    new Date(data.scheduled_at).getDate()
+  );
+  const formattedTime = new Date(data.scheduled_at).toLocaleTimeString(
+    "ko-KR",
+    {
+      hour: "2-digit",
+      minute: "2-digit",
+    }
+  );
+
   return (
     <div className="w-full h-[498px] rounded-[15px] bg-ct-white flex flex-col ct-center">
       <img
@@ -27,17 +37,17 @@ function PendingModal() {
         className="w-[80.53px] h-[80.53px]"
       />
       <span className="text-h2 text-ct-black-200 mt-[4.24px]">
-        {selectedTitle}
+        {data.title}
       </span>
       <div className="mt-[21px] flex">
-        <img src="/assets/chatting/manprofile.svg" alt="남성프로필" />
-        <img src="/assets/chatting/womanprofile.svg" alt="여성프로필" />
+        <img src={data.sender.profile_img} alt="보낸이" />
+        <img src={data.receiver.profile_img} alt="받는이" />
       </div>
       <div className="mt-[25px] relative">
         <InformationBox
           date={formattedDate}
-          time={selectedTime}
-          place={selectedPlace}
+          time={formattedTime}
+          place={data.place}
         />
         <img
           src="/assets/chatting/disablecheck.svg"
@@ -52,7 +62,7 @@ function PendingModal() {
         className="mt-[20px] w-[70px] h-[23px] border-b border-ct-gray-300 text-sub1 text-ct-gray-300"
         onClick={() => {
           setEditMode(true);
-          nav("/coffeechat/request");
+          nav("/chatting/coffeechatrequest/:roomId");
           setIsModalOpen(false);
         }}
       >
@@ -61,4 +71,5 @@ function PendingModal() {
     </div>
   );
 }
+
 export default PendingModal;

@@ -13,7 +13,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [myId, setMyId] = useState<number>(1);
   const [senderId, setSenderId] = useState<number>(1);
-  const [name, setName] = useState<string>("임호현");
+  const [name, setName] = useState<string>("김철수");
   return (
     <UserContext.Provider
       value={{
