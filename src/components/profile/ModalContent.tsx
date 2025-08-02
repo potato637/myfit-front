@@ -1,10 +1,22 @@
 import { useModal } from "../../contexts/ui/modalContext";
+import { useItemContext } from "../../contexts/ItemContext";
+import { useDeleteFeed } from "../../hooks/mypageQueries";
+import { useAuth } from "../../contexts/AuthContext";
 
 function ModalContent() {
   const { setIsModalOpen } = useModal();
+  const { itemId } = useItemContext();
+  const { user } = useAuth();
+
+  const { mutate } = useDeleteFeed({ service_id: user?.id?.toString() || "" });
+
+  const handleDelete = () => {
+    setIsModalOpen(false);
+    mutate({ feed_id: itemId });
+  };
 
   return (
-    <div className="w-full ct-center flex-col gap-[15px]">
+    <div className="w-full py-[30px] ct-center flex-col gap-[15px]">
       <div className="ct-center flex-col gap-2">
         <span className="text-ct-black-200 text-h2">
           해당 피드를 삭제하시겠나요?
@@ -27,7 +39,10 @@ function ModalContent() {
         >
           <span className="text-body1 text-ct-gray-400">취소</span>
         </div>
-        <div className="w-[139px] h-[45px] rounded-[10px] ct-center bg-ct-sub-blue-300">
+        <div
+          className="w-[139px] h-[45px] rounded-[10px] ct-center bg-ct-sub-blue-300"
+          onClick={handleDelete}
+        >
           <span className="text-body1 text-ct-white">삭제</span>
         </div>
       </div>

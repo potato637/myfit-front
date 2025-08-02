@@ -58,8 +58,14 @@ function RegisterEmail() {
 
   const handleVerifyCode = async (code: string) => {
     try {
-      console.log("🔐 인증코드 자동 검증 요청:", { email: fullEmail, authCode: code });
-      const response = await validateAuthCode({ email: fullEmail, authCode: code });
+      console.log("🔐 인증코드 자동 검증 요청:", {
+        email: fullEmail,
+        authCode: code,
+      });
+      const response = await validateAuthCode({
+        email: fullEmail,
+        authCode: code,
+      });
 
       if (response.isSuccess) {
         setCodeVerified(true);
@@ -236,13 +242,13 @@ function RegisterEmail() {
             htmlFor="password"
             className="text-sub1 font-sans text-ct-black-200"
           >
-            새로운 비밀번호
+            비밀번호
           </label>
           <input
             id="password"
             type="password"
             {...register("password")}
-            placeholder="새로운 비밀번호"
+            placeholder="비밀번호"
             className="w-full h-[44px] pl-[18px] bg-[#F7F7F7] rounded-[10px]"
           />
           {errors.password && (
@@ -251,7 +257,7 @@ function RegisterEmail() {
           <input
             type="password"
             {...register("confirmPassword")}
-            placeholder="새로운 비밀번호 확인"
+            placeholder="비밀번호 확인"
             className="w-full h-[44px] pl-[18px] bg-[#F7F7F7] rounded-[10px]"
           />
           {errors.confirmPassword && (

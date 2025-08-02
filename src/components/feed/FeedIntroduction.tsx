@@ -1,16 +1,10 @@
-import { useNavigate } from "react-router-dom";
 import { useGetProfile } from "../../hooks/mypageQueries";
-import { useAuth } from "../../contexts/AuthContext";
+import { useParams } from "react-router-dom";
 
-function Introduction({
-  setEditProfile,
-}: {
-  setEditProfile: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
-  const navigate = useNavigate();
-  const { user } = useAuth();
+function FeedIntroduction() {
+  const { id } = useParams();
   const { data: profile, isLoading } = useGetProfile({
-    service_id: user?.id?.toString() || "",
+    service_id: id as string,
   });
 
   if (isLoading) {
@@ -29,9 +23,8 @@ function Introduction({
           src={profile?.result.service.profile_img}
           alt="프로필 이미지"
           className="w-[70px] h-[70px] rounded-full"
-          onClick={() => setEditProfile(true)}
         />
-        <div className="w-[150px] h-full flex flex-col justify-between">
+        <div className="w-[160px] h-full flex flex-col justify-between">
           <div className="h-[20px] flex items-center gap-1">
             <span className="text-sub1 text-ct-black-100">
               {profile?.result.user.name}
@@ -56,11 +49,8 @@ function Introduction({
             </span>
           </div>
         </div>
-        <div className="w-[90px] h-full flex flex-col justify-between">
-          <div
-            className="w-full h-[29px] rounded-[3px] ct-center bg-ct-main-blue-200"
-            onClick={() => navigate("/mypage/status")}
-          >
+        <div className="w-[80px] h-full flex flex-col justify-between">
+          <div className="w-full h-[29px] rounded-[3px] ct-center bg-ct-main-blue-200">
             <span className="text-ct-white text-body1">
               {profile?.result.service.recruiting_status}
             </span>
@@ -93,4 +83,4 @@ function Introduction({
   );
 }
 
-export default Introduction;
+export default FeedIntroduction;

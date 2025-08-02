@@ -32,7 +32,7 @@ export const postInterest = async ({
 }): Promise<PostInterestResponse> => {
   try {
     const { data } = await apiClient.post(
-      `api/relationships/${service_id}/interests`
+      `/api/relationships/${service_id}/interests`
     );
     return data;
   } catch (error) {
@@ -51,7 +51,7 @@ export const deleteInterest = async ({
 }): Promise<DeleteInterestResponse> => {
   try {
     const { data } = await apiClient.delete(
-      `api/relationships/${service_id}/interests`
+      `/api/relationships/${service_id}/interests`
     );
     return data;
   } catch (error) {
@@ -69,7 +69,7 @@ export const getMyInterest = async ({
   page: number;
 }): Promise<GetMyInterestResponse> => {
   try {
-    const { data } = await apiClient.get(`api/relationships/interests`, {
+    const { data } = await apiClient.get(`/api/relationships/interests`, {
       params: {
         page,
         limit: 10,
@@ -90,7 +90,7 @@ export const getPeopleWhoInterestMe =
   async (): Promise<GetPeopleWhoInterestMeResponse> => {
     try {
       const { data } = await apiClient.get(
-        `api/relationships/interests/received`
+        `/api/relationships/interests/received`
       );
       return data;
     } catch (error) {
@@ -111,7 +111,7 @@ export const getAmIInterestHim = async ({
 }): Promise<GetAmIInterestHimResponse> => {
   try {
     const { data } = await apiClient.get(
-      `api/relationships/interests/status/${service_id}`
+      `/api/relationships/interests/status/${service_id}`
     );
     return data;
   } catch (error) {
@@ -132,7 +132,7 @@ export const getSentInterestCount = async ({
 }): Promise<GetSentInterestCountResponse> => {
   try {
     const { data } = await apiClient.get(
-      `api/relationships/interests/sent/count/${service_id}`
+      `/api/relationships/interests/sent/count/${service_id}`
     );
     return data;
   } catch (error) {
@@ -153,7 +153,7 @@ export const getReceivedInterestCount = async ({
 }): Promise<GetReceivedInterestCountResponse> => {
   try {
     const { data } = await apiClient.get(
-      `api/relationships/interests/received/count/${service_id}`
+      `/api/relationships/interests/received/count/${service_id}`
     );
     return data;
   } catch (error) {
@@ -176,7 +176,7 @@ export const PostNetwork = async ({
 }): Promise<PostNetworkResponse> => {
   try {
     const { data } = await apiClient.post(
-      `api/relationships/networks/request/${service_id}`
+      `/api/relationships/networks/request/${service_id}`
     );
     return data;
   } catch (error) {
@@ -195,7 +195,7 @@ export const patchAcceptNetwork = async ({
 }): Promise<PatchAcceptNetworkResponse> => {
   try {
     const { data } = await apiClient.patch(
-      `api/relationships/networks/request/${service_id}/accept`
+      `/api/relationships/networks/request/${service_id}/accept`
     );
     return data;
   } catch (error) {
@@ -214,7 +214,7 @@ export const patchRejectNetwork = async ({
 }): Promise<PatchRejectNetworkResponse> => {
   try {
     const { data } = await apiClient.patch(
-      `api/relationships/networks/request/${service_id}/reject`
+      `/api/relationships/networks/request/${service_id}/reject`
     );
     return data;
   } catch (error) {
@@ -233,7 +233,7 @@ export const deleteNetwork = async ({
 }): Promise<DeleteNetworkResponse> => {
   try {
     const { data } = await apiClient.delete(
-      `api/relationships/networks/disconnect/${network_id}`
+      `/api/relationships/networks/disconnect/${network_id}`
     );
     return data;
   } catch (error) {
@@ -248,7 +248,7 @@ export interface GetMyNetworkResponse extends BaseResponse {
 export const getMyNetwork = async (): Promise<GetMyNetworkResponse> => {
   try {
     const { data } = await apiClient.get(
-      `api/relationships/networks/connections`
+      `/api/relationships/networks/connections`
     );
     return data;
   } catch (error) {
@@ -263,7 +263,7 @@ export interface GetMyNetworkRequestResponse extends BaseResponse {
 export const getMyNetworkRequest =
   async (): Promise<GetMyNetworkRequestResponse> => {
     try {
-      const { data } = await apiClient.get(`api/relationships/networks/sent`);
+      const { data } = await apiClient.get(`/api/relationships/networks/sent`);
       return data;
     } catch (error) {
       console.error("getMyNetworkRequest error:", error);
@@ -286,7 +286,7 @@ export const getReceivedNetwork =
   async (): Promise<GetReceivedNetworkResponse> => {
     try {
       const { data } = await apiClient.get(
-        `api/relationships/networks/received`
+        `/api/relationships/networks/received`
       );
       return data;
     } catch (error) {
@@ -307,7 +307,7 @@ export const getIsNetworking = async ({
 }): Promise<GetIsNetworkingResponse> => {
   try {
     const { data } = await apiClient.get(
-      `api/relationships/networks/status/${service_id}`
+      `/api/relationships/networks/status/${service_id}`
     );
     return data;
   } catch (error) {
@@ -328,7 +328,7 @@ export const getSomeoneNetworkCount = async ({
 }): Promise<GetSomeoneNetworkCountResponse> => {
   try {
     const { data } = await apiClient.get(
-      `api/relationships/networks/count/${service_id}`
+      `/api/relationships/networks/count/${service_id}`
     );
     return data;
   } catch (error) {
@@ -347,7 +347,7 @@ export const postBlockUser = async ({
 }): Promise<PostBlockUserResponse> => {
   try {
     const { data } = await apiClient.post(
-      `api/relationships/blocks/${service_id}`
+      `/api/relationships/blocks/${service_id}`
     );
     return data;
   } catch (error) {
@@ -366,7 +366,7 @@ export const deleteBlockUser = async ({
 }): Promise<DeleteBlockUserResponse> => {
   try {
     const { data } = await apiClient.delete(
-      `api/relationships/blocks/${service_id}`
+      `/api/relationships/blocks/${service_id}`
     );
     return data;
   } catch (error) {
@@ -386,7 +386,7 @@ export interface GetBlockedUserResponse extends BaseResponse {
 }
 export const getBlockedUser = async (): Promise<GetBlockedUserResponse> => {
   try {
-    const { data } = await apiClient.get(`api/relationships/blocked_users`);
+    const { data } = await apiClient.get(`/api/relationships/blocked_users`);
     return data;
   } catch (error) {
     console.error("getBlockedUser error:", error);
@@ -408,7 +408,7 @@ export const getBlockStatus = async ({
 }): Promise<GetBlockStatusResponse> => {
   try {
     const { data } = await apiClient.get(
-      `api/relationships/block_status/${service_id}`
+      `/api/relationships/block_status/${service_id}`
     );
     return data;
   } catch (error) {

@@ -1,9 +1,7 @@
 import Introduction from "../../components/profile/Introduction";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ProfileCardContainer from "../../components/profile/ProfileCardContainer";
 import ProfileFeedContainer from "../../components/profile/ProfileFeedContainer";
-import CreateItemButton from "../../components/profile/CreateItemButton";
-import NetworkingBar from "../../components/profile/NetworkingBar";
 import CompanyLink from "../../components/profile/CompanyLink";
 import BottomNavContainer from "../../components/layouts/BottomNavContainer";
 import EditProfile from "./EditProfile";
@@ -12,7 +10,7 @@ import IntroductionDescriptionSkeleton from "../../components/skeletons/mypage/I
 import CompanyLinkSkeleton from "../../components/skeletons/mypage/CompanyLinkSkeleton";
 import NetworkingBarSkeleton from "../../components/skeletons/mypage/NetworkingBarSkeleton";
 import ProfileCardSkeleton from "../../components/skeletons/mypage/ProfileCardSkeleton";
-import { useGetFeeds, useGetProfile } from "../../hooks/mypageQueries";
+import { useGetProfile } from "../../hooks/mypageQueries";
 import { useAuth } from "../../contexts/AuthContext";
 
 function ProfileItem({
@@ -25,7 +23,9 @@ function ProfileItem({
   const [selectedTab, setSelectedTab] = useState<"card" | "feed">("card");
 
   const { user } = useAuth();
-  const { data: profile, isLoading } = useGetProfile();
+  const { data: profile, isLoading } = useGetProfile({
+    service_id: user?.id?.toString() || "",
+  });
 
   if (isLoading) {
     return (
@@ -48,13 +48,12 @@ function ProfileItem({
         <Introduction setEditProfile={setEditProfile} />
         <div className="mt-[20px] w-[335px]">
           <span className="text-ct-black-100 text-body1">
-            {/* {profile?.result.user.one_line_profile} */}
+            {profile?.result.user.one_line_profile}
           </span>
         </div>
-        {/* {profile?.result.user.link && (
-              <CompanyLink link={profile?.result.user.link} />
-            )} */}
-        <NetworkingBar />
+        {profile?.result.user.link && (
+          <CompanyLink link={profile?.result.user.link} />
+        )}
         <div className="w-full h-[40px] bg-ct-gray-100 flex sticky top-0 mt-[17px] mb-[17px]">
           <div
             className="flex-1 ct-center relative"
@@ -100,7 +99,6 @@ function ProfileItem({
         ) : (
           <ProfileFeedContainer />
         )}
-        <CreateItemButton />
       </div>
       {editProfile && profile && (
         <EditProfile

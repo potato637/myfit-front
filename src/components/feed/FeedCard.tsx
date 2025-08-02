@@ -65,7 +65,7 @@ function FeedCard({
           onClick={onProfileClick}
         />
         <div className="flex gap-3">
-          <span 
+          <span
             className="text-sub1 text-ct-black-100 cursor-pointer"
             onClick={onProfileClick}
           >

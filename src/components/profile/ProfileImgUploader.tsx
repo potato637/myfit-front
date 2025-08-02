@@ -1,10 +1,6 @@
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
 import * as config from "../../config/aws";
-import {
-  S3Client,
-  PutObjectCommand,
-  ObjectCannedACL,
-} from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useUpdateProfileImage } from "../../hooks/mypageQueries";
@@ -56,15 +52,12 @@ function ProfileImgUploader({ imageUrl }: { imageUrl: string }) {
         Bucket: config.awsBucketName,
         Key: fileName,
         Body: uint8Array,
-        ACL: ObjectCannedACL.public_read,
       };
 
       const command = new PutObjectCommand(params);
       await s3Client.send(command);
-
       const publicImageUrl = `https://${config.awsBucketName}.s3.${config.awsRegion}.amazonaws.com/${fileName}`;
 
-      alert("이미지 업로드에 성공했습니다.");
       mutate({ profile_img: publicImageUrl });
     } catch (err: any) {
       console.error("이미지 업로드 실패: ", err);

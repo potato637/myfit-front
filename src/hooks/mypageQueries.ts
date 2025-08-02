@@ -10,12 +10,13 @@ import {
   getCards,
   updateProfileImage,
   updateProfileStatus,
+  deleteFeed,
 } from "../apis/mypageAPI";
 
-export const useGetProfile = () => {
+export const useGetProfile = ({ service_id }: { service_id: string }) => {
   return useQuery({
-    queryKey: ["profile"],
-    queryFn: getProfile,
+    queryKey: ["profile", service_id],
+    queryFn: () => getProfile({ service_id }),
     staleTime: 1000 * 60,
   });
 };
@@ -28,8 +29,8 @@ export const useGetFeeds = ({ service_id }: { service_id: string }) => {
     staleTime: 1000 * 60,
     initialPageParam: "0",
     getNextPageParam: (lastPage) => {
-      if (!lastPage.result.pagination.hasMore) return undefined;
-      return lastPage.result.pagination.nextCursorId;
+      if (!lastPage.result.pagination.has_next) return undefined;
+      return lastPage.result.pagination.next_cursor;
     },
     enabled: !!service_id,
   });
@@ -43,8 +44,8 @@ export const useGetCards = ({ service_id }: { service_id: string }) => {
     staleTime: 1000 * 60,
     initialPageParam: "0",
     getNextPageParam: (lastPage) => {
-      if (!lastPage.result.pagination.hasMore) return undefined;
-      return lastPage.result.pagination.nextCursorId;
+      if (!lastPage.result.pagination.has_next) return undefined;
+      return lastPage.result.pagination.next_cursor;
     },
     enabled: !!service_id,
   });
@@ -69,13 +70,32 @@ export const useUpdateProfileStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ recruiting_status }: { recruiting_status: string }) =>
-      updateProfileStatus({ recruiting_status }),
+    mutationFn: ({
+      service_id,
+      recruiting_status,
+    }: {
+      service_id: string;
+      recruiting_status: string;
+    }) => updateProfileStatus({ service_id, recruiting_status }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
     onError: (error) => {
       console.error("Failed to update profile status:", error);
+    },
+  });
+};
+
+export const useDeleteFeed = ({ service_id }: { service_id: string }) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ feed_id }: { feed_id: string }) => deleteFeed({ feed_id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["feeds", service_id] });
+    },
+    onError: (error) => {
+      console.error("Failed to delete feed:", error);
     },
   });
 };

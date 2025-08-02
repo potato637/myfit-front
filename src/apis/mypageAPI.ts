@@ -14,6 +14,10 @@ export interface GetProfileResponse extends BaseResponse {
       profile_img: string;
       high_sector: string;
       low_sector: string;
+      userArea: {
+        high_area: string;
+        low_area: string;
+      };
     };
     user: {
       id: number;
@@ -27,12 +31,18 @@ export interface GetProfileResponse extends BaseResponse {
       industry: string | null;
       team_division: string | null;
     };
+    interest_count: number;
+    network_count: number;
   };
 }
-export const getProfile = async (): Promise<GetProfileResponse> => {
+export const getProfile = async ({
+  service_id,
+}: {
+  service_id: string;
+}): Promise<GetProfileResponse> => {
   try {
     const { data } = await apiClient.get<GetProfileResponse>(
-      `api/mypage/profile_info`
+      `/api/mypage/${service_id}/profile_info`
     );
     return data;
   } catch (error) {
@@ -54,7 +64,7 @@ export const updateProfileImage = async ({
 }): Promise<UpdateProfileImageResponse> => {
   try {
     const { data } = await apiClient.patch<UpdateProfileImageResponse>(
-      `api/mypage/profile_pic`,
+      `/api/mypage/profile_pic`,
       { profile_img }
     );
     return data;
@@ -72,14 +82,16 @@ export interface UpdateProfileStatusResponse extends BaseResponse {
   };
 }
 export const updateProfileStatus = async ({
+  service_id,
   recruiting_status,
 }: {
+  service_id: string;
   recruiting_status: string;
 }): Promise<UpdateProfileStatusResponse> => {
   try {
     const { data } = await apiClient.patch<UpdateProfileStatusResponse>(
-      `api/mypage/recruiting_status`,
-      { recruiting_status }
+      `/api/mypage/recruiting_status/update`,
+      { recruiting_status, params: { service_id } }
     );
     return data;
   } catch (error) {
@@ -108,8 +120,8 @@ export interface GetFeedsResponse extends BaseResponse {
   result: {
     feeds: FeedItem[];
     pagination: {
-      hasMore: boolean;
-      nextCursorId: string;
+      has_next: boolean;
+      next_cursor: string;
     };
   };
 }
@@ -122,11 +134,11 @@ export const getFeeds = async ({
 }): Promise<GetFeedsResponse> => {
   try {
     const { data } = await apiClient.get<GetFeedsResponse>(
-      `api/mypage/${service_id}/feeds`,
+      `/api/mypage/${service_id}/feeds`,
       {
         params: {
-          cursor,
           limit: "10",
+          cursor,
         },
       }
     );
@@ -151,8 +163,8 @@ export interface GetCardsResponse extends BaseResponse {
   result: {
     cards: CardItem[];
     pagination: {
-      hasMore: boolean;
-      nextCursorId: string;
+      has_next: boolean;
+      next_cursor: string;
     };
   };
 }
@@ -165,7 +177,7 @@ export const getCards = async ({
 }): Promise<GetCardsResponse> => {
   try {
     const { data } = await apiClient.get<GetCardsResponse>(
-      `api/mypage/${service_id}/cards`,
+      `/api/mypage/${service_id}/cards`,
       {
         params: {
           cursor,
@@ -176,6 +188,33 @@ export const getCards = async ({
     return data;
   } catch (error) {
     console.error("getCards error:", error);
+    throw error;
+  }
+};
+
+export interface DeleteFeedResponse {
+  isSuccess: boolean;
+  code: number;
+  message: {
+    message: string;
+  };
+  result: {
+    errorCode: string;
+    data: string;
+  };
+}
+export const deleteFeed = async ({
+  feed_id,
+}: {
+  feed_id: string;
+}): Promise<DeleteFeedResponse> => {
+  try {
+    const { data } = await apiClient.delete<DeleteFeedResponse>(
+      `/api/feeds/${feed_id}`
+    );
+    return data;
+  } catch (error) {
+    console.error("deleteFeed error:", error);
     throw error;
   }
 };
