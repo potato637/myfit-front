@@ -16,19 +16,19 @@ function CompanySetting() {
         <div className="w-full mt-[21px]">
           <button
             className="w-full h-[47.97px] text-left pl-[32px] text-sub1 font-Pretendard text-ct-black-100 border-b border-ct-gray-100"
-            onClick={() => nav("/companysetting/profile")}
+            onClick={() => nav("/mypage/setting/business/profile")}
           >
             프로필 관리
           </button>
           <button
             className="w-full h-[47.97px] text-left pl-[32px] text-sub1 font-Pretendard text-ct-black-100 border-b border-ct-gray-100"
-            onClick={() => nav("/personalsetting/account")}
+            onClick={() => nav("/mypage/setting/business/account")}
           >
             계정
           </button>
           <button
             className="w-full h-[47.97px] text-left pl-[32px] text-sub1 font-Pretendard text-ct-black-100 border-b border-ct-gray-100 flex items-center gap-[105px]"
-            onClick={() => nav("/companysetting/verifiedsetting")}
+            onClick={() => nav("/mypage/setting/business/verified")}
           >
             <span>회사 인증</span>
             {verified && (
@@ -42,7 +42,7 @@ function CompanySetting() {
           </button>
           <button
             className="w-full h-[47.97px] text-left pl-[32px] text-sub1 font-Pretendard text-ct-black-100 border-none"
-            onClick={() => nav("/companysetting/alarmsetting")}
+            onClick={() => nav("/mypage/setting/business/alarm")}
           >
             알림 설정
           </button>

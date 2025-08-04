@@ -2,11 +2,11 @@ import ProfileCardItem from "./ProfileCardItem";
 import { useGetCards } from "../../hooks/mypageQueries";
 import { useAuth } from "../../contexts/AuthContext";
 
-function ProfileCardContainer() {
+function ProfileCardContainer({ serviceId }: { serviceId?: string }) {
   const { user } = useAuth();
 
   const { data: cards, isLoading: cardsLoading } = useGetCards({
-    service_id: user?.id?.toString() || "",
+    service_id: serviceId ? serviceId : user?.id?.toString() || "",
   });
 
   if (cardsLoading) {
@@ -30,7 +30,9 @@ function ProfileCardContainer() {
           나를 나타내보세요!
         </p>
       ) : (
-        cardsData?.map((card) => <ProfileCardItem key={card.id} card={card} />)
+        cardsData?.map((card) => (
+          <ProfileCardItem key={card.id} card={card} serviceId={serviceId} />
+        ))
       )}
     </div>
   );

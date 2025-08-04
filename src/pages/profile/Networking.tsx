@@ -1,20 +1,12 @@
 import TopBarContainer from "../../components/common/TopBarContainer";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import BottomNavContainer from "../../components/layouts/BottomNavContainer";
-import ProfileResult from "../../components/feed/ProfileResult";
-import ProfileResultSkeleton from "../../components/skeletons/common/ProfileResultSkeleton";
+import NetworkingResult from "../../components/profile/NetworkingResult";
 
 function Networking() {
   const [selectedTab, setSelectedTab] = useState<
-    "network" | "request" | "send" | "receive"
+    "network" | "receivedNetwork" | "sendInterest" | "receivedInterest"
   >("network");
-  const [isReady, setIsReady] = useState<boolean>(false);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsReady(true);
-    }, 3000);
-  }, []);
 
   return (
     <TopBarContainer>
@@ -51,68 +43,58 @@ function Networking() {
             </div>
             <div
               className="flex-1 h-full ct-center relative"
-              onClick={() => setSelectedTab("request")}
+              onClick={() => setSelectedTab("receivedNetwork")}
             >
               <span
                 className={`text-body2 ${
-                  selectedTab === "request"
+                  selectedTab === "receivedNetwork"
                     ? "text-ct-black-300"
                     : "text-ct-gray-300"
                 }`}
               >
-                받은 요청
+                받은 네트워크
               </span>
-              {selectedTab === "request" && (
+              {selectedTab === "receivedNetwork" && (
                 <div className="absolute bottom-0 left-1/2 w-[74px] h-[3px] bg-ct-main-blue-200 translate-x-[-50%]"></div>
               )}
             </div>
             <div
               className="flex-1 h-full ct-center relative"
-              onClick={() => setSelectedTab("send")}
+              onClick={() => setSelectedTab("sendInterest")}
             >
               <span
                 className={`text-body2 ${
-                  selectedTab === "send"
+                  selectedTab === "sendInterest"
                     ? "text-ct-black-300"
                     : "text-ct-gray-300"
                 }`}
               >
                 보낸 관심
               </span>
-              {selectedTab === "send" && (
+              {selectedTab === "sendInterest" && (
                 <div className="absolute bottom-0 left-1/2 w-[74px] h-[3px] bg-ct-main-blue-200 translate-x-[-50%]"></div>
               )}
             </div>
             <div
               className="flex-1 h-full ct-center relative"
-              onClick={() => setSelectedTab("receive")}
+              onClick={() => setSelectedTab("receivedInterest")}
             >
               <span
                 className={`text-body2 ${
-                  selectedTab === "receive"
+                  selectedTab === "receivedInterest"
                     ? "text-ct-black-300"
                     : "text-ct-gray-300"
                 }`}
               >
                 받은 관심
               </span>
-              {selectedTab === "receive" && (
+              {selectedTab === "receivedInterest" && (
                 <div className="absolute bottom-0 left-1/2 w-[74px] h-[3px] bg-ct-main-blue-200 translate-x-[-50%]"></div>
               )}
             </div>
           </div>
           <div className="w-[350px] mx-auto mt-[30px]">
-            {isReady ? (
-              <ProfileResult keyword="" />
-            ) : (
-              <div className="flex flex-col gap-[20px]">
-                <ProfileResultSkeleton />
-                <ProfileResultSkeleton />
-                <ProfileResultSkeleton />
-                <ProfileResultSkeleton />
-                <ProfileResultSkeleton />
-              </div>
-            )}
+            <NetworkingResult selectedTab={selectedTab} />
           </div>
         </div>
       </BottomNavContainer>

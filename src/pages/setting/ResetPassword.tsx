@@ -10,9 +10,11 @@ import {
 } from "../../validations/resetPasswordSchema";
 import { sendVerificationCode, validateAuthCode } from "../../apis/onboarding";
 import { resetPassword } from "../../apis/auth";
+import { usePostLogout } from "../../hooks/settingQueries";
 
 function ResetPasssword() {
   const navigate = useNavigate();
+  const { mutate: logout } = usePostLogout();
 
   const {
     register,
@@ -53,8 +55,14 @@ function ResetPasssword() {
 
   const handleVerifyCode = async (code: string) => {
     try {
-      console.log("🔐 인증코드 검증 요청:", { email: fullEmail, authCode: code });
-      const response = await validateAuthCode({ email: fullEmail, authCode: code });
+      console.log("🔐 인증코드 검증 요청:", {
+        email: fullEmail,
+        authCode: code,
+      });
+      const response = await validateAuthCode({
+        email: fullEmail,
+        authCode: code,
+      });
 
       if (response.isSuccess) {
         setCodeVerified(true);
@@ -96,34 +104,39 @@ function ResetPasssword() {
       console.log("🔒 비밀번호 재설정 요청:", {
         email: `${data.email}@${data.domain}`,
         authCode: data.authCode,
-        newPassword: "***"
+        newPassword: "***",
       });
-      
+
       // 비밀번호 재설정 API 호출
       const response = await resetPassword({
         email: `${data.email}@${data.domain}`,
         authCode: data.authCode,
-        newPassword: data.password
+        newPassword: data.password,
       });
-      
+
       if (response.isSuccess) {
         console.log("✅ 비밀번호 재설정 완료:", response.message);
-        
+
         // 성공 시 로그인 페이지로 이동
+        logout();
         navigate("/onboarding", {
-          state: { message: response.message || "비밀번호가 성공적으로 변경되었습니다." }
+          state: {
+            message:
+              response.message || "비밀번호가 성공적으로 변경되었습니다.",
+          },
         });
       } else {
         throw new Error(response.message || "비밀번호 재설정에 실패했습니다.");
       }
     } catch (error: any) {
       console.error("❌ 비밀번호 재설정 실패:", error);
-      
+
       // 구체적인 에러 메시지 표시
       let errorMessage = "비밀번호 재설정에 실패했습니다.";
-      
+
       if (error.response?.status === 400) {
-        errorMessage = "인증코드가 유효하지 않거나 비밀번호 조건을 만족하지 않습니다.";
+        errorMessage =
+          "인증코드가 유효하지 않거나 비밀번호 조건을 만족하지 않습니다.";
       } else if (error.response?.status === 404) {
         errorMessage = "가입되지 않은 이메일입니다.";
       } else if (error.response?.status === 500) {
@@ -131,7 +144,7 @@ function ResetPasssword() {
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       }
-      
+
       alert(errorMessage);
     }
   };
@@ -208,9 +221,7 @@ function ResetPasssword() {
                   : "bg-ct-gray-100 text-ct-gray-300"
               }`}
             >
-              <span className="text-sub2">
-                이메일 인증 발송
-              </span>
+              <span className="text-sub2">이메일 인증 발송</span>
             </button>
 
             {/* 인증번호 입력칸 */}
@@ -236,7 +247,7 @@ function ResetPasssword() {
                   />
                 )}
               </div>
-              
+
               <button
                 type="button"
                 onClick={handleSendEmail}

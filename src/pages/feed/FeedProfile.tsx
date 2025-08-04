@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ProfileCardContainer from "../../components/profile/ProfileCardContainer";
 import ProfileFeedContainer from "../../components/profile/ProfileFeedContainer";
 import NetworkingBar from "../../components/profile/NetworkingBar";
@@ -85,10 +85,10 @@ function ProfileItem() {
           isLoading ? (
             <ProfileCardSkeleton />
           ) : (
-            <ProfileCardContainer />
+            <ProfileCardContainer serviceId={id} />
           )
         ) : (
-          <ProfileFeedContainer />
+          <ProfileFeedContainer serviceId={id} />
         )}
       </div>
     </>

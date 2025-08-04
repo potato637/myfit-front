@@ -3,10 +3,13 @@ import CardTagContainer from "./CardTagContainer";
 import { useBottomSheet } from "../../contexts/ui/bottomSheetContext";
 import { CardItem } from "../../apis/mypageAPI";
 import { useItemContext } from "../../contexts/ItemContext";
+import { useLocation } from "react-router-dom";
 
 function DetailCardItem({ item }: { item: CardItem }) {
   const { setIsBottomSheetOpen } = useBottomSheet();
   const { setItemId } = useItemContext();
+  const location = useLocation();
+  const isMine = location.pathname.startsWith("/mypage");
 
   const handleClick = () => {
     setIsBottomSheetOpen(true);
@@ -17,11 +20,13 @@ function DetailCardItem({ item }: { item: CardItem }) {
     <div className="w-full h-auto bg-ct-white rounded-[10px] p-[16px] flex flex-col gap-[10px] items-center">
       <div className="w-full h-[30px] px-[5px] py-[14px] flex items-center justify-between">
         <span className="text-ct-main-blue-100 text-body1">활동 카드</span>
-        <img
-          src="/assets/profile/settingIcon.svg"
-          alt="설정"
-          onClick={handleClick}
-        />
+        {isMine && (
+          <img
+            src="/assets/profile/settingIcon.svg"
+            alt="설정"
+            onClick={handleClick}
+          />
+        )}
       </div>
       <img
         className="w-[353px] h-[442px] rounded-[5px] object-cover"

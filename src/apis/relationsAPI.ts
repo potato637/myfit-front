@@ -11,6 +11,7 @@ interface NetworkType {
   other_service_id: string;
   other_service_name: string;
   other_service_profile_img: string;
+  [key: string]: any;
 }
 interface BaseResponse {
   isSuccess: boolean;
@@ -60,8 +61,32 @@ export const deleteInterest = async ({
   }
 };
 
+export interface InterestType {
+  id: string;
+  sender_id: string;
+  recipient_id: string;
+  created_at: string;
+  recipient: {
+    id: string;
+    service_name: string;
+    network_status: string;
+    profile_img: string;
+    description: string;
+  };
+  [key: string]: any;
+}
 export interface GetMyInterestResponse extends BaseResponse {
-  result: CommonResultType;
+  result: {
+    interests: InterestType[];
+    pagination: {
+      currentPage: number;
+      totalPages: number;
+      totalCount: number;
+      limit: number;
+      hasNext: boolean;
+      hasPrev: boolean;
+    };
+  };
 }
 export const getMyInterest = async ({
   page,
@@ -82,9 +107,15 @@ export const getMyInterest = async ({
   }
 };
 
-// 이건 InfiniteQuery 적용 안 하나?
+export interface PeopleWhoInterestMeType {
+  id: string;
+  sender_id: string;
+  sender_name: string;
+  sender_profile_img: string;
+  [key: string]: any;
+}
 export interface GetPeopleWhoInterestMeResponse extends BaseResponse {
-  result: CommonResultType;
+  result: PeopleWhoInterestMeType[];
 }
 export const getPeopleWhoInterestMe =
   async (): Promise<GetPeopleWhoInterestMeResponse> => {
@@ -278,6 +309,7 @@ export interface ReceivedNetworkType {
   sender_service_profile_img: string;
   status: string;
   requested_at: string;
+  [key: string]: any;
 }
 export interface GetReceivedNetworkResponse extends BaseResponse {
   result: ReceivedNetworkType[] | null;
@@ -297,7 +329,7 @@ export const getReceivedNetwork =
 
 export interface GetIsNetworkingResponse extends BaseResponse {
   result: {
-    status: string;
+    status: "NO_RELATION" | "PENDING_SENT" | "CONNECTED";
   };
 }
 export const getIsNetworking = async ({

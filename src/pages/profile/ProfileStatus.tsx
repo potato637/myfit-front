@@ -1,6 +1,9 @@
 import TopBarContainer from "../../components/common/TopBarContainer";
 import { useState } from "react";
-import { useUpdateProfileStatus } from "../../hooks/mypageQueries";
+import {
+  useUpdateProfileStatus,
+  useGetProfile,
+} from "../../hooks/mypageQueries";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -17,8 +20,13 @@ const TopBarContent = ({ onSave }: { onSave: () => void }) => {
 
 function ProfileStatus() {
   const navigate = useNavigate();
-  const [isSelected, setIsSelected] = useState<string>("구직 중");
   const { user } = useAuth();
+  const { data: profile } = useGetProfile({
+    service_id: user?.id.toString() || "",
+  });
+  const [isSelected, setIsSelected] = useState<string>(
+    profile?.result.service.recruiting_status || "구직 중"
+  );
   const { mutate } = useUpdateProfileStatus();
 
   const handleClick = (status: string) => {

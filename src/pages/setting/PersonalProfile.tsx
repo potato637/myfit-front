@@ -9,6 +9,8 @@ import BirthModal from "../../components/onboarding/BirthModal";
 import RegionModal from "../../components/onboarding/RegionModal";
 import SubRegionModal from "../../components/onboarding/SubRegionModal";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useGetProfile } from "../../hooks/mypageQueries";
+import { useAuth } from "../../contexts/AuthContext";
 
 function PersonalProfile() {
   const { isModalOpen, setIsModalOpen } = useModal();
@@ -34,6 +36,20 @@ function PersonalProfile() {
   };
   const nav = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
+  const { data: profile } = useGetProfile({
+    service_id: user?.id.toString() || "",
+  });
+
+  useEffect(() => {
+    setNickname(profile?.result.user.name || "");
+    setShortIntro(profile?.result.user.one_line_profile || "");
+    setRegion(profile?.result.service.userArea.high_area || "");
+    setSubRegion(profile?.result.service.userArea.low_area || "");
+    setEmploy(profile?.result.service.recruiting_status || "");
+    setEducationLevel(profile?.result.user.Highest_grade || "");
+    setAcademic(profile?.result.user.grade_status || "");
+  }, [profile]);
 
   useEffect(() => {
     const state = location.state;
@@ -131,7 +147,7 @@ function PersonalProfile() {
             value={selectedSkillLabel}
             placeholder="희망직무 입력"
             onClick={() =>
-              nav("/personalsetting/profile/jobpreference", {
+              nav("/mypage/setting/job-select", {
                 state: {
                   from: "setting",
                   prevData: {

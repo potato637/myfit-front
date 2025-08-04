@@ -70,6 +70,36 @@ export const getCalendarData = (): CalendarData => {
   return result;
 };
 
+export function formatTimeAgo(dateString: string) {
+  const date = new Date(dateString);
+  const now = new Date(); // 현재 시간
+
+  const diffMilliseconds = now.getTime() - date.getTime(); // 밀리초 차이
+  const diffSeconds = Math.round(diffMilliseconds / 1000);
+  const diffMinutes = Math.round(diffSeconds / 60);
+  const diffHours = Math.round(diffMinutes / 60);
+  const diffDays = Math.round(diffHours / 24);
+  const diffMonths = Math.round(diffDays / 30.44); // 평균 한 달 (365.25 / 12)
+  const diffYears = Math.round(diffDays / 365.25); // 평균 일 년
+
+  if (diffSeconds < 60) {
+    return "방금 전"; // 1분 미만
+  } else if (diffMinutes < 60) {
+    return `${diffMinutes}분 전`;
+  } else if (diffHours < 24) {
+    return `${diffHours}시간 전`;
+  } else if (diffDays < 7) {
+    return `${diffDays}일 전`;
+  } else if (diffDays < 30) {
+    // 1주 이상 1달 미만은 "N주 전"으로 표시
+    return `${Math.round(diffDays / 7)}주 전`;
+  } else if (diffMonths < 12) {
+    return `${diffMonths}개월 전`;
+  } else {
+    return `${diffYears}년 전`;
+  }
+}
+
 export const morningTimes = ["11:00", "11:30", "12:00", "12:30"];
 export const afternoonTimes = [
   "1:00",

@@ -26,7 +26,7 @@ export interface GetProfileResponse extends BaseResponse {
       Highest_grade: string | null;
       link: string | null;
       inc_AuthN_file: string | null;
-      division: string;
+      division: "personal" | "team";
       grade_status: string;
       industry: string | null;
       team_division: string | null;

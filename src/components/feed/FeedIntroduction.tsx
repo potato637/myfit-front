@@ -13,11 +13,6 @@ function FeedIntroduction() {
 
   return (
     <div className="w-[335px]">
-      <img
-        src="/assets/profile/setting.svg"
-        alt="설정"
-        className="w-[20px] h-[20px]"
-      />
       <div className="w-full flex justify-between items-center mt-4 h-[80px]">
         <img
           src={profile?.result.service.profile_img}

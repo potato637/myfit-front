@@ -1,10 +1,16 @@
+import { useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useGetProfile } from "../../hooks/mypageQueries";
 
-function DetailIntroduction() {
+function DetailIntroduction({ serviceId }: { serviceId?: string }) {
+  const location = useLocation();
+  const isMine = location.pathname.startsWith("/mypage");
   const { user } = useAuth();
+  const service_id = isMine
+    ? user?.id?.toString()
+    : location.pathname.split("/")[3];
   const { data: profile, isLoading } = useGetProfile({
-    service_id: user?.id?.toString() || "",
+    service_id: service_id || "",
   });
 
   if (isLoading) {

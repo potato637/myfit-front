@@ -12,6 +12,11 @@ function Introduction({
   const { data: profile, isLoading } = useGetProfile({
     service_id: user?.id?.toString() || "",
   });
+  const handleSettingClick = () => {
+    profile?.result.user.division === "personal"
+      ? navigate("/mypage/setting")
+      : navigate("/mypage/setting/business");
+  };
 
   if (isLoading) {
     return null;
@@ -23,6 +28,7 @@ function Introduction({
         src="/assets/profile/setting.svg"
         alt="설정"
         className="w-[20px] h-[20px]"
+        onClick={handleSettingClick}
       />
       <div className="w-full flex justify-between items-center mt-4 h-[80px]">
         <img
@@ -65,7 +71,10 @@ function Introduction({
               {profile?.result.service.recruiting_status}
             </span>
           </div>
-          <div className="w-full h-[40px] flex flex-col justify-between">
+          <div
+            className="w-full h-[40px] flex flex-col justify-between"
+            onClick={() => navigate("/mypage/networking")}
+          >
             <div className="flex justify-end items-center gap-2 h-[20px]">
               <img
                 src="/assets/profile/networkingIcon.svg"

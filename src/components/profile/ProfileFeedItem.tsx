@@ -1,10 +1,22 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { FeedItem } from "../../apis/mypageAPI";
 
-function ProfileFeedItem({ feed }: { feed: FeedItem }) {
+function ProfileFeedItem({
+  feed,
+  serviceId,
+}: {
+  feed: FeedItem;
+  serviceId?: string;
+}) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const path = location.pathname.split("/")[1];
   const handleClick = () => {
-    navigate(`/mypage/feed#${feed.feed_id}`);
+    if (serviceId) {
+      navigate(`/${path}/profile/${serviceId}/feed#${feed.feed_id}`);
+    } else {
+      navigate(`/${path}/feed#${feed.feed_id}`);
+    }
   };
 
   return (

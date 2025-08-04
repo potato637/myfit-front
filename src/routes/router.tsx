@@ -90,6 +90,8 @@ const router = createBrowserRouter([
               { path: "alarm", element: <MyAlarm /> },
               { path: "post", element: <PostFeed /> },
               { path: "profile/:id", element: <FeedProfile /> },
+              { path: "profile/:id/card", element: <CardDetail /> },
+              { path: "profile/:id/feed", element: <FeedDetail /> },
             ],
           },
 
@@ -103,6 +105,26 @@ const router = createBrowserRouter([
               { path: "status", element: <ProfileStatus /> },
               { path: "networking", element: <Networking /> },
               { path: "setting", element: <MypageSetting /> },
+              { path: "setting/profile", element: <PersonalProfile /> },
+              { path: "setting/account", element: <Account /> },
+              {
+                path: "setting/account/reset-password",
+                element: <ResetPasssword />,
+              },
+              { path: "setting/alarm", element: <AlarmSetting /> },
+              { path: "setting/job-select", element: <JobPreference /> },
+              { path: "setting/business", element: <CompanySetting /> },
+              { path: "setting/business/profile", element: <CompanyProfile /> },
+              { path: "setting/business/account", element: <Account /> },
+              {
+                path: "setting/business/account/reset-password",
+                element: <ResetPasssword />,
+              },
+              { path: "setting/business/alarm", element: <AlarmSetting /> },
+              {
+                path: "setting/business/verified",
+                element: <VerifiedSettingPage />,
+              },
               { path: "create-card", element: <CreateCard /> },
               { path: "keyword-selector", element: <CardKeyword /> },
             ],
@@ -134,41 +156,6 @@ const router = createBrowserRouter([
               { path: "saved", element: <SavedAnnouncement /> },
             ],
           },
-
-          // 민수 정리
-          {
-            path: "companysetting",
-            element: <CompanySetting />,
-          },
-          {
-            path: "personalsetting",
-            element: <PersonalSetting />,
-          },
-          {
-            path: "alarmsetting",
-            element: <AlarmSetting />,
-          },
-          {
-            path: "verifiedsetting",
-            element: <VerifiedSettingPage />,
-          },
-          {
-            path: "personalsetting/account",
-            element: <Account />,
-          },
-          {
-            path: "companysetting/profile",
-            element: <CompanyProfile />,
-          },
-          {
-            path: "personalsetting/profile",
-            element: <PersonalProfile />,
-          },
-          {
-            path: "personalsetting/profile/jobpreference",
-            element: <JobPreference />,
-          },
-          // 민수 정리
         ],
       },
     ],

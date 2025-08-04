@@ -9,6 +9,7 @@ import BottomSheet from "../../components/ui/BottomSheet";
 import BottomSheetContent from "../../components/profile/BottomSheetContent";
 import Modal from "../../components/ui/Modal";
 import ModalContent from "../../components/profile/ModalContent";
+import { useLocation } from "react-router-dom";
 
 const TopBarContent = () => {
   return (
@@ -21,9 +22,14 @@ const TopBarContent = () => {
 };
 
 function FeedDetail() {
+  const location = useLocation();
+  const isMine = location.pathname.startsWith("/mypage");
   const { user } = useAuth();
+  const service_id = isMine
+    ? user?.id?.toString()
+    : location.pathname.split("/")[3];
   const { data: feed, isFetching } = useGetFeeds({
-    service_id: user?.id?.toString() || "",
+    service_id: service_id || "",
   });
 
   const feedsData = feed?.pages.flatMap((page) => page.result.feeds);

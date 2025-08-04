@@ -2,11 +2,11 @@ import ProfileFeedItem from "./ProfileFeedItem";
 import { useGetFeeds } from "../../hooks/mypageQueries";
 import { useAuth } from "../../contexts/AuthContext";
 
-function ProfileFeedContainer() {
+function ProfileFeedContainer({ serviceId }: { serviceId?: string }) {
   const { user } = useAuth();
 
   const { data: feeds, isLoading: feedsLoading } = useGetFeeds({
-    service_id: user?.id?.toString() || "",
+    service_id: serviceId ? serviceId : user?.id?.toString() || "",
   });
 
   if (feedsLoading) {
@@ -31,7 +31,11 @@ function ProfileFeedContainer() {
         </p>
       ) : (
         feedsData?.map((feed) => (
-          <ProfileFeedItem key={feed.feed_id} feed={feed} />
+          <ProfileFeedItem
+            key={feed.feed_id}
+            feed={feed}
+            serviceId={serviceId}
+          />
         ))
       )}
     </div>
