@@ -31,6 +31,7 @@ import {
   getBlockedUser,
   getBlockStatus,
 } from "../apis/relationsAPI";
+import { addFeedLike, removeFeedLike } from "../apis/feed";
 
 // Interest Hooks
 export const usePostInterest = () => {
@@ -113,7 +114,7 @@ export const usePostNetwork = () => {
     mutationFn: ({ service_id }: { service_id: string }) =>
       PostNetwork({ service_id }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["network"] });
+      queryClient.invalidateQueries({ queryKey: ["is_networking"] });
     },
   });
 };
@@ -149,7 +150,7 @@ export const useDeleteNetwork = () => {
     mutationFn: ({ network_id }: { network_id: string }) =>
       deleteNetwork({ network_id }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["network"] });
+      queryClient.invalidateQueries({ queryKey: ["is_networking"] });
     },
   });
 };
@@ -180,7 +181,7 @@ export const useGetReceivedNetwork = () => {
 
 export const useGetIsNetworking = ({ service_id }: { service_id: string }) => {
   return useQuery({
-    queryKey: ["is-networking", service_id],
+    queryKey: ["is_networking"],
     queryFn: () => getIsNetworking({ service_id }),
     enabled: !!service_id,
     staleTime: 1000 * 60,
@@ -235,5 +236,33 @@ export const useGetBlockStatus = (service_id: string) => {
     queryFn: () => getBlockStatus({ service_id }),
     enabled: !!service_id,
     staleTime: 1000 * 60,
+  });
+};
+
+export const useAddFeedLike = ({ service_id }: { service_id: string }) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ feed_id }: { feed_id: string }) =>
+      addFeedLike(Number(feed_id)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["feeds", service_id],
+      });
+    },
+  });
+};
+
+export const useDeleteFeedLike = ({ service_id }: { service_id: string }) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ feed_id }: { feed_id: string }) =>
+      removeFeedLike(Number(feed_id)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["feeds", service_id],
+      });
+    },
   });
 };
