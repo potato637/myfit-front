@@ -9,6 +9,7 @@ import RecruitAnnouncement from "../pages/recruiting/RecruitAnnouncement";
 import SelectMembers from "../pages/onboarding/SelectMembers";
 import SavedAnnouncement from "../pages/recruiting/SavedAnnouncement";
 import RegisterAnnouncement from "../pages/recruiting/RegisterAnnouncement";
+import PersonalSetting from "../pages/setting/PersonalSetting";
 import CompanySetting from "../pages/setting/CompanySetting";
 import AlarmSetting from "../pages/setting/AlarmSetting";
 import RegisterEmail from "../pages/onboarding/RegisterEmail";
@@ -48,7 +49,6 @@ import ChattingContainer from "../pages/outlets/ChattingContainer";
 import RecruitingContainer from "../pages/outlets/RecruitingContainer";
 import CreateCard from "../pages/profile/CreateCard";
 import CardKeyword from "../pages/profile/CardKeyword";
-import NotFound from "../pages/error/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -157,10 +157,6 @@ const router = createBrowserRouter([
             ],
           },
         ],
-      },
-      {
-        path: "*",
-        element: <NotFound />,
       },
     ],
   },

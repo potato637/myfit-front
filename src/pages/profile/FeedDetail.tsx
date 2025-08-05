@@ -28,7 +28,7 @@ function FeedDetail() {
   const service_id = isMine
     ? user?.id?.toString()
     : location.pathname.split("/")[3];
-  const { data: feed, isLoading } = useGetFeeds({
+  const { data: feed, isFetching } = useGetFeeds({
     service_id: service_id || "",
   });
 
@@ -37,7 +37,7 @@ function FeedDetail() {
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
       <div className="w-full h-full bg-ct-gray-100 flex flex-col gap-[7px]">
-        {isLoading ? (
+        {isFetching ? (
           <>
             <DetailIntroductionSkeleton />
             <DetailFeedItemSkeleton />

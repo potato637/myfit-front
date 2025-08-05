@@ -11,8 +11,6 @@ import {
   updateProfileImage,
   updateProfileStatus,
   deleteFeed,
-  patchProfile,
-  PatchProfileProps,
 } from "../apis/mypageAPI";
 
 export const useGetProfile = ({ service_id }: { service_id: string }) => {
@@ -98,20 +96,6 @@ export const useDeleteFeed = ({ service_id }: { service_id: string }) => {
     },
     onError: (error) => {
       console.error("Failed to delete feed:", error);
-    },
-  });
-};
-
-export const usePatchProfile = ({ service_id }: { service_id: string }) => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (props: PatchProfileProps) => patchProfile(props),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["profile", service_id] });
-    },
-    onError: (error) => {
-      console.error("Failed to update profile status:", error);
     },
   });
 };
