@@ -9,7 +9,7 @@ import BirthModal from "../../components/onboarding/BirthModal";
 import RegionModal from "../../components/onboarding/RegionModal";
 import SubRegionModal from "../../components/onboarding/SubRegionModal";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useGetProfile } from "../../hooks/mypageQueries";
+import { useGetProfile, usePatchProfile } from "../../hooks/mypageQueries";
 import { useAuth } from "../../contexts/AuthContext";
 
 function PersonalProfile() {
@@ -71,18 +71,47 @@ function PersonalProfile() {
 
   const selectedSkillLabel = lowSector.join(", ");
 
+  const isValid =
+    nickname &&
+    shortIntro &&
+    region &&
+    subRegion &&
+    birthDate &&
+    employ &&
+    educationLevel &&
+    academic;
+
+  const { mutate: updateProfile } = usePatchProfile({
+    service_id: user?.id.toString() || "",
+  });
+
+  const handleSubmit = () => {
+    if (!isValid) return;
+    updateProfile({
+      name: nickname,
+      one_line_profile: shortIntro,
+      birth_date: birthDate,
+      Highest_grade: educationLevel,
+      grade_status: academic,
+      high_area: region,
+      low_area: subRegion,
+      recruiting_status: employ,
+      low_sector: selectedSkillLabel,
+    });
+    nav("/mypage");
+  };
+
   const TopBarContent = () => {
     return (
       <div className="flex ct-center">
         <span className="text-h2 font-Pretendard text-ct-black-100">
           프로필
         </span>
-        <span
-          className="absolute right-[23px] text-sub2 text-ct-gray-300"
-          onClick={() => nav("/personalsetting")}
-        >
-          완료
-        </span>
+        <div onClick={handleSubmit} className="ct-center">
+          <span className="absolute right-[23px] text-sub2 text-ct-gray-300">
+            완료
+          </span>
+        </div>
       </div>
     );
   };

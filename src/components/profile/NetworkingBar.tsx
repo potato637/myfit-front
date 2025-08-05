@@ -27,7 +27,9 @@ function NetworkingBar() {
       networkStatus === "PENDING_SENT" ||
       networkStatus === "CONNECTED"
     ) {
-      deleteNetwork({ network_id: id });
+      deleteNetwork({
+        network_id: networkStatusData?.result.network_id as string,
+      });
       deleteInterest({ service_id: id });
     }
   };

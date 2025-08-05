@@ -94,8 +94,8 @@ export default function CommentModal({
           ref={modalRef}
           className="flex-1 overflow-y-auto px-4 pt-6 pb-[160px] scrollbar-hide"
         >
-          <CommentList 
-            comments={comments} 
+          <CommentList
+            comments={comments}
             onReplyClick={(commentId, userName) => {
               setReplyToCommentId(commentId);
               setReplyToUserName(userName);

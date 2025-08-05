@@ -106,7 +106,6 @@ export interface FeedItem {
   user: {
     id: string;
     name: string;
-    sector: string;
     profile_img: string;
   };
   created_at: string;
@@ -114,6 +113,7 @@ export interface FeedItem {
   feed_text: string;
   hashtags: string;
   heart: number;
+  is_liked: boolean;
   comment_count: number;
 }
 export interface GetFeedsResponse extends BaseResponse {
@@ -215,6 +215,37 @@ export const deleteFeed = async ({
     return data;
   } catch (error) {
     console.error("deleteFeed error:", error);
+    throw error;
+  }
+};
+
+export interface PatchProfileProps {
+  name: string;
+  one_line_profile: string;
+  birth_date: string;
+  Highest_grade: string;
+  grade_status: string;
+  high_area: string;
+  low_area: string;
+  recruiting_status: string;
+  low_sector: string;
+}
+export interface PatchProfileResponse extends BaseResponse {
+  result: null;
+}
+export const patchProfile = async (
+  props: PatchProfileProps
+): Promise<PatchProfileResponse> => {
+  try {
+    const { data } = await apiClient.patch<PatchProfileResponse>(
+      "/api/settings/profile",
+      {
+        ...props,
+      }
+    );
+    return data;
+  } catch (error) {
+    console.error("patchProfile error:", error);
     throw error;
   }
 };
