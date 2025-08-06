@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import ChattingContainer from "../outlets/ChattingContainer";
 import { ChattingProvider } from "../../contexts/ChattingContext";
+import Chatting from "./Chatting";
 
 function ChattingWrapper() {
   const { chattingRoomId } = useParams();
@@ -8,7 +9,7 @@ function ChattingWrapper() {
 
   return (
     <ChattingProvider roomId={roomId}>
-      <ChattingContainer />
+      <Chatting />
     </ChattingProvider>
   );
 }

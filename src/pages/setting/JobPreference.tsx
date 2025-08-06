@@ -81,7 +81,7 @@ function JobPreference() {
         <div className="flex gap-[5px] mt-[6px]">
           <span className="text-body1 text-ct-gray-400">필수</span>
           <span className="text-body1 text-ct-gray-300">
-            가장 희망하는 1개의 직무를 선택해주세요!
+            희망하는 직무를 1개 이상 선택해주세요!
           </span>
         </div>
 

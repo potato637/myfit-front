@@ -9,7 +9,7 @@ import { useCoffeeChatModal } from "../../contexts/CoffeeChatModalContext";
 import Picker from "react-mobile-picker";
 import { useEffect, useState } from "react";
 import { useCoffeeChat } from "../../contexts/coffeeChatContext";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 
 const TopBarContent = () => {
   return <span className="text-h2 text-ct-black-100">커피챗 요청</span>;
@@ -20,12 +20,24 @@ function RequestCoffeeChat() {
   const { editMode, modalType, setModalType } = useCoffeeChatModal();
   const { setSelectedTime } = useCoffeeChat();
   const { chattingRoomId } = useParams();
+  const location = useLocation();
+  const [coffeechatId, setCoffeechatId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const idFromState = location.state?.coffeechatId;
+    if (idFromState) {
+      setCoffeechatId(idFromState);
+    }
+  }, [location.state]);
+
   if (!chattingRoomId) return null;
+
   const selections = {
     time: ["AM", "PM"],
     hour: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
     minute: ["00", "10", "20", "30", "40", "50"],
   };
+
   const [pickerValue, setPickerValue] = useState<{
     time: string;
     hour: string;
@@ -35,6 +47,7 @@ function RequestCoffeeChat() {
     hour: "1",
     minute: "00",
   });
+
   useEffect(() => {
     const formattedTime = `${pickerValue.time} ${pickerValue.hour}:${pickerValue.minute}`;
     setSelectedTime(formattedTime);
@@ -135,7 +148,12 @@ function RequestCoffeeChat() {
         {modalType === "request" && (
           <RequestModal roomId={Number(chattingRoomId)} />
         )}
-        {modalType === "editConfirm" && <EditConfirmedModal />}
+        {modalType === "editConfirm" && coffeechatId && (
+          <EditConfirmedModal
+            roomId={Number(chattingRoomId)}
+            coffeechatId={coffeechatId}
+          />
+        )}
       </Modal>
     </TopBarContainer>
   );

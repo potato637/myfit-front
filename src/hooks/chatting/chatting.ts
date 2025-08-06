@@ -2,12 +2,16 @@ import {
   QueryFunctionContext,
   useInfiniteQuery,
   useMutation,
+  useQuery,
 } from "@tanstack/react-query";
 import { useChatting } from "../../contexts/ChattingContext";
 import { useAuth } from "../../contexts/AuthContext";
 import {
-  FetchChatMessageResponse,
+  ChattingListResponse,
   getChatMessage,
+  getChattingRooms,
+  getPartnerProfile,
+  PartnerProfileResponse,
   sendChatMessage,
   SendChatMessageRequest,
 } from "../../apis/chatting/chatting";
@@ -59,3 +63,22 @@ export const useChatMessageInfiniteQuery = (
     enabled: !!chatting_room_id,
   });
 };
+
+export const usePartnerProfileQuery = (chattingRoomId: number) => {
+  return useQuery<PartnerProfileResponse>({
+    queryKey: ["partnerProfile", chattingRoomId],
+    queryFn: () => getPartnerProfile(chattingRoomId),
+    enabled: !!chattingRoomId,
+  });
+};
+
+export const useChattingListInfiniteQuery = () =>
+  useInfiniteQuery<ChattingListResponse, Error>({
+    queryKey: ["chattingRooms"],
+    queryFn: ({ pageParam = 0 }) => getChattingRooms(pageParam as number, 10),
+    getNextPageParam: (lastPage) => {
+      const nextCursor = lastPage.result.next_cursor;
+      return nextCursor !== null ? nextCursor : undefined;
+    },
+    initialPageParam: 0,
+  });

@@ -1,9 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useChatting } from "../../contexts/ChattingContext";
-import { useUser } from "../../contexts/UserContext";
+import { useAuth } from "../../contexts/AuthContext";
 import MessageBubble from "./MessageBubble";
 import RequestCoffeeChatBox from "./RequestCoffechatBox";
 import { useChatMessageInfiniteQuery } from "../../hooks/chatting/chatting";
+import { formatDateWithDayAndTime } from "../../utils/format";
 
 interface Props {
   bottomRef?: React.RefObject<HTMLDivElement | null>;
@@ -11,8 +12,11 @@ interface Props {
 
 function ChatMessageList({ bottomRef }: Props) {
   const { messages, roomId, prependMessages } = useChatting();
-  const { myId, name } = useUser();
-
+  const { user } = useAuth();
+  const [chatInitiator, setChatInitiator] = useState<{
+    name: string;
+    time: Date;
+  } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const prevPageCount = useRef(0);
 
@@ -52,24 +56,34 @@ function ChatMessageList({ bottomRef }: Props) {
     });
   }, [data, prependMessages]);
 
+  useEffect(() => {
+    if (messages.length > 0 && !chatInitiator) {
+      const first = messages[0];
+      setChatInitiator({
+        name: first.sender_name ?? "알 수 없음",
+        time: new Date(first.created_at),
+      });
+    }
+  }, [messages, chatInitiator]);
+
   return (
     <div
       ref={containerRef}
       className="flex-1 flex flex-col overflow-y-auto overscroll-contain px-4 pb-[80px]"
     >
-      {messages.length > 0 && (
+      {chatInitiator && (
         <div className="flex flex-col items-center gap-[6px] pt-[46px]">
           <span className="text-body2 text-ct-gray-300">
-            2025.05.15 (월) PM 3:00
+            {formatDateWithDayAndTime(chatInitiator.time.getTime())}
           </span>
           <span className="text-body2 text-ct-gray-300">
-            {name}님께서 대화를 시작하셨습니다.
+            {chatInitiator.name}님께서 대화를 시작하셨습니다.
           </span>
         </div>
       )}
 
       {messages.map((msg, idx) => {
-        if (msg.type === "COFFEECHAT")
+        if (msg.type === "COFFEECHAT") {
           return (
             <div key={msg.id} className="min-h-[41px] my-[10px]">
               <RequestCoffeeChatBox
@@ -80,9 +94,10 @@ function ChatMessageList({ bottomRef }: Props) {
               />
             </div>
           );
+        }
 
         const isSameSender = messages[idx - 1]?.sender_id === msg.sender_id;
-        const isMine = msg.sender_id === myId;
+        const isMine = msg.sender_id === user?.id;
 
         return (
           <div
@@ -91,7 +106,7 @@ function ChatMessageList({ bottomRef }: Props) {
               isSameSender ? "mt-[5px]" : "mt-[20px]"
             }`}
           >
-            <div className={`flex ${isMine ? "justify-start" : "justify-end"}`}>
+            <div className={`flex ${isMine ? "justify-end" : "justify-start"}`}>
               <div className="flex flex-col gap-[5px]">
                 <MessageBubble
                   text={msg.detail_message}

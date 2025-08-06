@@ -1,4 +1,28 @@
-function CancelModal() {
+import { CoffeeChatDetailResponse } from "../../../apis/chatting/coffeechat";
+import { useChatting } from "../../../contexts/ChattingContext";
+import { useModal } from "../../../contexts/ui/modalContext";
+import { useRejectCoffeeChatMutation } from "../../../hooks/chatting/coffeechat";
+
+interface CancelModalProps {
+  onClose?: () => void;
+  data: CoffeeChatDetailResponse["result"];
+}
+
+function CancelModal({ onClose, data }: CancelModalProps) {
+  const { roomId } = useChatting();
+  const numericRoomId = Number(roomId);
+  const { setIsModalOpen } = useModal();
+  const { mutate: rejectChat } = useRejectCoffeeChatMutation(numericRoomId);
+  const handleReject = () => {
+    rejectChat(data.chatting_room_id, {
+      onSuccess: () => {
+        setIsModalOpen(false);
+      },
+      onError: (error) => {
+        console.error("커피챗 거절 실패", error);
+      },
+    });
+  };
   return (
     <div className="flex flex-col ct-center mt-[55px] mb-[26px]">
       <img
@@ -13,14 +37,23 @@ function CancelModal() {
         취소된 커피챗은 되돌릴 수 없습니다.
       </span>
       <div className="flex gap-[12px] mt-[30px]">
-        <button className="w-[142px] h-[42px] rounded-[100px] bg-ct-gray-200 text-ct-white text-sub2">
-          취소 할래요
-        </button>
-        <button className="w-[142px] h-[42px] rounded-[100px] bg-ct-main-blue-200 text-ct-white text-sub2">
+        <button
+          className="w-[142px] h-[42px] rounded-[100px] bg-ct-gray-200 text-ct-white text-sub2"
+          onClick={() => {
+            setIsModalOpen(false);
+          }}
+        >
           안 할래요
+        </button>
+        <button
+          className="w-[142px] h-[42px] rounded-[100px] bg-ct-main-blue-200 text-ct-white text-sub2"
+          onClick={handleReject}
+        >
+          거절 할래요
         </button>
       </div>
     </div>
   );
 }
+
 export default CancelModal;

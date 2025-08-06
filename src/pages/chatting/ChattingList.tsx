@@ -1,10 +1,26 @@
 import { useNavigate } from "react-router-dom";
 import BottomNav from "../../components/layouts/BottomNav";
 import ChatUserCard from "../../components/chatting/ChatUserCard";
+import { useChattingListInfiniteQuery } from "../../hooks/chatting/chatting";
+import { useEffect, useRef } from "react";
 
 function ChattingList() {
   const nav = useNavigate();
-  const nothing = true;
+  const { data, fetchNextPage, hasNextPage } = useChattingListInfiniteQuery();
+  const observerRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (!observerRef.current || !hasNextPage) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 1.0 }
+    );
+    observer.observe(observerRef.current);
+    return () => observer.disconnect();
+  }, [fetchNextPage, hasNextPage]);
   return (
     <div className="flex flex-col">
       <div className="flex w-full h-[39px]">
@@ -18,7 +34,8 @@ function ChattingList() {
           커피챗
         </button>
       </div>
-      {nothing ? (
+      {data?.pages.length === 0 ||
+      data?.pages.every((page) => page.result.chatting_rooms.length === 0) ? (
         <div className="h-[680px] w-full flex flex-col gap-[8px] ct-center">
           <img src="/assets/chatting/nochattingicon.svg" alt="채팅없음아이콘" />
           <span className="text-[17px] font-[400] text-ct-gray-300">
@@ -27,10 +44,12 @@ function ChattingList() {
         </div>
       ) : (
         <div className="flex-1 flex-col w-full mt-[26px] pl-[20px]">
-          <ChatUserCard />
-          <ChatUserCard />
-          <ChatUserCard />
-          <ChatUserCard />
+          {data?.pages.map((page) =>
+            page.result.chatting_rooms.map((room) => (
+              <ChatUserCard key={room.chatting_room_id} data={room} />
+            ))
+          )}
+          <div ref={observerRef} className="h-5"></div>
         </div>
       )}
       <BottomNav />

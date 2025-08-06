@@ -51,6 +51,7 @@ import CreateCard from "../pages/profile/CreateCard";
 import CardKeyword from "../pages/profile/CardKeyword";
 import NotFound from "../pages/error/NotFound";
 import EditFeed from "../pages/feed/EditFeed";
+import ChattingWrapper from "../pages/chatting/ChattingWrapper";
 
 const router = createBrowserRouter([
   {
@@ -145,7 +146,7 @@ const router = createBrowserRouter([
               },
               { path: "coffeechatlist", element: <CoffeeChatList /> },
               { path: "coffeechatstorage", element: <CoffeeChatStorage /> },
-              { path: ":chattingRoomId", element: <Chatting /> },
+              { path: ":chattingRoomId", element: <ChattingWrapper /> },
             ],
           },
 

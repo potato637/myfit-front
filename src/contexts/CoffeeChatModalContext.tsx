@@ -8,7 +8,7 @@ type ModalType =
   | "edit"
   | "editConfirm";
 
-type RequestStatus = "none" | "requested" | "accepted" | "edited" | "rejected";
+type RequestStatus = "none" | "PENDING" | "ACCEPTED" | "REJECTED" | "CANCELED";
 
 interface CoffeeChatModalContextType {
   modalType: ModalType;

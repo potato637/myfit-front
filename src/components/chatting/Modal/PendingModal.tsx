@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useCoffeeChatModal } from "../../../contexts/CoffeeChatModalContext";
 import InformationBox from "../InformationBox";
 import { useModal } from "../../../contexts/ui/modalContext";
-import { formatDateWithDay } from "../../../utils/format";
+import { FormattedDate, FormattedTime } from "../../../utils/format";
 import { CoffeeChatDetailResponse } from "../../../apis/chatting/coffeechat";
 import { useChatting } from "../../../contexts/ChattingContext";
 
@@ -16,18 +16,8 @@ function PendingModal({ data }: Props) {
   const { roomId } = useChatting();
   const nav = useNavigate();
 
-  const formattedDate = formatDateWithDay(
-    new Date(data.scheduled_at).getFullYear(),
-    new Date(data.scheduled_at).getMonth() + 1,
-    new Date(data.scheduled_at).getDate()
-  );
-  const formattedTime = new Date(data.scheduled_at).toLocaleTimeString(
-    "ko-KR",
-    {
-      hour: "2-digit",
-      minute: "2-digit",
-    }
-  );
+  const formattedDate = FormattedDate(data.scheduled_at);
+  const formattedTime = FormattedTime(data.scheduled_at);
 
   return (
     <div className="w-full h-[498px] rounded-[15px] bg-ct-white flex flex-col ct-center">
@@ -40,8 +30,16 @@ function PendingModal({ data }: Props) {
         {data.title}
       </span>
       <div className="mt-[21px] flex">
-        <img src={data.sender.profile_img} alt="보낸이" />
-        <img src={data.receiver.profile_img} alt="받는이" />
+        <img
+          src={data.sender.profile_img}
+          alt="보낸이"
+          className="w-[61px] h-[61px] rounded-full"
+        />
+        <img
+          src={data.receiver.profile_img}
+          alt="받는이"
+          className="w-[61px] h-[61px] rounded-full"
+        />
       </div>
       <div className="mt-[25px] relative">
         <InformationBox
@@ -62,7 +60,11 @@ function PendingModal({ data }: Props) {
         className="mt-[20px] w-[70px] h-[23px] border-b border-ct-gray-300 text-sub1 text-ct-gray-300"
         onClick={() => {
           setEditMode(true);
-          nav("/chatting/coffeechatrequest/:roomId");
+          nav(`/chatting/coffeechatrequest/${roomId}`, {
+            state: {
+              coffeechatId: data.coffeechat_id,
+            },
+          });
           setIsModalOpen(false);
         }}
       >

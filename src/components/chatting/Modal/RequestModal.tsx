@@ -1,10 +1,9 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import InformationBox from "../InformationBox";
 import { useCoffeeChat } from "../../../contexts/coffeeChatContext";
 import { useModal } from "../../../contexts/ui/modalContext";
 import { useCoffeeChatModal } from "../../../contexts/CoffeeChatModalContext";
-import { useChatting } from "../../../contexts/ChattingContext";
-import { formatDateWithDay } from "../../../utils/format";
+import toISOString, { formatDateWithDay } from "../../../utils/format";
 import {
   useGetCoffeeChatPreviewQuery,
   useRequestCoffeeChatMutation,
@@ -13,7 +12,6 @@ import {
 function RequestModal({ roomId }: { roomId: number }) {
   const nav = useNavigate();
   const { setIsModalOpen } = useModal();
-  const { addMessage } = useChatting();
   const { selectedTitle, selectedDate, selectedTime, selectedPlace } =
     useCoffeeChat();
   const { setRequestStatus } = useCoffeeChatModal();
@@ -28,34 +26,13 @@ function RequestModal({ roomId }: { roomId: number }) {
     : "";
 
   const { data } = useGetCoffeeChatPreviewQuery(numericRoomId);
-
-  if (!numericRoomId) return null;
   const { mutate: CoffeeChatInformation } =
     useRequestCoffeeChatMutation(numericRoomId);
 
-  function toISOString(
-    timeStr: string,
-    dateObj: { year: number; month: number; date: number }
-  ): string {
-    const [period, time] = timeStr.split(" ");
-    let [hour, minute] = time.split(":").map(Number);
+  if (!numericRoomId || !selectedDate) return null;
 
-    if (period === "PM" && hour < 12) hour += 12;
-    if (period === "AM" && hour === 12) hour = 0;
-
-    const date = new Date(
-      dateObj.year,
-      dateObj.month - 1,
-      dateObj.date,
-      hour,
-      minute,
-      0
-    );
-
-    return date.toISOString();
-  }
-  if (!selectedDate) return;
   const scheduledAt = toISOString(selectedTime, selectedDate);
+
   return (
     <div className="w-full h-[498px] rounded-[15px] bg-ct-white flex flex-col ct-center">
       <img
@@ -78,11 +55,16 @@ function RequestModal({ roomId }: { roomId: number }) {
           className="w-[61px] h-[61px] rounded-full"
         />
       </div>
-      <div className="mt-[25px]">
+      <div className="mt-[25px] relative">
         <InformationBox
           date={formattedDate}
           time={selectedTime}
           place={selectedPlace}
+        />
+        <img
+          src="/assets/chatting/disablecheck.svg"
+          alt="비활성 체크"
+          className="absolute top-[10px] right-[10px]"
         />
       </div>
       <button
@@ -90,24 +72,15 @@ function RequestModal({ roomId }: { roomId: number }) {
         onClick={() => {
           CoffeeChatInformation(
             {
-              receiver_id: 2,
               title: selectedTitle,
               scheduled_at: scheduledAt,
               place: selectedPlace,
             },
             {
-              onSuccess: (res) => {
-                setRequestStatus("requested");
-                addMessage({
-                  id: res.result.coffeechat_id,
-                  sender_name: res.result.name,
-                  sender_id: res.result.sender_id,
-                  type: "COFFEECHAT",
-                  detail_message: "",
-                  created_at: res.result.created_at,
-                });
-                nav(`/chatting/${roomId}`);
+              onSuccess: () => {
+                setRequestStatus("PENDING");
                 setIsModalOpen(false);
+                nav(`/chatting/${roomId}`);
               },
               onError: (err) => {
                 console.error("커피챗 요청 실패", err);
@@ -127,4 +100,5 @@ function RequestModal({ roomId }: { roomId: number }) {
     </div>
   );
 }
+
 export default RequestModal;

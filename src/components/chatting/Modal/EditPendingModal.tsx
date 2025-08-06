@@ -1,24 +1,30 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCoffeeChatModal } from "../../../contexts/CoffeeChatModalContext";
 import { useModal } from "../../../contexts/ui/modalContext";
 import InformationBox from "../InformationBox";
 import { useCoffeeChat } from "../../../contexts/coffeeChatContext";
-import { formatDateWithDay } from "../../../utils/format";
+import {
+  formatDateWithDay,
+  FormattedDate,
+  FormattedTime,
+} from "../../../utils/format";
+import { useUpdateCoffeeChatMutation } from "../../../hooks/chatting/coffeechat";
+import { useChatting } from "../../../contexts/ChattingContext";
+import { CoffeeChatDetailResponse } from "../../../apis/chatting/coffeechat";
 
-function EditPendingModal() {
+interface Props {
+  data: CoffeeChatDetailResponse["result"];
+}
+
+function EditPendingModal({ data }: Props) {
   const { setEditMode } = useCoffeeChatModal();
   const { setIsModalOpen } = useModal();
+  const { roomId } = useChatting();
   const nav = useNavigate();
-  const { selectedTitle, selectedDate, selectedTime, selectedPlace } =
-    useCoffeeChat();
 
-  const formattedDate = selectedDate
-    ? formatDateWithDay(
-        selectedDate.year,
-        selectedDate.month,
-        selectedDate.date
-      )
-    : "";
+  const formattedDate = FormattedDate(data.scheduled_at);
+  const formattedTime = FormattedTime(data.scheduled_at);
+
   return (
     <div className="w-full h-[498px] rounded-[15px] bg-ct-white flex flex-col ct-center">
       <img
@@ -27,7 +33,7 @@ function EditPendingModal() {
         className="w-[80.53px] h-[80.53px]"
       />
       <span className="text-h2 text-ct-black-200 mt-[4.24px]">
-        {selectedTitle}
+        {data.title}
       </span>
       <div className="mt-[21px] flex">
         <img src="/assets/chatting/manprofile.svg" alt="남성프로필" />
@@ -36,8 +42,8 @@ function EditPendingModal() {
       <div className="mt-[25px] relative">
         <InformationBox
           date={formattedDate}
-          time={selectedTime}
-          place={selectedPlace}
+          time={formattedTime}
+          place={data.place}
         />
         <img
           src="/assets/chatting/check.svg"
@@ -49,7 +55,11 @@ function EditPendingModal() {
         className="mt-[26px] w-[168px] h-[42px] rounded-[100px] border border-ct-main-blue-200 text-sub1 bg-ct-main-blue-200 text-ct-white"
         onClick={() => {
           setEditMode(true);
-          nav("/coffeechat/request");
+          nav(`/chatting/coffeechatrequest/${roomId}`, {
+            state: {
+              coffeechatId: data.coffeechat_id,
+            },
+          });
           setIsModalOpen(false);
         }}
       >

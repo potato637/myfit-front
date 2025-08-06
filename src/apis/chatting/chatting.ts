@@ -1,3 +1,4 @@
+import { StringValidation } from "zod/v3";
 import apiInstance from "../apiClient";
 
 export interface SendChatMessageRequest {
@@ -35,6 +36,40 @@ export interface FetchChatMessageResponse {
   };
 }
 
+export interface PartnerProfileResponse {
+  isSuccess: boolean;
+  code: number;
+  message: string;
+  result: {
+    service_id: number;
+    name: string;
+    profile_img: string;
+  };
+}
+export interface chattingRoomInformation {
+  chatting_room_id: number;
+  partner: {
+    service_id: number;
+    name: string;
+    age: number;
+    low_sector: string;
+    profile_image: string;
+  };
+  last_message: {
+    message: string;
+    created_at: string;
+  };
+}
+export interface ChattingListResponse {
+  isSuccess: boolean;
+  code: number;
+  message: string;
+  result: {
+    chatting_rooms: chattingRoomInformation[];
+    next_cursor: number;
+  };
+}
+
 export const sendChatMessage = async (
   chattingRoomId: number | null,
   data: SendChatMessageRequest
@@ -63,5 +98,24 @@ export const getChatMessage = async (
     `/api/chatting-rooms/${chatting_room_id}/messages`,
     { params }
   );
+  return response.data;
+};
+
+export const getPartnerProfile = async (
+  chattingRoomId: number
+): Promise<PartnerProfileResponse> => {
+  const response = await apiInstance.get(
+    `/api/chatting-rooms/${chattingRoomId}/partner`
+  );
+  return response.data;
+};
+
+export const getChattingRooms = async (
+  cursor?: number,
+  limit?: number
+): Promise<ChattingListResponse> => {
+  const response = await apiInstance.get("/api/chatting-rooms", {
+    params: { cursor, limit },
+  });
   return response.data;
 };
