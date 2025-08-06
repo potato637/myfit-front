@@ -56,6 +56,20 @@ function NetworkingBar() {
             <span className="text-sub1 text-ct-white">네트워크</span>
           </div>
         </div>
+      ) : networkStatus === "PENDING_SENT" ? (
+        <div className="flex-[2] h-[29px] ct-center">
+          <div
+            className="w-full h-full ct-center gap-1 bg-ct-main-blue-200 rounded-[3px]"
+            onClick={handleNetworkClick}
+          >
+            <img
+              src="/assets/profile/networkingIcon-white.svg"
+              alt="네트워킹"
+              className="w-[20px] h-[20px]"
+            />
+            <span className="text-sub1 text-ct-white">네트워크 요청 취소</span>
+          </div>
+        </div>
       ) : (
         <>
           <div className="flex-1 h-[29px] ct-center">
