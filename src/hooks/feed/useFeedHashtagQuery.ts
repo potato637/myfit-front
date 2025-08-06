@@ -1,12 +1,11 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { searchFeedsByHashtag } from "../apis/feed";
+import { searchFeedsByHashtag } from "../../apis/feed";
 
-interface UseFeedHashtagSearchProps {
+interface UseFeedHashtagQueryProps {
   hashtag: string;
-  enabled?: boolean;
 }
 
-export const useFeedHashtagSearch = ({ hashtag, enabled = true }: UseFeedHashtagSearchProps) => {
+export const useFeedHashtagQuery = ({ hashtag }: UseFeedHashtagQueryProps) => {
   return useInfiniteQuery({
     queryKey: ['searchFeedsByHashtag', hashtag],
     queryFn: ({ pageParam }: { pageParam?: number }) => 
@@ -17,6 +16,6 @@ export const useFeedHashtagSearch = ({ hashtag, enabled = true }: UseFeedHashtag
         ? lastPage.result.pagination.next_cursor 
         : undefined;
     },
-    enabled: enabled && !!hashtag.trim(),
+    enabled: !!hashtag.trim(),
   });
 };

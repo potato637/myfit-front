@@ -2,7 +2,7 @@
 export interface Writer {
   id: number;
   name: string;
-  high_sector: string; // job 대신
+  low_sector: string; // job 대신
   profile_img: string; // profile_image_url 대신
 }
 

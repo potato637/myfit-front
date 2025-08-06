@@ -29,7 +29,19 @@ export interface SearchUsersParams {
 // 해시태그 검색 결과 피드 타입
 export interface HashtagFeed {
   feed_id: number;
+  feed_text: string;
+  comment_count: number;
+  heart: number;
+  is_liked: boolean;
+  created_at: string;
+  hashtags: string[];
   images: string[];
+  user: {
+    id: number;
+    name: string;
+    profile_img: string;
+    sector: string;
+  };
 }
 
 // 해시태그 검색 응답 타입
@@ -55,7 +67,19 @@ export interface SearchHashtagParams {
 // 키워드 검색 결과 피드 타입
 export interface KeywordFeed {
   feed_id: number;
+  feed_text: string;
+  comment_count: number;
+  heart: number;
+  is_liked: boolean;
+  created_at: string;
+  hashtags: string[];
   images: string[];
+  user: {
+    id: number;
+    name: string;
+    profile_img: string;
+    sector: string;
+  };
 }
 
 // 키워드 검색 응답 타입

@@ -1,154 +1,23 @@
-import { useState, useEffect, useRef } from "react";
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-  useQuery,
-} from "@tanstack/react-query";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FeedCard from "../../components/feed/FeedCard";
 import FixedHeader from "../../components/feed/FixedHeader";
 import BottomNavContainer from "../../components/layouts/BottomNavContainer";
 import FeedCardSkeleton from "../../components/skeletons/feed/FeedCardSkeleton";
-import {
-  getFeedsWithCursor,
-  addFeedLike,
-  removeFeedLike,
-  getFeedComments,
-  createComment,
-  deleteComment,
-} from "../../apis/feed";
-import { FeedResponse } from "../../types/feed/feed";
 import CommentModal from "../../components/feed/CommentModal";
 import { motion, AnimatePresence } from "framer-motion";
 import getTimeAgo from "../../utils/timeAgo";
 import { useAuth } from "../../contexts/AuthContext";
+import { useFeedInfiniteQuery } from "../../hooks/feed/useFeedInfiniteQuery";
+import { useFeedMutations } from "../../hooks/feed/useFeedMutations";
+import { useFeedComments } from "../../hooks/feed/useFeedComments";
+import { useInfiniteScroll } from "../../hooks/common/useInfiniteScroll"; 
+import { FeedResponse } from "../../types/feed/feed";
 
 export default function FeedPage() {
   const [activePostId, setActivePostId] = useState<string | null>(null);
-  const queryClient = useQueryClient();
-  const loadMoreRef = useRef<HTMLDivElement>(null);
-  const { user } = useAuth(); // 현재 사용자 정보
+  const { user } = useAuth();
   const navigate = useNavigate();
-
-  // 좋아요 추가 mutation
-  const addLikeMutation = useMutation({
-    mutationFn: addFeedLike,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["feeds"] });
-    },
-    onError: (error) => {
-      console.error("좋아요 추가 실패:", error);
-    },
-  });
-
-  // 좋아요 취소 mutation
-  const removeLikeMutation = useMutation({
-    mutationFn: removeFeedLike,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["feeds"] });
-    },
-    onError: (error) => {
-      console.error("좋아요 취소 실패:", error);
-    },
-  });
-
-  // 좋아요 토글 핸들러
-  const handleLikeToggle = (feedId: number, isLiked: boolean) => {
-    if (isLiked) {
-      removeLikeMutation.mutate(feedId);
-    } else {
-      addLikeMutation.mutate(feedId);
-    }
-  };
-
-  // 댓글 작성 mutation
-  const createCommentMutation = useMutation({
-    mutationFn: ({
-      feedId,
-      commentText,
-    }: {
-      feedId: number;
-      commentText: string;
-    }) =>
-      createComment(feedId, {
-        comment_text: commentText,
-        high_comment_id: null,
-      }),
-    onSuccess: () => {
-      // 댓글 작성 성공 시 댓글 목록과 피드 목록 모두 새로고침
-      queryClient.invalidateQueries({ queryKey: ["comments", activePostId] });
-      queryClient.invalidateQueries({ queryKey: ["feeds"] }); // 댓글 개수 업데이트
-    },
-    onError: (error) => {
-      console.error("댓글 작성 실패:", error);
-    },
-  });
-
-  // 대댓글 작성 mutation
-  const createReplyMutation = useMutation({
-    mutationFn: ({
-      feedId,
-      commentText,
-      parentCommentId,
-    }: {
-      feedId: number;
-      commentText: string;
-      parentCommentId: number;
-    }) =>
-      createComment(feedId, {
-        comment_text: commentText,
-        high_comment_id: parentCommentId,
-      }),
-    onSuccess: () => {
-      // 대댓글 작성 성공 시 댓글 목록과 피드 목록 모두 새로고침
-      queryClient.invalidateQueries({ queryKey: ["comments", activePostId] });
-      queryClient.invalidateQueries({ queryKey: ["feeds"] }); // 댓글 개수 업데이트
-    },
-    onError: (error) => {
-      console.error("대댓글 작성 실패:", error);
-    },
-  });
-
-  // 댓글 작성 핸들러
-  const handleCommentCreate = (commentText: string) => {
-    if (activePostId && commentText.trim()) {
-      createCommentMutation.mutate({
-        feedId: Number(activePostId),
-        commentText: commentText.trim(),
-      });
-    }
-  };
-
-  // 대댓글 작성 핸들러
-  const handleReplyCreate = (commentText: string, parentCommentId: number) => {
-    if (activePostId && commentText.trim()) {
-      createReplyMutation.mutate({
-        feedId: Number(activePostId),
-        commentText: commentText.trim(),
-        parentCommentId,
-      });
-    }
-  };
-
-  // 댓글 삭제 mutation
-  const deleteCommentMutation = useMutation({
-    mutationFn: ({ commentId }: { commentId: number }) =>
-      deleteComment(Number(activePostId), commentId),
-    onSuccess: () => {
-      // 댓글 삭제 성공 시 댓글 목록과 피드 목록 모두 새로고침
-      queryClient.invalidateQueries({ queryKey: ["comments", activePostId] });
-      queryClient.invalidateQueries({ queryKey: ["feeds"] }); // 댓글 개수 업데이트
-    },
-    onError: (error) => {
-      console.error("댓글 삭제 실패:", error);
-    },
-  });
-
-  // 댓글 삭제 핸들러
-  const handleCommentDelete = (commentId: number) => {
-    deleteCommentMutation.mutate({ commentId });
-  };
 
   const {
     data,
@@ -157,55 +26,25 @@ export default function FeedPage() {
     isFetchingNextPage,
     isLoading,
     error,
-  } = useInfiniteQuery({
-    queryKey: ["feeds"],
-    queryFn: ({ pageParam }: { pageParam: number | undefined }) =>
-      getFeedsWithCursor(pageParam),
-    initialPageParam: undefined as number | undefined,
-    getNextPageParam: (lastPage: FeedResponse) =>
-      lastPage.result.pagination.has_next
-        ? lastPage.result.pagination.next_cursor
-        : undefined,
+  } = useFeedInfiniteQuery();
+
+  const {
+    handleLikeToggle,
+    handleCommentCreate,
+    handleReplyCreate,
+    handleCommentDelete,
+  } = useFeedMutations({ activePostId });
+
+  const { data: commentsData } = useFeedComments({ activePostId });
+
+  const { loadMoreRef } = useInfiniteScroll({
+    hasNextPage: !!hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
   });
 
   const allFeeds =
     data?.pages.flatMap((page: FeedResponse) => page.result.feeds) || [];
-
-  // 무한스크롤 Intersection Observer
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const target = entries[0];
-        if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
-          console.log("🔄 무한스크롤: 다음 페이지 로드");
-          fetchNextPage();
-        }
-      },
-      {
-        root: null,
-        rootMargin: "100px", // 하단 100px 전에 미리 로드
-        threshold: 0.1,
-      }
-    );
-
-    const currentRef = loadMoreRef.current;
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-    };
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  // 활성화된 댓글 모달의 댓글 데이터
-  const { data: commentsData } = useQuery({
-    queryKey: ["comments", activePostId],
-    queryFn: () => getFeedComments({ feedId: Number(activePostId) }),
-    enabled: !!activePostId, // activePostId가 있을 때만 실행
-  });
 
   return (
     <BottomNavContainer showBottomNav={!activePostId}>
@@ -289,6 +128,7 @@ export default function FeedPage() {
               onReplyCreate={handleReplyCreate}
               onCommentDelete={handleCommentDelete}
               currentUserId={user?.id}
+              postOwnerId={allFeeds.find(feed => feed.feed_id === Number(activePostId))?.user?.id}
             />
           </>
         )}

@@ -3,6 +3,7 @@ import { FeedResponse } from "../types/feed/feed";
 import { LikeFeedResponse } from "../types/feed/like";
 import { CommentsResponse, GetCommentsParams, CreateCommentRequest, CreateCommentResponse, DeleteCommentResponse } from "../types/feed/comment";
 import { CreateFeedRequest, CreateFeedResponse } from "../types/feed/createFeed";
+import { GetFeedForEditResponse, UpdateFeedRequest, UpdateFeedResponse } from "../types/feed/editFeed";
 import { 
   SearchUsersResponse, 
   SearchUsersParams,
@@ -101,5 +102,21 @@ export const deleteComment = async (feedId: number, commentId: number): Promise<
   console.log('🗑️ [API] 댓글 삭제 요청:', { feedId, commentId });
   const response = await apiClient.delete<DeleteCommentResponse>(`/api/feeds/${feedId}/comments/${commentId}`);
   console.log('✅ [API] 댓글 삭제 응답:', response.data);
+  return response.data;
+};
+
+// 특정 피드 조회 (수정용)
+export const getFeedForEdit = async (feedId: number): Promise<GetFeedForEditResponse> => {
+  console.log('🔄 [API] 피드 수정용 조회 요청:', feedId);
+  const response = await apiClient.get<GetFeedForEditResponse>(`/api/feeds/${feedId}`);
+  console.log('✅ [API] 피드 수정용 조회 응답:', response.data);
+  return response.data;
+};
+
+// 피드 수정
+export const updateFeed = async (feedId: number, request: UpdateFeedRequest): Promise<UpdateFeedResponse> => {
+  console.log('🔄 [API] 피드 수정 요청:', { feedId, request });
+  const response = await apiClient.patch<UpdateFeedResponse>(`/api/feeds/${feedId}`, request);
+  console.log('✅ [API] 피드 수정 응답:', response.data);
   return response.data;
 };

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import PostResultSkeleton from "../skeletons/feed/PostResultSkeleton";
 import { searchFeedsByKeyword } from "../../apis/feed";
-import { SearchFeed } from "../../types/feed/searchKeyword";
+import { KeywordFeed } from "../../types/feed/search";
 
 interface Props {
   keyword: string;
@@ -23,6 +24,7 @@ const useDebounce = (value: string, delay: number) => {
 const PostResult = ({ keyword }: Props) => {
   const debouncedKeyword = useDebounce(keyword, 300);
   const loadMoreRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   // 키워드로 피드 검색 무한 쿼리
   const {
@@ -110,8 +112,15 @@ const PostResult = ({ keyword }: Props) => {
       {allFeeds.length > 0 ? (
         <>
           <div className="grid grid-cols-3 gap-2">
-            {allFeeds.map((feed: SearchFeed) => (
-              <div key={feed.feed_id} className="aspect-square relative">
+            {allFeeds.map((feed: KeywordFeed) => (
+              <div 
+                key={feed.feed_id} 
+                className="aspect-square relative cursor-pointer hover:opacity-80 transition-opacity"
+                onClick={() => {
+                  console.log('피드 검색 결과 클릭:', feed);
+                  navigate(`/feed/search-result?keyword=${encodeURIComponent(debouncedKeyword)}&startFeedId=${feed.feed_id}`);
+                }}
+              >
                 {feed.images.length > 0 ? (
                   <img
                     src={feed.images[0]} // 첫 번째 이미지만 표시
@@ -119,11 +128,11 @@ const PostResult = ({ keyword }: Props) => {
                     className="w-full h-full object-cover rounded-sm"
                   />
                 ) : (
-                  // 이미지가 없는 경우 텍스트로 대체
-                  <div className="w-full h-full bg-gray-100 rounded-sm flex items-center justify-center p-2">
-                    <p className="text-xs text-gray-600 line-clamp-3 text-center">
-                      {feed.feed_text}
-                    </p>
+                  // 이미지가 없는 경우 기본 배경
+                  <div className="w-full h-full bg-gray-100 rounded-sm flex items-center justify-center">
+                    <div className="text-gray-400 text-xs">
+                      이미지 없음
+                    </div>
                   </div>
                 )}
                 {/* 다중 이미지 표시 */}

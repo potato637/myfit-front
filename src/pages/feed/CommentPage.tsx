@@ -2,7 +2,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import CommentList from "../../components/feed/CommentList";
 import ChatInputField from "../../components/chatting/ChatInputField";
-import { mockComments } from "../../mocks/comments";
 
 export default function CommentPage() {
   const { postId } = useParams();
@@ -24,7 +23,7 @@ export default function CommentPage() {
 
       {/* 댓글 목록 */}
       <div className="flex-1 overflow-y-auto px-4 pt-2 pb-24">
-        <CommentList comments={mockComments} />
+        {/* TODO: 실제 API로 댓글 데이터 연동 필요 */}
       </div>
 
       {/* 자동완성 버튼 + 입력창 */}

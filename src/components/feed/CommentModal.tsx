@@ -1,6 +1,7 @@
 // CommentModal.tsx - 바텀시트 스타일 모달 컴포넌트
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CommentList from "../feed/CommentList";
 import { Comment } from "../../types/feed/comment";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
@@ -15,6 +16,7 @@ interface CommentModalProps {
   onReplyCreate: (commentText: string, parentCommentId: number) => void;
   onCommentDelete?: (commentId: number) => void;
   currentUserId?: number;
+  postOwnerId?: number;
 }
 
 export default function CommentModal({
@@ -25,12 +27,19 @@ export default function CommentModal({
   onReplyCreate,
   onCommentDelete,
   currentUserId,
+  postOwnerId,
 }: CommentModalProps) {
+  const navigate = useNavigate();
   const [closing, setClosing] = useState(false);
   const [replyToCommentId, setReplyToCommentId] = useState<number | null>(null);
   const [replyToUserName, setReplyToUserName] = useState<string>("");
 
   const handleRequestClose = () => setClosing(true);
+
+  // 프로필 클릭 핸들러
+  const handleProfileClick = (userId: number) => {
+    navigate(`/feed/profile/${userId}`);
+  };
 
   const modalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<CommentInputFieldRef>(null);
@@ -105,7 +114,9 @@ export default function CommentModal({
               inputRef.current?.focus();
             }}
             onDeleteClick={onCommentDelete}
+            onProfileClick={handleProfileClick}
             currentUserId={currentUserId}
+            postOwnerId={postOwnerId}
           />
         </div>
         <div className="fixed bottom-0 left-0 right-0 z-50 bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200">

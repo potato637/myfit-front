@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProfileCardContainer from "../../components/profile/ProfileCardContainer";
 import ProfileFeedContainer from "../../components/profile/ProfileFeedContainer";
 import NetworkingBar from "../../components/profile/NetworkingBar";
@@ -11,15 +11,23 @@ import NetworkingBarSkeleton from "../../components/skeletons/mypage/NetworkingB
 import ProfileCardSkeleton from "../../components/skeletons/mypage/ProfileCardSkeleton";
 import FeedIntroduction from "../../components/feed/FeedIntroduction";
 import { useGetProfile } from "../../hooks/mypageQueries";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 
 function ProfileItem() {
   const [selectedTab, setSelectedTab] = useState<"card" | "feed">("card");
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
 
   const { data: profile, isLoading } = useGetProfile({
     service_id: id as string,
   });
+
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam === 'feed') {
+      setSelectedTab('feed');
+    }
+  }, [searchParams]);
 
   if (isLoading) {
     return (

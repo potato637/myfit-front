@@ -110,7 +110,7 @@ function Splash() {
           onChange={(e) => setPassword(e.target.value)}
           disabled={isLoading}
           onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-          className="w-full px-4 py-3 mb-2 rounded-md bg-transparent border border-ct-white text-ct-white placeholder:text-ct-white disabled:opacity-50"
+          className="w-full px-4 py-3 mb-5 rounded-md bg-transparent border border-ct-white text-ct-white placeholder:text-ct-white disabled:opacity-50"
         />
 
         {/* 성공 메시지 */}

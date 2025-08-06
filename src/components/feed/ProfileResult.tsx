@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import ProfileResultSkeleton from "../skeletons/common/ProfileResultSkeleton";
 import { searchUsers } from "../../apis/feed";
 import { SearchUser } from "../../types/feed/search";
@@ -23,6 +24,7 @@ const useDebounce = (value: string, delay: number) => {
 const ProfileResult = ({ keyword }: Props) => {
   const debouncedKeyword = useDebounce(keyword, 300);
   const loadMoreRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   // 유저 검색 무한 쿼리
   const {
@@ -31,18 +33,20 @@ const ProfileResult = ({ keyword }: Props) => {
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-    error
+    error,
   } = useInfiniteQuery({
-    queryKey: ['searchUsers', debouncedKeyword],
-    queryFn: ({ pageParam }: { pageParam?: number }) => 
+    queryKey: ["searchUsers", debouncedKeyword],
+    queryFn: ({ pageParam }: { pageParam?: number }) =>
       searchUsers({ name: debouncedKeyword, last_profile_id: pageParam }),
     initialPageParam: undefined as number | undefined,
-    getNextPageParam: (lastPage) => 
-      lastPage.result.pagination.has_next ? lastPage.result.pagination.next_cursor : undefined,
+    getNextPageParam: (lastPage) =>
+      lastPage.result.pagination.has_next
+        ? lastPage.result.pagination.next_cursor
+        : undefined,
     enabled: !!debouncedKeyword.trim(), // 검색어가 있을 때만 실행
   });
 
-  const allUsers = data?.pages.flatMap(page => page.result.users) || [];
+  const allUsers = data?.pages.flatMap((page) => page.result.users) || [];
 
   // 무한스크롤 Intersection Observer
   useEffect(() => {
@@ -50,14 +54,14 @@ const ProfileResult = ({ keyword }: Props) => {
       (entries) => {
         const target = entries[0];
         if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
-          console.log('🔄 프로필 검색 무한스크롤: 다음 페이지 로드');
+          console.log("🔄 프로필 검색 무한스크롤: 다음 페이지 로드");
           fetchNextPage();
         }
       },
       {
         root: null,
-        rootMargin: '100px',
-        threshold: 0.1
+        rootMargin: "100px",
+        threshold: 0.1,
       }
     );
 
@@ -76,9 +80,9 @@ const ProfileResult = ({ keyword }: Props) => {
   // 검색어가 없을 때
   if (!debouncedKeyword.trim()) {
     return (
-      <ul className="mt-[6px] flex flex-col gap-[20px]">
-        <li className="text-gray-400 text-sm ml-2">검색어를 입력해주세요.</li>
-      </ul>
+      <div className="-mx-[22px] text-center py-8 text-gray-400 text-sm">
+        사용자 이름을 입력해주세요.
+      </div>
     );
   }
 
@@ -97,7 +101,9 @@ const ProfileResult = ({ keyword }: Props) => {
   if (error) {
     return (
       <ul className="mt-[6px] flex flex-col gap-[20px]">
-        <li className="text-red-500 text-sm ml-2">검색 중 오류가 발생했습니다.</li>
+        <li className="text-red-500 text-sm ml-2">
+          검색 중 오류가 발생했습니다.
+        </li>
       </ul>
     );
   }
@@ -107,7 +113,14 @@ const ProfileResult = ({ keyword }: Props) => {
       {allUsers.length > 0 ? (
         <>
           {allUsers.map((user: SearchUser) => (
-            <li key={user.user_id} className="ml-2 flex items-center gap-4">
+            <li
+              key={user.user_id}
+              className="ml-2 flex items-center gap-4 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
+              onClick={() => {
+                console.log("프로필 검색에서 사용자 클릭:", user);
+                navigate(`/feed/profile/${user.user_id}?tab=feed`);
+              }}
+            >
               <img
                 src={user.profile_img}
                 alt={user.name}
@@ -121,9 +134,12 @@ const ProfileResult = ({ keyword }: Props) => {
               </div>
             </li>
           ))}
-          
+
           {/* 무한스크롤 트리거 */}
-          <div ref={loadMoreRef} className="h-4 flex items-center justify-center">
+          <div
+            ref={loadMoreRef}
+            className="h-4 flex items-center justify-center"
+          >
             {isFetchingNextPage && (
               <div className="text-gray-400 text-sm">
                 더 많은 사용자를 불러오는 중...

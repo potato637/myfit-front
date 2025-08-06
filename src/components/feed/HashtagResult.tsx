@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import HashtagResultSkeleton from "../skeletons/feed/HashtagResultSkeleton";
-import { useFeedHashtagSearch } from "../../hooks/useFeedHashtagSearch";
+import { useFeedHashtagQuery } from "../../hooks/feed/useFeedHashtagQuery";
 import { useHashtagAnalyze } from "../../hooks/useHashtagAnalyze";
 import { HashtagFeed, HashtagItem } from "../../types/feed/search";
 
@@ -21,6 +22,7 @@ const useDebounce = (value: string, delay: number) => {
 };
 
 const HashtagResult = ({ keyword }: Props) => {
+  const navigate = useNavigate();
   const debouncedKeyword = useDebounce(keyword, 300);
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const [selectedHashtag, setSelectedHashtag] = useState<string | null>(null);
@@ -46,9 +48,8 @@ const HashtagResult = ({ keyword }: Props) => {
     isFetchingNextPage: isFetchingNextFeeds,
     isLoading: isLoadingFeeds,
     error: feedsError
-  } = useFeedHashtagSearch({
-    hashtag: selectedHashtag || '',
-    enabled: !!selectedHashtag
+  } = useFeedHashtagQuery({
+    hashtag: selectedHashtag || ''
   });
 
   const allHashtags = hashtagsData?.pages.flatMap(page => page.result.hashtags) || [];
@@ -57,6 +58,11 @@ const HashtagResult = ({ keyword }: Props) => {
   // 해시태그 선택 핸들러
   const handleHashtagSelect = (hashtag: string) => {
     setSelectedHashtag(hashtag);
+  };
+
+  // 피드 클릭 핸들러 - FeedSearchResult로 이동
+  const handleFeedClick = (feed: HashtagFeed) => {
+    navigate(`/feed/search-result?hashtag=${selectedHashtag}&startFeedId=${feed.feed_id}`);
   };
 
   // 뒤로가기 (해시태그 목록으로)
@@ -156,7 +162,11 @@ const HashtagResult = ({ keyword }: Props) => {
           <>
             <div className="grid grid-cols-3 gap-2">
               {allFeeds.map((feed: HashtagFeed) => (
-                <div key={feed.feed_id} className="aspect-square relative">
+                <button
+                  key={feed.feed_id}
+                  onClick={() => handleFeedClick(feed)}
+                  className="aspect-square relative hover:opacity-80 transition-opacity"
+                >
                   {feed.images.length > 0 ? (
                     <img
                       src={feed.images[0]}
@@ -173,7 +183,7 @@ const HashtagResult = ({ keyword }: Props) => {
                       +{feed.images.length - 1}
                     </div>
                   )}
-                </div>
+                </button>
               ))}
             </div>
 

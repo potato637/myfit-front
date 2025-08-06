@@ -41,6 +41,7 @@ import Networking from "../pages/profile/Networking";
 import MypageSetting from "../pages/profile/MypageSetting";
 import ProtectedRoute from "./ProtectedRoute";
 import FeedProfile from "../pages/feed/FeedProfile";
+import FeedSearchResult from "../pages/feed/FeedSearchResult";
 import MypageContainer from "../pages/outlets/MypageContainer";
 import OnboardingContainer from "../pages/outlets/OnboardingContainer";
 import FeedContainer from "../pages/outlets/FeedContainer";
@@ -49,6 +50,7 @@ import RecruitingContainer from "../pages/outlets/RecruitingContainer";
 import CreateCard from "../pages/profile/CreateCard";
 import CardKeyword from "../pages/profile/CardKeyword";
 import NotFound from "../pages/error/NotFound";
+import EditFeed from "../pages/feed/EditFeed";
 
 const router = createBrowserRouter([
   {
@@ -87,8 +89,10 @@ const router = createBrowserRouter([
             children: [
               { index: true, element: <FeedPage /> },
               { path: "search", element: <FeedSearch /> },
+              { path: "search-result", element: <FeedSearchResult /> },
               { path: "alarm", element: <MyAlarm /> },
               { path: "post", element: <PostFeed /> },
+              { path: "edit/:feedId", element: <EditFeed /> },
               { path: "profile/:id", element: <FeedProfile /> },
               { path: "profile/:id/card", element: <CardDetail /> },
               { path: "profile/:id/feed", element: <FeedDetail /> },

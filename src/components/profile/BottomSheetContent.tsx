@@ -1,11 +1,20 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useBottomSheet } from "../../contexts/ui/bottomSheetContext";
 import { useModal } from "../../contexts/ui/modalContext";
+import { useItemContext } from "../../contexts/ItemContext";
 
 function BottomSheetContent() {
+  const navigate = useNavigate();
   const { setIsBottomSheetOpen } = useBottomSheet();
   const { setIsModalOpen } = useModal();
+  const { itemId } = useItemContext();
   const [how, setHow] = useState<"see" | "hide">("see");
+
+  const handleEdit = () => {
+    setIsBottomSheetOpen(false);
+    navigate(`/feed/edit/${itemId}`);
+  };
 
   return (
     <div className="w-full h-auto bg-ct-white ct-center flex-col gap-[15px]">
@@ -50,7 +59,10 @@ function BottomSheetContent() {
         <span className="text-sub2 text-ct-black-200 ml-[14px]">숨기기</span>
       </div>
       <div className="w-full flex justify-between">
-        <div className="bg-ct-light-blue-100 w-[152px] h-[46px] rounded-[10px] ct-center">
+        <div 
+          className="bg-ct-light-blue-100 w-[152px] h-[46px] rounded-[10px] ct-center cursor-pointer hover:bg-ct-light-blue-200 transition-colors"
+          onClick={handleEdit}
+        >
           <span className="text-sub2 text-ct-sub-blue-300">수정하기</span>
         </div>
         <div className="bg-ct-main-blue-100 w-[152px] h-[46px] rounded-[10px] ct-center">
