@@ -9,11 +9,11 @@ import {
 
 function NetworkingBar() {
   const location = useLocation();
-  const id = location.pathname.split("/")[3];
+  const service_id = location.pathname.split("/")[3];
 
   //네트워크 NO_RELATION, PENDING_SENT, CONNECTED
   const { data: networkStatusData, isLoading: networkStatusLoading } =
-    useGetIsNetworking({ service_id: id });
+    useGetIsNetworking({ service_id });
   const networkStatus = networkStatusData?.result.status;
   const { mutate: postNetwork } = usePostNetwork();
   const { mutate: deleteNetwork } = useDeleteNetwork();
@@ -21,16 +21,17 @@ function NetworkingBar() {
   const handleNetworkClick = () => {
     if (networkStatusLoading) return;
     if (networkStatus === "NO_RELATION") {
-      postNetwork({ service_id: id });
-      sendInterest({ service_id: id });
+      postNetwork({ service_id });
+      sendInterest({ service_id });
     } else if (
       networkStatus === "PENDING_SENT" ||
       networkStatus === "CONNECTED"
     ) {
+      console.log(networkStatusData?.result.network_id);
       deleteNetwork({
         network_id: networkStatusData?.result.network_id as string,
       });
-      deleteInterest({ service_id: id });
+      deleteInterest({ service_id });
     }
   };
 

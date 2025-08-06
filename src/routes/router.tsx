@@ -50,7 +50,11 @@ import RecruitingContainer from "../pages/outlets/RecruitingContainer";
 import CreateCard from "../pages/profile/CreateCard";
 import CardKeyword from "../pages/profile/CardKeyword";
 import NotFound from "../pages/error/NotFound";
+import SearchingContainer from "../pages/outlets/SearchingContainer";
+import Searching from "../pages/searching/Searching";
 import EditFeed from "../pages/feed/EditFeed";
+import Filter from "../pages/searching/Filter";
+import FilterResult from "../pages/searching/FilterResult";
 import ChattingWrapper from "../pages/chatting/ChattingWrapper";
 
 const router = createBrowserRouter([
@@ -159,6 +163,17 @@ const router = createBrowserRouter([
               { path: "register", element: <RegisterAnnouncement /> },
               { path: ":recruitment_id", element: <RecruitAnnouncement /> },
               { path: "saved", element: <SavedAnnouncement /> },
+            ],
+          },
+
+          {
+            path: "searching",
+            element: <SearchingContainer />,
+            children: [
+              { index: true, element: <Searching /> },
+              { path: "filter", element: <Filter /> },
+              { path: "filter/result", element: <FilterResult /> },
+              { path: "filter/job-select", element: <JobPreference /> },
             ],
           },
         ],

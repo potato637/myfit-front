@@ -51,6 +51,8 @@ function JobPreference() {
         ? "/onboarding/profile-register"
         : from === "recruit"
         ? "/recruiting/register"
+        : from === "filter"
+        ? "/searching/filter"
         : "/mypage/setting/profile";
 
     navigate(dest, {

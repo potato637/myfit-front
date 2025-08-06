@@ -5,7 +5,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 function MypageSetting() {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location.pathname);
 
   const handleProfileClick = () => {
     navigate(`${location.pathname}/profile`);

@@ -184,7 +184,10 @@ export const useGetIsNetworking = ({ service_id }: { service_id: string }) => {
     queryKey: ["is_networking"],
     queryFn: () => getIsNetworking({ service_id }),
     enabled: !!service_id,
-    staleTime: 1000 * 60,
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 };
 
