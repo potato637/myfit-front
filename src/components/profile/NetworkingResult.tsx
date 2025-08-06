@@ -54,9 +54,9 @@ function NetworkingResult({ selectedTab }: NetworkingResultProps) {
     receivedNetwork: {
       data: receivedNetwork,
       message: "받은 요청이 없습니다.",
-      name: "sender_name",
-      profile_img: "sender_profile_img",
-      sector: "sender_sector",
+      name: "sender_service_name",
+      profile_img: "sender_service_profile_img",
+      sector: "sender_service_sector",
     },
     sendInterest: {
       data: myInterestsData,

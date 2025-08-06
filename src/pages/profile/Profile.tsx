@@ -29,12 +29,12 @@ function ProfileItem({
 
   if (isLoading) {
     return (
-      <div className="w-full h-full ct-center flex-col mt-5">
+      <>
         <IntroductionSkeleton />
         <IntroductionDescriptionSkeleton />
         <CompanyLinkSkeleton />
         <NetworkingBarSkeleton />
-      </div>
+      </>
     );
   }
 

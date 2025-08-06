@@ -304,9 +304,9 @@ export const getMyNetworkRequest =
 
 export interface ReceivedNetworkType {
   id: string;
-  sender_id: string;
-  sender_name: string;
-  sender_profile_img: string;
+  sender_service_id: string;
+  sender_service_name: string;
+  sender_service_profile_img: string;
   status: string;
   requested_at: string;
   [key: string]: any;

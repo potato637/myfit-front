@@ -22,7 +22,7 @@ function CompanyProfile() {
         </span>
         <span
           className="absolute right-[23px] text-sub2 text-ct-gray-300"
-          onClick={() => nav("/mypage")}
+          onClick={() => nav("/companysetting")}
         >
           완료
         </span>
