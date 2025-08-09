@@ -3,11 +3,14 @@ import BottomNav from "../../components/layouts/BottomNav";
 import ChatUserCard from "../../components/chatting/ChatUserCard";
 import { useChattingListInfiniteQuery } from "../../hooks/chatting/chatting";
 import { useEffect, useRef } from "react";
+import ChatUserCardSkeleton from "../../components/skeletons/chatting/ChatUserCardSkeleton";
 
 function ChattingList() {
   const nav = useNavigate();
-  const { data, fetchNextPage, hasNextPage } = useChattingListInfiniteQuery();
+  const { data, fetchNextPage, hasNextPage, isLoading } =
+    useChattingListInfiniteQuery();
   const observerRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     if (!observerRef.current || !hasNextPage) return;
     const observer = new IntersectionObserver(
@@ -21,6 +24,7 @@ function ChattingList() {
     observer.observe(observerRef.current);
     return () => observer.disconnect();
   }, [fetchNextPage, hasNextPage]);
+
   return (
     <div className="flex flex-col">
       <div className="flex w-full h-[39px]">
@@ -34,8 +38,15 @@ function ChattingList() {
           커피챗
         </button>
       </div>
-      {data?.pages.length === 0 ||
-      data?.pages.every((page) => page.result.chatting_rooms.length === 0) ? (
+
+      {isLoading ? (
+        <div className="flex flex-col mt-[26px] pl-[20px]">
+          {[...Array(5)].map((_, idx) => (
+            <ChatUserCardSkeleton key={idx} />
+          ))}
+        </div>
+      ) : data?.pages.length === 0 ||
+        data?.pages.every((page) => page.result.chatting_rooms.length === 0) ? (
         <div className="h-[680px] w-full flex flex-col gap-[8px] ct-center">
           <img src="/assets/chatting/nochattingicon.svg" alt="채팅없음아이콘" />
           <span className="text-[17px] font-[400] text-ct-gray-300">
@@ -52,8 +63,10 @@ function ChattingList() {
           <div ref={observerRef} className="h-5"></div>
         </div>
       )}
+
       <BottomNav />
     </div>
   );
 }
+
 export default ChattingList;

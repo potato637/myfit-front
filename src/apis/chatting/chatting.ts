@@ -1,17 +1,24 @@
 import { StringValidation } from "zod/v3";
 import apiInstance from "../apiClient";
+import socket from "../../libs/socket";
+import { Status } from "./coffeechat";
 
 export interface SendChatMessageRequest {
+  sender_id: number;
   detail_message: string;
-  type: "TEXT" | "COFFEECHAT" | "SYSTEM";
+  type: string;
+  tempId?: number;
 }
+export type ChatMessageType = "TEXT" | "COFFEECHAT" | "SYSTEM";
+export type divisionType = "personal" | "team";
+
 export interface ChatMessageResponse {
   chatting_room_id: number;
   message_id: number;
   sender_id: number;
   receiver_id: number;
   message: string;
-  type: "TEXT" | "COFFEECHAT" | "SYSTEM";
+  type: ChatMessageType;
   created_at: string;
 }
 
@@ -21,7 +28,8 @@ export interface ChatMessage {
   sender_name?: string;
   detail_message: string;
   created_at: string;
-  type: "TEXT" | "COFFEECHAT" | "SYSTEM";
+  type: ChatMessageType;
+  status: Status;
   isTemp?: boolean;
   coffeechat_id?: number;
 }
@@ -50,6 +58,7 @@ export interface chattingRoomInformation {
   chatting_room_id: number;
   partner: {
     service_id: number;
+    division: divisionType;
     name: string;
     age: number;
     low_sector: string;
@@ -58,6 +67,8 @@ export interface chattingRoomInformation {
   last_message: {
     message: string;
     created_at: string;
+    type: ChatMessageType;
+    sender_name: string;
   };
 }
 export interface ChattingListResponse {
@@ -78,15 +89,30 @@ export const sendChatMessage = async (
     `/api/chatting-rooms/${chattingRoomId}/messages`,
     data
   );
-  const res = response.data;
+
+  const res = response.data.result; // ✅ 실제 메시지 객체
+
   return {
-    id: res.message_id,
-    sender_name: res.name,
+    id: res.id,
+    sender_name: res.sender_name,
     sender_id: res.sender_id,
-    detail_message: res.message,
+    detail_message: res.detail_message,
     created_at: res.created_at,
     type: res.type,
+    status: res.status,
   };
+};
+
+export const sendSocketMessage = (
+  chattingRoomId: number,
+  message: Omit<SendChatMessageRequest, "tempId">,
+  tempId: number
+) => {
+  socket.emit("sendMessage", {
+    roomId: `chat:${chattingRoomId}`,
+    message,
+    tempId,
+  });
 };
 
 export const getChatMessage = async (

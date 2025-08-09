@@ -2,16 +2,20 @@ import {
   useInfiniteQuery,
   useMutation,
   useQuery,
+  useQueryClient,
   UseQueryOptions,
 } from "@tanstack/react-query";
 import {
   CoffeeChatListResponse,
   CoffeeChatRequest,
   CoffeeChatResponse,
+  CoffeeChatStorageResponse,
   GetCoffeeChatDetail,
   GetCoffeeChatList,
   GetCoffeeChatPreview,
+  GetCoffeeChatStorage,
   PatchAcceptCoffeeChat,
+  PatchCancelCoffeeChat,
   PatchRejectCoffeeChat,
   PatchUpdateCoffeeChat,
   PostRequestCoffeeChat,
@@ -69,10 +73,14 @@ export const useAcceptCoffeeChatMutation = (chattingRoomId: number) => {
 };
 
 export const useCancelCoffeeChatMutation = (chattingRoomId: number) => {
-  return useMutation<CoffeeChatResponse, Error, number>({
-    mutationKey: ["cancelCoffeeChat", chattingRoomId],
+  const queryClient = useQueryClient();
+
+  return useMutation({
     mutationFn: (coffeechat_id: number) =>
-      PatchAcceptCoffeeChat(chattingRoomId, coffeechat_id),
+      PatchCancelCoffeeChat(chattingRoomId, coffeechat_id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["coffeeChatList"] });
+    },
   });
 };
 
@@ -86,3 +94,10 @@ export const useCoffeeChatListInfiniteQuery = () =>
     },
     initialPageParam: 0,
   });
+
+export const useCoffeeChatStorageQuery = (page: number) => {
+  return useQuery<CoffeeChatStorageResponse>({
+    queryKey: ["coffeeChatStorage", page],
+    queryFn: () => GetCoffeeChatStorage(page),
+  });
+};

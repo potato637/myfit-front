@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   usePostInterest,
   useDeleteInterest,
@@ -6,10 +6,12 @@ import {
   useDeleteNetwork,
   useGetIsNetworking,
 } from "../../hooks/relationQueries";
+import { useCreateChattingRoomMutation } from "../../hooks/recruiting/recruiting";
 
 function NetworkingBar() {
   const location = useLocation();
   const service_id = location.pathname.split("/")[3];
+  const nav = useNavigate();
 
   //네트워크 NO_RELATION, PENDING_SENT, CONNECTED
   const { data: networkStatusData, isLoading: networkStatusLoading } =
@@ -38,8 +40,20 @@ function NetworkingBar() {
   // 관심
   const { mutate: sendInterest } = usePostInterest();
   const { mutate: deleteInterest } = useDeleteInterest();
+  const { mutate: createChattingRoom } = useCreateChattingRoomMutation();
 
   const handleInterestClick = () => {};
+  const handleChatClick = () => {
+    const targetServiceId = Number(service_id);
+    if (!targetServiceId) return;
+    createChattingRoom(targetServiceId, {
+      onSuccess: (res) => {
+        nav(`/chatting/${res.result.chatting_room_id}`, {
+          state: { isNewRoom: res.result.is_new },
+        });
+      },
+    });
+  };
 
   return (
     <div className="w-[335px] flex items-center justify-between mt-[20px] gap-2">
@@ -101,7 +115,7 @@ function NetworkingBar() {
           </div>
         </>
       )}
-      <div className="flex-1 h-[29px] ct-center">
+      <div className="flex-1 h-[29px] ct-center" onClick={handleChatClick}>
         <div className="w-full h-full ct-center gap-1 bg-ct-main-blue-100 rounded-[3px]">
           <img
             src="/assets/profile/chat.svg"

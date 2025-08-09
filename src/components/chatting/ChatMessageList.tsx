@@ -1,107 +1,75 @@
-import { useEffect, useRef, useState } from "react";
+import { useMemo } from "react";
 import { useChatting } from "../../contexts/ChattingContext";
 import { useAuth } from "../../contexts/AuthContext";
 import MessageBubble from "./MessageBubble";
 import RequestCoffeeChatBox from "./RequestCoffechatBox";
-import { useChatMessageInfiniteQuery } from "../../hooks/chatting/chatting";
 import { formatDateWithDayAndTime } from "../../utils/format";
 
 interface Props {
-  bottomRef?: React.RefObject<HTMLDivElement | null>;
+  showStartBanner: boolean;
 }
 
-function ChatMessageList({ bottomRef }: Props) {
-  const { messages, roomId, prependMessages } = useChatting();
+function ChatMessageList({ showStartBanner }: Props) {
+  const { messages } = useChatting();
   const { user } = useAuth();
-  const [chatInitiator, setChatInitiator] = useState<{
-    name: string;
-    time: Date;
-  } | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const prevPageCount = useRef(0);
 
-  const { data, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    useChatMessageInfiniteQuery(roomId);
-
-  const lastCoffeeChatIndex = messages
-    .map((m) => m.type)
-    .lastIndexOf("COFFEECHAT");
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const onScroll = () => {
-      if (isFetchingNextPage || !hasNextPage) return;
-      if (el.scrollTop < 100) fetchNextPage();
-    };
-    el.addEventListener("scroll", onScroll);
-    return () => el.removeEventListener("scroll", onScroll);
-  }, [isFetchingNextPage, hasNextPage, fetchNextPage]);
-
-  useEffect(() => {
-    if (!data) return;
-    if (data.pages.length === prevPageCount.current) return;
-
-    const el = containerRef.current;
-    if (!el) return;
-    const prevHeight = el.scrollHeight;
-
-    const latest = data.pages[data.pages.length - 1].result.messages;
-    const older = [...latest].reverse();
-    prependMessages(older);
-    prevPageCount.current = data.pages.length;
-
-    requestAnimationFrame(() => {
-      el.scrollTop += el.scrollHeight - prevHeight;
-    });
-  }, [data, prependMessages]);
-
-  useEffect(() => {
-    if (messages.length > 0 && !chatInitiator) {
-      const first = messages[0];
-      setChatInitiator({
-        name: first.sender_name ?? "알 수 없음",
-        time: new Date(first.created_at),
-      });
+  const firstMessage = useMemo(() => {
+    if (!messages.length) return null;
+    let min = messages[0];
+    for (let i = 1; i < messages.length; i++) {
+      if (
+        new Date(messages[i].created_at).getTime() <
+        new Date(min.created_at).getTime()
+      ) {
+        min = messages[i];
+      }
     }
-  }, [messages, chatInitiator]);
+    return min;
+  }, [messages]);
+
+  const lastCoffeeChatIndex = useMemo(
+    () => messages.map((m: any) => m.type).lastIndexOf("COFFEECHAT"),
+    [messages]
+  );
 
   return (
-    <div
-      ref={containerRef}
-      className="flex-1 flex flex-col overflow-y-auto overscroll-contain px-4 pb-[80px]"
-    >
-      {chatInitiator && (
-        <div className="flex flex-col items-center gap-[6px] pt-[46px]">
+    <div className="flex-1 flex flex-col pb-[80px]">
+      {showStartBanner && firstMessage && (
+        <div className="flex flex-col items-center gap-[6px] pt-[16px] pb-[8px]">
           <span className="text-body2 text-ct-gray-300">
-            {formatDateWithDayAndTime(chatInitiator.time.getTime())}
+            {formatDateWithDayAndTime(
+              new Date(firstMessage.created_at).getTime()
+            )}
           </span>
           <span className="text-body2 text-ct-gray-300">
-            {chatInitiator.name}님께서 대화를 시작하셨습니다.
+            {firstMessage.sender_name ?? "알 수 없음"}님께서 대화를
+            시작하셨습니다.
           </span>
         </div>
       )}
 
-      {messages.map((msg, idx) => {
+      {messages.map((msg: any, idx: number) => {
         if (msg.type === "COFFEECHAT") {
           return (
-            <div key={msg.id} className="min-h-[41px] my-[10px]">
+            <div key={`coffee-${msg.id}`} className="min-h-[41px] my-[10px]">
               <RequestCoffeeChatBox
-                coffeechat_id={msg.coffeechat_id!}
+                coffeechat_id={msg.coffeechat_id}
                 text={msg.detail_message}
                 name={msg.sender_name ?? "이름 없음"}
                 isLast={idx === lastCoffeeChatIndex}
+                status={msg.status}
               />
             </div>
           );
         }
 
-        const isSameSender = messages[idx - 1]?.sender_id === msg.sender_id;
-        const isMine = msg.sender_id === user?.id;
+        const prev = messages[idx - 1];
+        const isSameSender = prev && prev.sender_id === msg.sender_id;
+        const isMine = user && msg.sender_id === user.id;
 
         return (
           <div
-            key={`${msg.id}${msg.isTemp ? "-t" : ""}`}
+            key={`msg-${msg.id}`}
             className={`flex flex-col ${
               isSameSender ? "mt-[5px]" : "mt-[20px]"
             }`}
@@ -117,8 +85,6 @@ function ChatMessageList({ bottomRef }: Props) {
           </div>
         );
       })}
-
-      <div ref={bottomRef} />
     </div>
   );
 }

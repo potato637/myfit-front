@@ -69,10 +69,10 @@ export const useUnSubscribeRecruitmentMutation = (recruitment_id: string) => {
   });
 };
 
-export const useGetSubscribedRecruitment = (total_page: number) => {
+export const useGetSubscribedRecruitment = (page: number) => {
   return useQuery({
-    queryKey: ["subscribedRecruitment", total_page],
-    queryFn: () => getSubscribedRecruitment(total_page),
+    queryKey: ["subscribedRecruitment", page],
+    queryFn: () => getSubscribedRecruitment(page),
   });
 };
 

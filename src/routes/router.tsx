@@ -55,7 +55,6 @@ import Searching from "../pages/searching/Searching";
 import EditFeed from "../pages/feed/EditFeed";
 import Filter from "../pages/searching/Filter";
 import FilterResult from "../pages/searching/FilterResult";
-import ChattingWrapper from "../pages/chatting/ChattingWrapper";
 
 const router = createBrowserRouter([
   {
@@ -150,7 +149,7 @@ const router = createBrowserRouter([
               },
               { path: "coffeechatlist", element: <CoffeeChatList /> },
               { path: "coffeechatstorage", element: <CoffeeChatStorage /> },
-              { path: ":chattingRoomId", element: <ChattingWrapper /> },
+              { path: ":chattingRoomId", element: <Chatting /> },
             ],
           },
 

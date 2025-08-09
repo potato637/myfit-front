@@ -41,12 +41,13 @@ function RecruitAnnouncement() {
   };
 
   const targetServiceId = data?.result.recruitment.writer.id;
-  console.log(targetServiceId);
   const handleClick = () => {
     if (!targetServiceId) return;
     createChattingRoom(targetServiceId, {
       onSuccess: (res) => {
-        nav(`/chatting/${res.result.chatting_room_id}`);
+        nav(`/chatting/${res.result.chatting_room_id}`, {
+          state: { isNewRoom: res.result.is_new },
+        });
       },
     });
   };

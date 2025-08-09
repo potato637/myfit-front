@@ -1,27 +1,28 @@
+import { CoffeeChatDetailResponse } from "../../../apis/chatting/coffeechat";
+import { useChatting } from "../../../contexts/ChattingContext";
 import { useCoffeeChatModal } from "../../../contexts/CoffeeChatModalContext";
 import { useModal } from "../../../contexts/ui/modalContext";
-import { useCancelCoffeeChatMutation } from "../../../hooks/chatting/coffeechat";
+import { useRejectCoffeeChatMutation } from "../../../hooks/chatting/coffeechat";
 
-interface CancelModalProps {
+interface RejectModalProps {
   onClose?: () => void;
-  coffeechat_id: number;
-  roomId: number;
+  data: CoffeeChatDetailResponse["result"];
 }
 
-function CancelModal({ onClose, coffeechat_id, roomId }: CancelModalProps) {
+function RejectConfirmModal({ onClose, data }: RejectModalProps) {
+  const { roomId } = useChatting();
   const numericRoomId = Number(roomId);
   const { setIsModalOpen } = useModal();
   const { setRequestStatus } = useCoffeeChatModal();
-  const { mutate: cancelChat } = useCancelCoffeeChatMutation(numericRoomId);
-  const handleCancel = () => {
-    cancelChat(coffeechat_id, {
+  const { mutate: rejectChat } = useRejectCoffeeChatMutation(numericRoomId);
+  const handleReject = () => {
+    rejectChat(data.coffeechat_id, {
       onSuccess: () => {
-        if (onClose) onClose();
-        setRequestStatus("CANCELED");
+        setRequestStatus("REJECTED");
         setIsModalOpen(false);
       },
       onError: (error) => {
-        console.error("커피챗 취소 실패", error);
+        console.error("커피챗 거절 실패", error);
       },
     });
   };
@@ -33,10 +34,10 @@ function CancelModal({ onClose, coffeechat_id, roomId }: CancelModalProps) {
         className="w-[33px] h-[34px]"
       />
       <span className="mt-[4px] text-sub2 text-ct-black-100">
-        정말 취소하시겠어요?
+        정말 거절하시겠어요?
       </span>
       <span className="text-[15px] font-[400] text-ct-gray-300">
-        취소한 커피챗은 되돌릴 수 없습니다.
+        거절된 커피챗은 되돌릴 수 없습니다.
       </span>
       <div className="flex gap-[12px] mt-[30px]">
         <button
@@ -49,13 +50,13 @@ function CancelModal({ onClose, coffeechat_id, roomId }: CancelModalProps) {
         </button>
         <button
           className="w-[142px] h-[42px] rounded-[100px] bg-ct-main-blue-200 text-ct-white text-sub2"
-          onClick={handleCancel}
+          onClick={handleReject}
         >
-          취소 할래요
+          거절 할래요
         </button>
       </div>
     </div>
   );
 }
 
-export default CancelModal;
+export default RejectConfirmModal;

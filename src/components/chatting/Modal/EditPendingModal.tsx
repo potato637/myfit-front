@@ -1,29 +1,49 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useCoffeeChatModal } from "../../../contexts/CoffeeChatModalContext";
-import { useModal } from "../../../contexts/ui/modalContext";
 import InformationBox from "../InformationBox";
-import { useCoffeeChat } from "../../../contexts/coffeeChatContext";
-import {
-  formatDateWithDay,
-  FormattedDate,
-  FormattedTime,
-} from "../../../utils/format";
-import { useUpdateCoffeeChatMutation } from "../../../hooks/chatting/coffeechat";
-import { useChatting } from "../../../contexts/ChattingContext";
 import { CoffeeChatDetailResponse } from "../../../apis/chatting/coffeechat";
+import { FormattedDate, FormattedTime } from "../../../utils/format";
+import { useCancelCoffeeChatMutation } from "../../../hooks/chatting/coffeechat";
+import { useState } from "react";
+import { useModal } from "../../../contexts/ui/modalContext";
+import CancelModal from "./CancelModal";
+import { useChatting } from "../../../contexts/ChattingContext";
+import { useCoffeeChatModal } from "../../../contexts/CoffeeChatModalContext";
 
 interface Props {
   data: CoffeeChatDetailResponse["result"];
 }
 
 function EditPendingModal({ data }: Props) {
-  const { setEditMode } = useCoffeeChatModal();
-  const { setIsModalOpen } = useModal();
   const { roomId } = useChatting();
+  const { setEditMode } = useCoffeeChatModal();
   const nav = useNavigate();
+  const numericRoomId = Number(roomId);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const { setIsModalOpen } = useModal();
 
   const formattedDate = FormattedDate(data.scheduled_at);
   const formattedTime = FormattedTime(data.scheduled_at);
+
+  const handleEdit = () => {
+    nav(`/chatting/coffeechatrequest/${roomId}`, {
+      state: {
+        coffeechatId: data.coffeechat_id,
+      },
+      replace: true,
+    });
+    setEditMode(true);
+    setIsModalOpen(false);
+  };
+
+  if (showCancelModal) {
+    return (
+      <CancelModal
+        coffeechat_id={data.coffeechat_id}
+        roomId={numericRoomId}
+        onClose={() => setShowCancelModal(false)}
+      />
+    );
+  }
 
   return (
     <div className="w-full h-[498px] rounded-[15px] bg-ct-white flex flex-col ct-center">
@@ -36,8 +56,16 @@ function EditPendingModal({ data }: Props) {
         {data.title}
       </span>
       <div className="mt-[21px] flex">
-        <img src="/assets/chatting/manprofile.svg" alt="남성프로필" />
-        <img src="/assets/chatting/womanprofile.svg" alt="여성프로필" />
+        <img
+          src={data.sender.profile_img}
+          alt="보낸이 프로필"
+          className="w-[61px] h-[61px] rounded-full"
+        />
+        <img
+          src={data.receiver.profile_img}
+          alt="받은이 프로필"
+          className="w-[61px] h-[61px] rounded-full"
+        />
       </div>
       <div className="mt-[25px] relative">
         <InformationBox
@@ -53,22 +81,18 @@ function EditPendingModal({ data }: Props) {
       </div>
       <button
         className="mt-[26px] w-[168px] h-[42px] rounded-[100px] border border-ct-main-blue-200 text-sub1 bg-ct-main-blue-200 text-ct-white"
-        onClick={() => {
-          setEditMode(true);
-          nav(`/chatting/coffeechatrequest/${roomId}`, {
-            state: {
-              coffeechatId: data.coffeechat_id,
-            },
-          });
-          setIsModalOpen(false);
-        }}
+        onClick={handleEdit}
       >
         변경 하기
       </button>
-      <button className="mt-[20px] w-[70px] h-[23px] border-b border-ct-gray-300 text-sub1 text-ct-gray-300">
+      <button
+        className="mt-[20px] w-[70px] h-[23px] border-b border-ct-gray-300 text-sub1 text-ct-gray-300"
+        onClick={() => setShowCancelModal(true)}
+      >
         취소하기
       </button>
     </div>
   );
 }
+
 export default EditPendingModal;

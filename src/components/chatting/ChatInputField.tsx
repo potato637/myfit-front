@@ -6,17 +6,27 @@ interface ChatInputFieldProps {
 
 function ChatInputField({ onSend }: ChatInputFieldProps) {
   const [text, setText] = useState("");
+  const [sending, setSending] = useState(false);
+
   const handleSubmit = () => {
-    if (text.trim() == "") return;
+    if (sending || text.trim() === "") return;
+    setSending(true);
     onSend(text);
     setText("");
+    setTimeout(() => setSending(false), 100); // debounce 방지
   };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault();
-      handleSubmit();
+      const trimmed = text.trim();
+      if (trimmed) {
+        onSend(trimmed);
+        setText("");
+      }
     }
   };
+
   return (
     <div className="fixed bottom-0 left-0 right-0 z-10 bg-white px-4 pt-3 h-[80px] max-w-[480px] mx-auto pb-[env(safe-area-inset-bottom,15px)]">
       <div className="relative">
@@ -38,4 +48,5 @@ function ChatInputField({ onSend }: ChatInputFieldProps) {
     </div>
   );
 }
+
 export default ChatInputField;

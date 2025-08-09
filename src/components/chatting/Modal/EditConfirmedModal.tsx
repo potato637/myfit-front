@@ -111,7 +111,7 @@ function EditConfirmedModal({ roomId, coffeechatId }: EditConfirmedModalProps) {
             },
             {
               onSuccess: () => {
-                nav(`/chatting/${roomId}`);
+                nav(`/chatting/${roomId}`, { replace: true });
                 setIsModalOpen(false);
               },
               onError: (err) => {

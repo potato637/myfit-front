@@ -7,6 +7,8 @@ import {
 import { useChatting } from "../../contexts/ChattingContext";
 import { useAuth } from "../../contexts/AuthContext";
 import {
+  ChatMessage,
+  ChatMessageType,
   ChattingListResponse,
   getChatMessage,
   getChattingRooms,
@@ -24,25 +26,28 @@ export const useSendChatMessageMutation = (chattingRoomId: number | null) => {
     mutationKey: ["sendMessage", chattingRoomId],
     mutationFn: (data: SendChatMessageRequest) =>
       sendChatMessage(chattingRoomId, data),
-    onMutate: async (newMessage) => {
+    onMutate: async (newMessage: any) => {
       if (!user) return;
-      const tempId = Date.now();
-      const optimisticMessage = {
+      const tempId = newMessage.tempId ?? Date.now();
+      const optimistic: ChatMessage = {
         id: tempId,
-        name: user.username,
-        sender_id: user.id,
-        detail_message: newMessage.detail_message,
-        created_at: new Date().toISOString(),
-        type: newMessage.type,
         isTemp: true,
-      };
-      addMessage(optimisticMessage);
-
+        sender_id: user.id,
+        sender_name: user.username ?? user.username,
+        detail_message: newMessage.detail_message,
+        type: newMessage.type,
+        created_at: new Date().toISOString(),
+      } as any;
+      addMessage(optimistic);
       return { tempId };
     },
-    onSuccess: (_ack, _vars, context) => {},
-    onError: (_err, _vars, context) => {
-      if (context?.tempId) removeMessage(context.tempId);
+    onSuccess: (real: ChatMessage, _vars: any, ctx: any) => {
+      if (!ctx) return;
+      replaceMessage(ctx.tempId, { ...real, isTemp: false } as any);
+    },
+    onError: (_e, _v, ctx: any) => {
+      if (!ctx) return;
+      removeMessage(ctx.tempId);
     },
   });
 };

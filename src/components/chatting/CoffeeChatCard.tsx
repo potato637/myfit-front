@@ -1,6 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import { useModal } from "../../contexts/ui/modalContext";
 import Modal from "../ui/Modal";
 import CancelModal from "./Modal/CancelModal";
+import { useCoffeeChatModal } from "../../contexts/CoffeeChatModalContext";
 
 export interface CoffeeChatData {
   coffeechat_id: number;
@@ -21,6 +23,8 @@ interface CoffeeChatCardProps {
 
 function CoffeeChatCard({ data }: CoffeeChatCardProps) {
   const { setIsModalOpen } = useModal();
+  const { setEditMode } = useCoffeeChatModal();
+  const nav = useNavigate();
 
   const formatDateTime = (iso: string) => {
     const date = new Date(iso);
@@ -29,11 +33,15 @@ function CoffeeChatCard({ data }: CoffeeChatCardProps) {
       (date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
     );
 
+    const hours = date.getHours();
+    const period = hours >= 12 ? "PM" : "AM";
+    const hour12 = hours % 12 || 12;
+
     const formattedDate = `${date.getFullYear()}.${(date.getMonth() + 1)
       .toString()
       .padStart(2, "0")}.${date.getDate().toString().padStart(2, "0")} ${
       ["일", "월", "화", "수", "목", "금", "토"][date.getDay()]
-    } PM ${date.getHours()}:${date.getMinutes().toString().padStart(2, "0")}`;
+    } ${period} ${hour12}:${date.getMinutes().toString().padStart(2, "0")}`;
 
     return { daysLeft: `${daysLeft}일 뒤`, formattedDate };
   };
@@ -42,7 +50,10 @@ function CoffeeChatCard({ data }: CoffeeChatCardProps) {
 
   return (
     <div className="w-full rounded-[7.53px] flex flex-col bg-ct-white border border-[#E2E2E2] pl-[9px] py-[24px]">
-      <div className="flex gap-[13px] pl-[7px]">
+      <div
+        className="flex gap-[13px] pl-[7px] "
+        onClick={() => nav(`/chatting/${data.chatting_room_id}`)}
+      >
         <img
           src={data.opponent.profile_img}
           alt="프로필 이미지"
@@ -78,10 +89,22 @@ function CoffeeChatCard({ data }: CoffeeChatCardProps) {
         >
           취소
         </button>
-        <button className="w-[121px] h-[26px] rounded-[4.81px] bg-ct-gray-100 text-[15px] font-[400] text-ct-black-300">
+        <button
+          className="w-[121px] h-[26px] rounded-[4.81px] bg-ct-gray-100 text-[15px] font-[400] text-ct-black-300"
+          onClick={() => {
+            setEditMode(false);
+            nav(`/chatting/coffeechatrequest/${data.chatting_room_id}`);
+          }}
+        >
           재요청
         </button>
       </div>
+      <Modal>
+        <CancelModal
+          coffeechat_id={data.coffeechat_id}
+          roomId={data.chatting_room_id}
+        />
+      </Modal>
     </div>
   );
 }

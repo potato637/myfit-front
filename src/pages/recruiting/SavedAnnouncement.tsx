@@ -1,3 +1,4 @@
+// pages/recruiting/SavedAnnouncement.tsx
 import { useEffect, useState } from "react";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import BottomNav from "../../components/layouts/BottomNav";
@@ -10,52 +11,41 @@ import { useGetSubscribedRecruitment } from "../../hooks/recruiting/recruiting";
 function SavedAnnouncement() {
   const [recruitment, setRecruitment] = useState<SubscribedRecruitment[]>([]);
   const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [delayedLoading, setDelayedLoading] = useState(true);
+
   const { data, isLoading, isError } = useGetSubscribedRecruitment(page);
   const nav = useNavigate();
 
-  const handleCardClick = (id: number) => {
-    nav(`/recruiting/${id}`);
-  };
+  const handleCardClick = (id: number) => nav(`/recruiting/${id}`);
 
   useEffect(() => {
-    if (data) {
-      setRecruitment(data.result.subscribedRecruitments);
-      setTotalPage(data.result.pagination.total_page);
-    }
+    if (!data) return;
+    setRecruitment(data.result.subscribedRecruitments ?? []);
+    setTotalPages(data.result.pagination.total_page ?? 1);
   }, [data]);
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
-
-    if (isLoading) {
-      setDelayedLoading(true);
-    } else {
-      timeout = setTimeout(() => {
-        setDelayedLoading(false);
-      }, 300);
-    }
-
-    return () => clearTimeout(timeout);
+    let t: ReturnType<typeof setTimeout>;
+    if (isLoading) setDelayedLoading(true);
+    else t = setTimeout(() => setDelayedLoading(false), 300);
+    return () => clearTimeout(t);
   }, [isLoading]);
 
   if (isError) return <div>저장된 공고를 불러오는 중 오류가 발생했습니다.</div>;
 
-  const TopBarContent = () => {
-    return (
-      <span className="text-h2 font-Pretendard text-ct-black-300">
-        저장된 공고
-      </span>
-    );
-  };
+  const TopBarContent = () => (
+    <span className="text-h2 font-Pretendard text-ct-black-300">
+      저장된 공고
+    </span>
+  );
 
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
-      <div className="flex flex-col gap-[12px] items-center mb-[89px]">
+      <div className="flex flex-col gap-[12px] items-center mb-[50px]">
         {delayedLoading ? (
-          Array.from({ length: 3 }).map((_, idx) => (
-            <RecruitCardSkeleton key={idx} />
+          Array.from({ length: 3 }).map((_, i) => (
+            <RecruitCardSkeleton key={i} />
           ))
         ) : recruitment.length === 0 ? (
           <div className="text-sub2 text-ct-gray-200 mt-[48px]">
@@ -72,16 +62,16 @@ function SavedAnnouncement() {
         )}
       </div>
 
-      {!delayedLoading && totalPage >= 1 && (
-        <div className="flex justify-center gap-2 mt-4">
+      {!delayedLoading && totalPages >= 1 && (
+        <div className="flex justify-center gap-2 mt-[10px] mb-[90px]">
           <button
             disabled={page === 1}
-            onClick={() => setPage((prev) => prev - 1)}
+            onClick={() => setPage((p) => p - 1)}
             className="px-3 py-1 text-sm rounded border disabled:text-ct-gray-200"
           >
             {"<"}
           </button>
-          {Array.from({ length: totalPage }, (_, i) => (
+          {Array.from({ length: totalPages }, (_, i) => (
             <button
               key={i + 1}
               onClick={() => setPage(i + 1)}
@@ -95,8 +85,8 @@ function SavedAnnouncement() {
             </button>
           ))}
           <button
-            disabled={page === totalPage}
-            onClick={() => setPage((prev) => prev + 1)}
+            disabled={page === totalPages}
+            onClick={() => setPage((p) => p + 1)}
             className="px-3 py-1 text-sm rounded border disabled:text-ct-gray-200"
           >
             {">"}

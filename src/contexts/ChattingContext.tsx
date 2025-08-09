@@ -31,46 +31,53 @@ export const ChattingProvider = ({
 }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
-  const addMessage = (msg: ChatMessage) => {
-    setMessages((prev) => [...prev, msg]);
+  const sortByTime = (a: ChatMessage, b: ChatMessage) =>
+    new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+
+  const upsert = (prev: ChatMessage[], msg: ChatMessage) => {
+    const map = new Map(prev.map((m) => [m.id, m]));
+    const old = map.get(msg.id);
+    const created_at = old?.isTemp ? old.created_at : msg.created_at; // temp가 있던 시간 우선
+    map.set(msg.id, { ...msg, created_at, isTemp: false });
+    return Array.from(map.values()).sort(sortByTime);
   };
-  console.log("📤 emitting join to:", `chat:${roomId}`);
+
+  const upsertMany = (prev: ChatMessage[], msgs: ChatMessage[]) => {
+    const map = new Map(prev.map((m) => [m.id, m]));
+    for (const m of msgs) map.set(m.id, { ...m });
+    return Array.from(map.values()).sort(sortByTime);
+  };
+
+  const addMessage = (msg: ChatMessage) => {
+    setMessages((prev) => upsert(prev, msg));
+  };
+
   useEffect(() => {
     if (!roomId) return;
 
     const roomName = `chat:${roomId}`;
-    console.log("📤 emitting join to:", roomName);
-    socket.emit("join", roomName);
+    socket.emit("joinRoom", roomId);
 
-    const handler = (msg: ChatMessage) => {
+    const handler = (msg: ChatMessage & { tempId?: number }) => {
       setMessages((prev) => {
-        const tempIdx = prev.findIndex(
-          (p) => p.isTemp && p.sender_id === msg.sender_id
-        );
-        if (tempIdx !== -1) {
-          const next = [...prev];
-          next[tempIdx] = msg;
-          return next;
+        let base = prev;
+        if (msg.tempId !== undefined) {
+          base = base.filter((m) => m.id !== msg.tempId);
         }
-        return [...prev, msg];
+        return upsert(base, { ...msg, isTemp: false });
       });
     };
 
     socket.on("receiveMessage", handler);
 
     return () => {
-      console.log("👋 leaving room:", roomName);
       socket.emit("leave", roomName);
       socket.off("receiveMessage", handler);
     };
   }, [roomId]);
 
   const prependMessages = (msgs: ChatMessage[]) => {
-    setMessages((prev) => {
-      const ids = new Set(prev.map((m) => m.id));
-      const unique = msgs.filter((m) => !ids.has(m.id));
-      return [...unique, ...prev];
-    });
+    setMessages((prev) => upsertMany(prev, msgs));
   };
 
   const clearMessages = () => {
@@ -78,9 +85,16 @@ export const ChattingProvider = ({
   };
 
   const replaceMessage = (tempId: number, newMsg: ChatMessage) => {
-    setMessages((prev) =>
-      prev.map((msg) => (msg.id === tempId ? newMsg : msg))
-    );
+    setMessages((prev) => {
+      const prevTemp = prev.find((m) => m.id === tempId);
+      const keepCreatedAt = prevTemp?.created_at ?? newMsg.created_at;
+      const filtered = prev.filter((m) => m.id !== tempId);
+      return upsert(filtered, {
+        ...newMsg,
+        created_at: keepCreatedAt,
+        isTemp: false,
+      });
+    });
   };
 
   const removeMessage = (tempId: number) => {

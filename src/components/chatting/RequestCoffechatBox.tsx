@@ -8,12 +8,14 @@ import EditPendingModal from "./Modal/EditPendingModal";
 import PendingModal from "./Modal/PendingModal";
 import { useAuth } from "../../contexts/AuthContext";
 import { useCoffeeChatModal } from "../../contexts/CoffeeChatModalContext";
+import { Status } from "../../apis/chatting/coffeechat";
 
 interface RequestCoffeeChatProps {
   text: string;
   name: string;
   isLast: boolean;
   coffeechat_id: number;
+  status: Status;
 }
 
 function RequestCoffeeChatBox({
@@ -21,6 +23,7 @@ function RequestCoffeeChatBox({
   name = "",
   isLast,
   coffeechat_id,
+  status,
 }: RequestCoffeeChatProps) {
   const { setIsModalOpen } = useModal();
   const { roomId } = useChatting();
@@ -32,47 +35,44 @@ function RequestCoffeeChatBox({
   );
   const { setRequestStatus } = useCoffeeChatModal();
   const [modalComponent, setModalComponent] = useState<React.ReactNode>(null);
+
   const handleClick = async () => {
     const response = await refetch();
     console.log("📦 refetch 응답:", response);
     const ChatDetail = response.data?.result;
     if (!ChatDetail) return;
     const isMeSender = ChatDetail.sender.id === user?.id;
-    console.log("👤 현재 사용자 ID (user?.id):", user?.id);
-    console.log("📤 커피챗 sender_id:", ChatDetail.sender_id);
-    console.log("✅ isMeSender 판단 결과:", isMeSender);
+
     if (ChatDetail.status === "PENDING") {
+      setRequestStatus("PENDING");
       if (isMeSender) {
-        setRequestStatus("PENDING");
-        setModalComponent(<PendingModal data={response.data.result} />);
+        setModalComponent(<PendingModal data={ChatDetail} />);
       } else {
-        setRequestStatus("PENDING");
-        setModalComponent(<AcceptModal data={response.data.result} />);
+        setModalComponent(<AcceptModal data={ChatDetail} />);
       }
     } else if (ChatDetail.status === "ACCEPTED") {
       setRequestStatus("ACCEPTED");
-      setModalComponent(<EditPendingModal data={response.data.result} />);
+      setModalComponent(<EditPendingModal data={ChatDetail} />);
     }
 
     setIsModalOpen(true);
-
-    setIsModalOpen(true);
   };
+
   return (
     <div className="w-full h-[41px] rounded-[15px] text-[15px] font-[400] text-[#121212] border border-ct-main-blue-200 px-[20px] relative flex items-center ">
       <span className=" text-ct-main-blue-200">{name}</span>
       {text}
 
-      {isLast && (
+      {/* 🔹 화살표 표시 조건 변경 */}
+      {isLast && status !== "REJECTED" && status !== "CANCELED" && (
         <img
           src="/assets/chatting/bluearrow.svg"
           alt="화살표"
           className="absolute top-1/2 -translate-y-1/2 right-[20px] "
-          onClick={() => {
-            handleClick();
-          }}
+          onClick={handleClick}
         />
       )}
+
       <Modal>{modalComponent}</Modal>
     </div>
   );

@@ -1,7 +1,7 @@
 import apiInstance from "../apiClient";
 
 export interface CoffeeChatRequest {
-  coffeechat_id: number;
+  coffeechat_id?: number;
   title: string;
   scheduled_at: string;
   place: string;
@@ -85,6 +85,30 @@ export interface CoffeeChatListResponse {
   };
 }
 
+export interface CoffeeChatStorageResponse {
+  isSuccess: boolean;
+  code: number;
+  message: string;
+  result: {
+    chats: [
+      {
+        coffeechat_id: number;
+        chatting_room_id: number;
+        opponent: {
+          name: string;
+          age: number;
+          job: string;
+          profile_img: string;
+        };
+        scheduled_at: string;
+        place: string;
+      }
+    ];
+    currentPage: number;
+    totalpages: number;
+  };
+}
+
 export const PostRequestCoffeeChat = async (
   chattingRoomId: number,
   data: CoffeeChatRequest
@@ -136,14 +160,13 @@ export const PatchUpdateCoffeeChat = async (
   );
   return response.data;
 };
-
 export const PatchRejectCoffeeChat = async (
   chattingRoomId: number,
   coffeechat_id: number
 ) => {
   const resposne = await apiInstance.patch(
     `/api/chatting-rooms/${chattingRoomId}/coffeechats/reject`,
-    coffeechat_id
+    { coffeechat_id }
   );
   return resposne.data;
 };
@@ -153,7 +176,7 @@ export const PatchCancelCoffeeChat = async (
 ) => {
   const resposne = await apiInstance.patch(
     `/api/chatting-rooms/${chattingRoomId}/coffeechats/cancel`,
-    coffeechat_id
+    { coffeechat_id }
   );
   return resposne.data;
 };
@@ -161,5 +184,17 @@ export const GetCoffeeChatList = async (cursor?: number, limit?: number) => {
   const response = await apiInstance.get("/api/chatting-rooms/coffeechats", {
     params: { cursor, limit },
   });
+  return response.data;
+};
+
+export const GetCoffeeChatStorage = async (
+  page?: number
+): Promise<CoffeeChatStorageResponse> => {
+  const response = await apiInstance.get(
+    "/api/chatting-rooms/coffeechats/archive",
+    {
+      params: { page },
+    }
+  );
   return response.data;
 };

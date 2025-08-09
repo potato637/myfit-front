@@ -14,6 +14,7 @@ import WorkTypeModal from "../../components/recruiting/WorkTypeModal";
 
 function RegisterAnnouncement() {
   const { state } = useLocation();
+  const { setSelectedDate } = useCoffeeChat();
   const navigate = useNavigate();
   const { isModalOpen, setIsModalOpen } = useModal();
   const { selectedDate } = useCoffeeChat();
@@ -54,6 +55,12 @@ function RegisterAnnouncement() {
   }, [state]);
 
   const selectedSkillLabel = lowSector.join(", ");
+
+  useEffect(() => {
+    if (!state) {
+      setSelectedDate(null);
+    }
+  }, [state, setSelectedDate]);
 
   const handleSubmit = () => {
     if (!imageUrl) {
@@ -96,7 +103,7 @@ function RegisterAnnouncement() {
           placeholder="선택해주세요"
           value={selectedSkillLabel}
           onClick={() =>
-            navigate("/personalsetting/profile/jobpreference", {
+            navigate("/recruiting/jobpreference", {
               state: {
                 from: "recruit",
                 prevData: {

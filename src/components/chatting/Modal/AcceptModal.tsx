@@ -3,9 +3,9 @@ import InformationBox from "../InformationBox";
 import { CoffeeChatDetailResponse } from "../../../apis/chatting/coffeechat";
 import { FormattedDate, FormattedTime } from "../../../utils/format";
 import { useAcceptCoffeeChatMutation } from "../../../hooks/chatting/coffeechat";
-import CancelModal from "./CancelModal";
 import { useState } from "react";
 import { useModal } from "../../../contexts/ui/modalContext";
+import RejectConfirmModal from "./RejectConfirmModal";
 
 interface Props {
   data: CoffeeChatDetailResponse["result"];
@@ -38,7 +38,10 @@ function AcceptModal({ data }: Props) {
 
   if (showCancelModal) {
     return (
-      <CancelModal onClose={() => setShowCancelModal(false)} data={data} />
+      <RejectConfirmModal
+        onClose={() => setShowCancelModal(false)}
+        data={data}
+      />
     );
   }
 

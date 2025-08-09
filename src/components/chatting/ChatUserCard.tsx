@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { ChatMessageType, divisionType } from "../../apis/chatting/chatting";
 export interface dataprops {
   chatting_room_id: number;
   partner: {
@@ -7,10 +8,13 @@ export interface dataprops {
     age: number;
     low_sector: string;
     profile_image: string;
+    division: divisionType;
   };
   last_message: {
     message: string;
     created_at: string;
+    type: ChatMessageType;
+    sender_name: string;
   };
 }
 interface ChatUserDataProps {
@@ -32,13 +36,22 @@ function ChatUserCard({ data }: ChatUserDataProps) {
       />
       <div className="flex flex-col gap-[2px]">
         <span className="text-[13px] font-[400] text-ct-black-100">
-          {data.partner.name}/{data.partner.age}
+          {data.partner.name}
+          {data.partner.division === "personal" && `/${data.partner.age}`}
         </span>
         <span className="text-[13px] font-[400] text-ct-black-100">
           {data.partner.low_sector}
         </span>
-        <span className="text-[13px] font-[400] text-ct-main-blue-200">
-          {data.last_message.message}
+        <span
+          className={`text-[13px] font-[400] ${
+            data.last_message.type === "COFFEECHAT"
+              ? "text-ct-main-blue-200"
+              : "text-[#909397]"
+          }`}
+        >
+          {data.last_message.type === "COFFEECHAT"
+            ? `${data.last_message.sender_name} ${data.last_message.message}`
+            : data.last_message.message}
         </span>
       </div>
     </div>
