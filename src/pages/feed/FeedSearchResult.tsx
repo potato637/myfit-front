@@ -59,7 +59,12 @@ const FeedSearchResult = () => {
       : ["searchFeedsByKeyword", keyword]
   });
 
-  const { data: commentsData } = useFeedComments({ activePostId });
+  const {
+    data: commentsData,
+    fetchNextPage: fetchCommentsNextPage,
+    hasNextPage: hasCommentsNextPage,
+    isFetchingNextPage: isFetchingCommentsNextPage,
+  } = useFeedComments({ activePostId });
 
   const { loadMoreRef } = useInfiniteScroll({
     hasNextPage: !!hasNextPage,
@@ -195,7 +200,10 @@ const FeedSearchResult = () => {
             onLikeClick={() => handleLikeToggle(feed.feed_id, feed.is_liked)}
             onProfileClick={() => {
               if (feed.user?.id) {
-                navigate(`/feed/profile/${feed.user.id}`);
+                // 내가 작성한 피드라면 마이페이지로, 다른 사람 피드라면 해당 사용자 프로필로 이동
+                const isMyFeed = feed.user.id === user?.id;
+                const targetPath = isMyFeed ? "/mypage" : `/feed/profile/${feed.user.id}`;
+                navigate(targetPath);
               }
             }}
           />
@@ -223,13 +231,16 @@ const FeedSearchResult = () => {
             />
             <CommentModal
               postId={activePostId}
-              comments={commentsData?.result?.feeds || []}
+              comments={commentsData?.pages.flatMap(page => page.result.feeds) || []}
               onClose={() => setActivePostId(null)}
               onCommentCreate={handleCommentCreate}
               onReplyCreate={handleReplyCreate}
               onCommentDelete={handleCommentDelete}
               currentUserId={user?.id}
               postOwnerId={allFeeds.find(feed => feed.feed_id === Number(activePostId))?.user?.id}
+              fetchNextPage={fetchCommentsNextPage}
+              hasNextPage={hasCommentsNextPage}
+              isFetchingNextPage={isFetchingCommentsNextPage}
             />
           </>
         )}

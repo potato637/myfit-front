@@ -38,11 +38,34 @@ export const removeFeedLike = async (feedId: number): Promise<LikeFeedResponse> 
 // 피드 댓글 목록 조회
 export const getFeedComments = async ({ feedId, last_comment_id, size }: GetCommentsParams): Promise<CommentsResponse> => {
   const params: Record<string, string | number> = {};
-  if (last_comment_id) params.last_comment_id = last_comment_id;
+  // first page에서는 last_comment_id를 전달하지 않음
+  if (last_comment_id !== undefined) {
+    params.last_comment_id = last_comment_id;
+  }
   if (size) params.size = size;
   
-  const response = await apiClient.get<CommentsResponse>(`/api/feeds/${feedId}/comments`, { params });
-  return response.data;
+  const isFirstPage = last_comment_id === undefined;
+  console.log(`🔄 [API] 댓글 조회 요청 ${isFirstPage ? '(첫 페이지)' : '(다음 페이지)'}:`, { 
+    feedId, 
+    last_comment_id, 
+    size, 
+    params,
+    url: `/api/feeds/${feedId}/comments`
+  });
+  
+  try {
+    const response = await apiClient.get<CommentsResponse>(`/api/feeds/${feedId}/comments`, { params });
+    console.log('✅ [API] 댓글 조회 응답 성공:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('❌ [API] 댓글 조회 실패:', {
+      feedId,
+      last_comment_id,
+      params,
+      error: error.response?.data || error.message
+    });
+    throw error;
+  }
 };
 
 // 댓글 작성

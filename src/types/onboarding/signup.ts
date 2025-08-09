@@ -5,11 +5,12 @@ export interface SignUpRequest {
   name: string;
   one_line_profile?: string;
   birth_date?: string; // YYYY-MM-DD 형식
-  high_area_id: number;
-  low_area_id: number;
+  high_area: string;
+  low_area: string;
   recruiting_status?: string;
   high_sector?: string;
   low_sector?: string;
+  Highest_grade?: string;
   grade_status?: string;
 }
 

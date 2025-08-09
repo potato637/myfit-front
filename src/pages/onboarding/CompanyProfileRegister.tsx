@@ -54,8 +54,8 @@ function CompanyProfileRegister() {
         division: "team",
         name: companyName,
         one_line_profile: shortIntro,
-        high_area_id: signupData.highAreaId || 1, // ID로 전송
-        low_area_id: signupData.lowAreaId || 1,   // ID로 전송
+        high_area: region,
+        low_area: subRegion,
         recruiting_status: employmentStatus,
         team_division: division,
         industry: industry,

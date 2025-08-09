@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import CommentList from "../feed/CommentList";
 import { Comment } from "../../types/feed/comment";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
-import CommentSuggestions from "./CommentSuggestions";
 import CommentInputField, { CommentInputFieldRef } from "./CommentInputField";
 
 interface CommentModalProps {
@@ -17,6 +16,9 @@ interface CommentModalProps {
   onCommentDelete?: (commentId: number) => void;
   currentUserId?: number;
   postOwnerId?: number;
+  fetchNextPage?: () => void;
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
 }
 
 export default function CommentModal({
@@ -28,6 +30,9 @@ export default function CommentModal({
   onCommentDelete,
   currentUserId,
   postOwnerId,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
 }: CommentModalProps) {
   const navigate = useNavigate();
   const [closing, setClosing] = useState(false);
@@ -38,11 +43,15 @@ export default function CommentModal({
 
   // 프로필 클릭 핸들러
   const handleProfileClick = (userId: number) => {
-    navigate(`/feed/profile/${userId}`);
+    // 내 프로필이라면 마이페이지로, 다른 사람 프로필이라면 해당 사용자 프로필로 이동
+    const isMyProfile = userId === currentUserId;
+    const targetPath = isMyProfile ? "/mypage" : `/feed/profile/${userId}`;
+    navigate(targetPath);
   };
 
   const modalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<CommentInputFieldRef>(null);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const target = modalRef.current;
@@ -59,6 +68,35 @@ export default function CommentModal({
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
+
+  // 무한스크롤 Intersection Observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting && hasNextPage && !isFetchingNextPage && fetchNextPage) {
+          console.log("🔄 댓글 무한스크롤: 다음 페이지 로드");
+          fetchNextPage();
+        }
+      },
+      {
+        root: modalRef.current,
+        rootMargin: "100px",
+        threshold: 0.1,
+      }
+    );
+
+    const currentRef = loadMoreRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <motion.section
@@ -118,11 +156,20 @@ export default function CommentModal({
             currentUserId={currentUserId}
             postOwnerId={postOwnerId}
           />
+          
+          {/* 무한스크롤 트리거 */}
+          <div
+            ref={loadMoreRef}
+            className="h-4 flex items-center justify-center py-4"
+          >
+            {isFetchingNextPage && (
+              <div className="text-gray-400 text-sm">
+                댓글을 더 불러오는 중...
+              </div>
+            )}
+          </div>
         </div>
         <div className="fixed bottom-0 left-0 right-0 z-50 bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200">
-          <CommentSuggestions
-            onSelect={(label) => inputRef.current?.setText(label)}
-          />
           <CommentInputField
             ref={inputRef}
             onSend={(text) => {

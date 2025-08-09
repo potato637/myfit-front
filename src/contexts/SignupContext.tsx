@@ -20,6 +20,7 @@ interface SignupData {
   highSector: string;
   lowSector: string;
   gradeStatus: string;
+  educationLevel: string; // 최종 학력
   
   // 회사 회원 전용 필드
   teamDivision: string; // 스타트업/창업 팀/예비 창업팀
@@ -69,6 +70,7 @@ const initialSignupData: SignupData = {
   highSector: '',
   lowSector: '',
   gradeStatus: '',
+  educationLevel: '',
   
   // 회사 회원 전용 필드
   teamDivision: '',

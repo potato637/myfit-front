@@ -26,7 +26,7 @@ function ProfileRegister() {
   const [subRegionError, setSubRegionError] = useState("");
   const [birthDate, setBirthDate] = useState(signupData.birthdate || "");
   const [employ, setEmploy] = useState(signupData.recruitingStatus || "");
-  const [educationLevel, setEducationLevel] = useState("");
+  const [educationLevel, setEducationLevel] = useState(signupData.educationLevel || "");
   const [highSector, setHighSector] = useState<string[]>([]);
   const [lowSector, setLowSector] = useState<string[]>([]);
   const [academic, setAcademic] = useState(signupData.gradeStatus || "");
@@ -137,7 +137,17 @@ function ProfileRegister() {
             label="희망 직무를 선택해주세요"
             value={selectedSkillLabel}
             placeholder="희망직무 입력"
-            onClick={() =>
+            onClick={() => {
+              // Context에 현재 상태 먼저 저장
+              updateProfileInfo({
+                name: nickname,
+                oneLineProfile: shortIntro,
+                birthdate: birthDate,
+                recruitingStatus: employ,
+                gradeStatus: academic,
+                educationLevel: educationLevel,
+              });
+              
               nav("/onboarding/jobpreference", {
                 state: {
                   from: "onboarding",
@@ -154,8 +164,8 @@ function ProfileRegister() {
                   high_sector: highSector,
                   low_sector: lowSector,
                 },
-              })
-            }
+              });
+            }}
           />
           <PersonalInputField
             label="최종 학력을 입력해주세요"
@@ -185,6 +195,7 @@ function ProfileRegister() {
                   birthdate: birthDate,
                   recruitingStatus: employ,
                   gradeStatus: academic,
+                  educationLevel: educationLevel,
                   highSector: highSector.join(", ") || "",
                   lowSector: lowSector.join(", ") || "",
                 });
@@ -197,11 +208,12 @@ function ProfileRegister() {
                   name: nickname,
                   one_line_profile: shortIntro,
                   birth_date: birthDate,
-                  high_area_id: signupData.highAreaId || 1, // 기본값 설정 필요
-                  low_area_id: signupData.lowAreaId || 1, // 기본값 설정 필요
+                  high_area: region,
+                  low_area: subRegion,
                   recruiting_status: employ,
                   high_sector: highSector[0] || "",
                   low_sector: lowSector.join(", ") || "",
+                  Highest_grade: educationLevel,
                   grade_status: academic,
                 };
 
