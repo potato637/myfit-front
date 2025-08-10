@@ -8,11 +8,12 @@ import {
 export function applyLoggerInterceptor(apiInstance: AxiosInstance): void {
   apiInstance.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-      const baseURL = config.baseURL || '';
-      const url = config.url || '';
-      const params = config.params ? new URLSearchParams(config.params).toString() : '';
-      const fullUrl = `${baseURL}${url}${params ? `?${params}` : ''}`;
-      
+      const url = config.url || "";
+      const params = config.params
+        ? new URLSearchParams(config.params).toString()
+        : "";
+      const fullUrl = params ? `${url}?${params}` : url;
+
       console.log(`[Request] ${config.method?.toUpperCase()} ${fullUrl}`);
       console.log("Headers:", config.headers);
       if (config.data) {
@@ -22,11 +23,12 @@ export function applyLoggerInterceptor(apiInstance: AxiosInstance): void {
       return config;
     },
     (error: AxiosError) => {
-      const baseURL = error.config?.baseURL || '';
-      const url = error.config?.url || '';
-      const params = (error.config as any)?.params ? new URLSearchParams((error.config as any).params).toString() : '';
-      const fullUrl = `${baseURL}${url}${params ? `?${params}` : ''}`;
-      
+      const url = error.config?.url || "";
+      const params = (error.config as any)?.params
+        ? new URLSearchParams((error.config as any).params).toString()
+        : "";
+      const fullUrl = params ? `${url}?${params}` : url;
+
       console.error(
         `[Request Error] ${error.config?.method?.toUpperCase()} ${fullUrl}`,
         error
@@ -38,13 +40,16 @@ export function applyLoggerInterceptor(apiInstance: AxiosInstance): void {
 
   apiInstance.interceptors.response.use(
     (response: AxiosResponse) => {
-      const baseURL = response.config.baseURL || '';
-      const url = response.config.url || '';
-      const params = (response.config as any)?.params ? new URLSearchParams((response.config as any).params).toString() : '';
-      const fullUrl = `${baseURL}${url}${params ? `?${params}` : ''}`;
-      
+      const url = response.config.url || "";
+      const params = (response.config as any)?.params
+        ? new URLSearchParams((response.config as any).params).toString()
+        : "";
+      const fullUrl = params ? `${url}?${params}` : url;
+
       console.log(
-        `[Response] ${response.config.method?.toUpperCase()} ${fullUrl} - Status: ${response.status}`
+        `[Response] ${response.config.method?.toUpperCase()} ${fullUrl} - Status: ${
+          response.status
+        }`
       );
       console.log("Response Data:", response.data);
       console.log("------------------------------------");
@@ -52,13 +57,16 @@ export function applyLoggerInterceptor(apiInstance: AxiosInstance): void {
     },
     (error: AxiosError) => {
       if (error.response) {
-        const baseURL = error.config?.baseURL || '';
-        const url = error.config?.url || '';
-        const params = (error.config as any)?.params ? new URLSearchParams((error.config as any).params).toString() : '';
-        const fullUrl = `${baseURL}${url}${params ? `?${params}` : ''}`;
-        
+        const url = error.config?.url || "";
+        const params = (error.config as any)?.params
+          ? new URLSearchParams((error.config as any).params).toString()
+          : "";
+        const fullUrl = params ? `${url}?${params}` : url;
+
         console.error(
-          `[Response Error] ${error.config?.method?.toUpperCase()} ${fullUrl} - Status: ${error.response.status}`,
+          `[Response Error] ${error.config?.method?.toUpperCase()} ${fullUrl} - Status: ${
+            error.response.status
+          }`,
           error.response.data
         );
         console.log("Response Headers:", error.response.headers);
