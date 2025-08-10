@@ -4,11 +4,12 @@ import { useAuth } from "../contexts/AuthContext";
 function HomeRouter() {
   const { isLoggedIn } = useAuth();
 
-  if (isLoggedIn) {
-    return <Navigate to="/feed" replace />;
-  }
-
-  return <Navigate to="/onboarding" replace />;
+  // Redirect based on authentication status
+  return isLoggedIn ? (
+    <Navigate to="/feed" replace />
+  ) : (
+    <Navigate to="/onboarding" replace />
+  );
 }
 
 export default HomeRouter;
