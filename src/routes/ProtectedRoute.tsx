@@ -3,6 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 
 function ProtectedRoute() {
   const { isLoggedIn, isLoading } = useAuth();
+  console.log("Protected Route: ", isLoggedIn);
 
   // 로딩 중일 때는 로딩 화면 표시
   if (isLoading) {

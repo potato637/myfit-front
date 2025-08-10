@@ -55,12 +55,17 @@ import Searching from "../pages/searching/Searching";
 import EditFeed from "../pages/feed/EditFeed";
 import Filter from "../pages/searching/Filter";
 import FilterResult from "../pages/searching/FilterResult";
+import HomeRouter from "../pages/HomeRouter";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
+      {
+        index: true,
+        element: <HomeRouter />,
+      },
       {
         path: "onboarding",
         element: <OnboardingContainer />,
