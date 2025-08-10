@@ -22,7 +22,6 @@ interface CommentModalProps {
 }
 
 export default function CommentModal({
-  postId,
   comments,
   onClose,
   onCommentCreate,
@@ -74,7 +73,12 @@ export default function CommentModal({
     const observer = new IntersectionObserver(
       (entries) => {
         const target = entries[0];
-        if (target.isIntersecting && hasNextPage && !isFetchingNextPage && fetchNextPage) {
+        if (
+          target.isIntersecting &&
+          hasNextPage &&
+          !isFetchingNextPage &&
+          fetchNextPage
+        ) {
           console.log("🔄 댓글 무한스크롤: 다음 페이지 로드");
           fetchNextPage();
         }
@@ -156,7 +160,7 @@ export default function CommentModal({
             currentUserId={currentUserId}
             postOwnerId={postOwnerId}
           />
-          
+
           {/* 무한스크롤 트리거 */}
           <div
             ref={loadMoreRef}

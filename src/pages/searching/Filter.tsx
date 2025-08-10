@@ -2,7 +2,7 @@ import TopBarContainer from "../../components/common/TopBarContainer";
 import BottomNavContainer from "../../components/layouts/BottomNavContainer";
 import { useLocation, useNavigate } from "react-router-dom";
 import PersonalInputField from "../../components/setting/PersonalInputField";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 import { useModal } from "../../contexts/ui/modalContext";
 import { useCountCard } from "../../hooks/searchingQueries";

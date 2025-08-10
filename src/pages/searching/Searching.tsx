@@ -14,7 +14,7 @@ function Searching() {
   const navigate = useNavigate();
 
   // Use the search hook
-  const { data, isLoading, fetchNextPage } = useSectorBaseSearching({
+  const { data } = useSectorBaseSearching({
     high_sector: selectedCategory,
     low_sector: selectedSkill,
     sort: sortOption,

@@ -8,7 +8,6 @@ import { useChatting } from "../../contexts/ChattingContext";
 import { useAuth } from "../../contexts/AuthContext";
 import {
   ChatMessage,
-  ChatMessageType,
   ChattingListResponse,
   getChatMessage,
   getChattingRooms,

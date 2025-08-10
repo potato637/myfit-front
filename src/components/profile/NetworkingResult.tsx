@@ -99,7 +99,7 @@ function NetworkingResult({ selectedTab, searchTerm }: NetworkingResultProps) {
     matchingData[selectedTab].data?.filter((user) => {
       if (!searchTerm.trim()) return true;
 
-      const { name, sector, id } = matchingData[selectedTab];
+      const { name, sector } = matchingData[selectedTab];
       const userName = user[name]?.toLowerCase() || "";
       const userSector = user[sector]?.toLowerCase() || "";
       const search = searchTerm.toLowerCase();

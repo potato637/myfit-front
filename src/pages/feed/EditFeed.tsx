@@ -12,7 +12,7 @@ export default function EditFeed() {
   const { feedId } = useParams<{ feedId: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  
+
   const [content, setContent] = useState("");
   const [images, setImages] = useState<string[]>([]);
   const [keywords, setKeywords] = useState<string[]>([]);
@@ -22,7 +22,7 @@ export default function EditFeed() {
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = 'auto';
+      textarea.style.height = "auto";
       textarea.style.height = `${Math.max(48, textarea.scrollHeight)}px`;
     }
   };
@@ -40,15 +40,16 @@ export default function EditFeed() {
 
   // 피드 수정 mutation
   const updateMutation = useMutation({
-    mutationFn: (request: UpdateFeedRequest) => updateFeed(Number(feedId), request),
-    onSuccess: (data) => {
+    mutationFn: (request: UpdateFeedRequest) =>
+      updateFeed(Number(feedId), request),
+    onSuccess: () => {
       alert("게시글이 수정되었습니다!");
       // 피드 목록 쿼리들 무효화
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
       queryClient.invalidateQueries({ queryKey: ["feedForEdit", feedId] });
       navigate("/feed");
     },
-    onError: (error) => {
+    onError: () => {
       alert("게시글 수정에 실패했습니다. 다시 시도해주세요.");
     },
   });
@@ -88,8 +89,8 @@ export default function EditFeed() {
             onClick={handleSubmit}
             disabled={updateMutation.isPending || !content.trim()}
             className={`text-sub2 cursor-pointer ${
-              updateMutation.isPending || !content.trim() 
-                ? "text-ct-gray-200" 
+              updateMutation.isPending || !content.trim()
+                ? "text-ct-gray-200"
                 : "text-ct-main-blue-100"
             }`}
           >
@@ -135,10 +136,7 @@ export default function EditFeed() {
               className="w-full min-h-[48px] text-body1 text-ct-black-200 resize-none outline-none bg-[#F7F7F7] rounded-[8px] p-[12px] mb-[16px]"
             />
             <div className="ml-3">
-              <KeywordInput 
-                keywords={keywords}
-                setKeywords={setKeywords}
-              />
+              <KeywordInput keywords={keywords} setKeywords={setKeywords} />
             </div>
           </div>
         </div>

@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { 
-  addFeedLike, 
-  removeFeedLike, 
-  createComment, 
-  deleteComment 
+import {
+  addFeedLike,
+  removeFeedLike,
+  createComment,
+  deleteComment,
 } from "../../apis/feed";
 
 interface UseFeedMutationsProps {
@@ -11,9 +11,8 @@ interface UseFeedMutationsProps {
   invalidateQueryKey?: string | string[];
 }
 
-export const useFeedMutations = ({ 
-  activePostId, 
-  invalidateQueryKey = ["feeds"] 
+export const useFeedMutations = ({
+  activePostId,
 }: UseFeedMutationsProps = {}) => {
   const queryClient = useQueryClient();
 

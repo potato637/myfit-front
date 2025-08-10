@@ -1,17 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CoffeeChatStorageCard from "../../components/chatting/CoffeeChatStorageCard";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import { useCoffeeChatStorageQuery } from "../../hooks/chatting/coffeechat";
-import RecruitCardSkeleton from "../../components/skeletons/recruiting/RecruitCardSkeleton";
 import CoffeeChatCardSkeleton from "../../components/skeletons/chatting/CoffeeChatCardSkeleton";
 
 function CoffeeChatStorage() {
   const [page, setPage] = useState(1);
   const { data, isLoading } = useCoffeeChatStorageQuery(page);
-  const [delayedLoading, setDelayedLoading] = useState(true);
 
   const chats = data?.result.chats ?? [];
-  const currentPage = data?.result.currentPage ?? 1;
   const totalPage = data?.result.totalpages ?? 1;
 
   const TopBarContent = () => (

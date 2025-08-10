@@ -36,28 +36,30 @@ function MultiImageUploadBox({
         forcePathStyle: true, // 브라우저 호환성 개선
       });
 
-      const fileName = `${S3Folder ? S3Folder + "/" : ""}${Date.now()}_${Math.random().toString(36).substr(2, 9)}_${file.name}`;
-      
+      const fileName = `${
+        S3Folder ? S3Folder + "/" : ""
+      }${Date.now()}_${Math.random().toString(36).substr(2, 9)}_${file.name}`;
+
       // File을 ArrayBuffer로 변환 (브라우저 호환성)
       const arrayBuffer = await file.arrayBuffer();
-      
+
       const uploadParams = {
         Bucket: awsBucketName,
         Key: fileName,
         Body: new Uint8Array(arrayBuffer),
         ContentType: file.type,
-        ContentDisposition: 'inline',
+        ContentDisposition: "inline",
       };
 
-      console.log('🔄 S3 업로드 시작:', fileName);
+      console.log("🔄 S3 업로드 시작:", fileName);
       await s3Client.send(new PutObjectCommand(uploadParams));
-      
+
       const fileUrl = `https://${awsBucketName}.s3.${awsRegion}.amazonaws.com/${fileName}`;
-      console.log('✅ S3 업로드 완료:', fileUrl);
-      
+      console.log("✅ S3 업로드 완료:", fileUrl);
+
       return fileUrl;
     } catch (error) {
-      console.error('❌ S3 업로드 실패:', error);
+      console.error("❌ S3 업로드 실패:", error);
       throw new Error(`업로드 실패: ${file.name}`);
     }
   };
@@ -78,14 +80,14 @@ function MultiImageUploadBox({
     }
 
     setIsUploading(true);
-    
+
     try {
       const uploadPromises = filesToProcess.map(async (file) => {
         // 파일 검증
-        if (!file.type.startsWith('image/')) {
+        if (!file.type.startsWith("image/")) {
           throw new Error(`${file.name}은(는) 이미지 파일이 아닙니다.`);
         }
-        
+
         if (file.size > 10 * 1024 * 1024) {
           throw new Error(`${file.name}의 크기가 10MB를 초과합니다.`);
         }
@@ -95,10 +97,9 @@ function MultiImageUploadBox({
 
       const uploadedUrls = await Promise.all(uploadPromises);
       onImagesChange([...images, ...uploadedUrls]);
-      
     } catch (error: any) {
-      console.error('이미지 업로드 실패:', error);
-      alert(error.message || '이미지 업로드에 실패했습니다.');
+      console.error("이미지 업로드 실패:", error);
+      alert(error.message || "이미지 업로드에 실패했습니다.");
     } finally {
       setIsUploading(false);
     }
@@ -110,7 +111,7 @@ function MultiImageUploadBox({
     if (files && files.length > 0) {
       handleFiles(files);
     }
-    e.target.value = ''; // 같은 파일 재선택 가능하도록
+    e.target.value = ""; // 같은 파일 재선택 가능하도록
   };
 
   // 드래그 앤 드롭 핸들러
@@ -126,15 +127,18 @@ function MultiImageUploadBox({
     }
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setDragOver(false);
-    
-    const files = e.dataTransfer.files;
-    if (files && files.length > 0) {
-      handleFiles(files);
-    }
-  }, [images, maxImages, onImagesChange]);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setDragOver(false);
+
+      const files = e.dataTransfer.files;
+      if (files && files.length > 0) {
+        handleFiles(files);
+      }
+    },
+    [images, maxImages, onImagesChange]
+  );
 
   // 이미지 삭제
   const handleRemoveImage = (index: number) => {
@@ -143,12 +147,12 @@ function MultiImageUploadBox({
   };
 
   // 이미지 순서 변경 (간단한 버전)
-  const handleMoveImage = (fromIndex: number, toIndex: number) => {
-    const newImages = [...images];
-    const [removed] = newImages.splice(fromIndex, 1);
-    newImages.splice(toIndex, 0, removed);
-    onImagesChange(newImages);
-  };
+  // const handleMoveImage = (fromIndex: number, toIndex: number) => {
+  //   const newImages = [...images];
+  //   const [removed] = newImages.splice(fromIndex, 1);
+  //   newImages.splice(toIndex, 0, removed);
+  //   onImagesChange(newImages);
+  // };
 
   return (
     <div className={`${className}`}>
@@ -182,10 +186,10 @@ function MultiImageUploadBox({
       {images.length < maxImages && (
         <div
           className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
-            dragOver 
-              ? 'border-ct-main-blue-100 bg-ct-light-blue-100' 
-              : 'border-ct-gray-200 hover:border-ct-gray-300'
-          } ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            dragOver
+              ? "border-ct-main-blue-100 bg-ct-light-blue-100"
+              : "border-ct-gray-200 hover:border-ct-gray-300"
+          } ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`}
           onClick={() => !isUploading && inputRef.current?.click()}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -200,7 +204,7 @@ function MultiImageUploadBox({
             className="hidden"
             disabled={isUploading}
           />
-          
+
           {isUploading ? (
             <div className="text-ct-gray-300">
               <div className="animate-spin w-6 h-6 border-2 border-ct-main-blue-100 border-t-transparent rounded-full mx-auto mb-2"></div>

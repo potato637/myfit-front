@@ -1,8 +1,7 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import InformationBox from "../InformationBox";
 import { CoffeeChatDetailResponse } from "../../../apis/chatting/coffeechat";
 import { FormattedDate, FormattedTime } from "../../../utils/format";
-import { useCancelCoffeeChatMutation } from "../../../hooks/chatting/coffeechat";
 import { useState } from "react";
 import { useModal } from "../../../contexts/ui/modalContext";
 import CancelModal from "./CancelModal";

@@ -55,7 +55,7 @@ function SwipeContainer({
     type: "bullets" as const,
     dynamicBullets: true,
     dynamicMainBullets: 4, // 최대 4개의 bullet만 표시
-    renderBullet: function (index: number, className: string) {
+    renderBullet: function (_: number, className: string) {
       return '<span class="' + className + '"></span>';
     },
   };

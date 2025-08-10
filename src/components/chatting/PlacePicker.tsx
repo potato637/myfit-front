@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { useCoffeeChat } from "../../contexts/coffeeChatContext";
 
 function PlacePicker() {
-  // const { selectedPlace, setSelectedPlace } = useCoffeeChat();
   const [value, setValue] = useState<string>("");
 
   const handleClick = () => {
