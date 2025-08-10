@@ -29,7 +29,7 @@ const mockAlarms: AlarmItem[] = [
     fromUser: {
       id: 102,
       name: "임호현",
-      avatarUrl: "/public/assets/feed/network2.svg",
+      avatarUrl: "/public/assets/feed/network1.svg",
     },
     message: "님이 네트워크 관계를 요청했어요.",
     time: "10분",
@@ -41,7 +41,7 @@ const mockAlarms: AlarmItem[] = [
     fromUser: {
       id: 102,
       name: "임호현",
-      avatarUrl: "/public/assets/feed/network2.svg",
+      avatarUrl: "/public/assets/feed/network1.svg",
     },
     message: "님이 회원님의 게시글을 좋아합니다.",
     time: "15분",
