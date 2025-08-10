@@ -41,7 +41,8 @@ export const usePostInterest = () => {
     mutationFn: ({ service_id }: { service_id: string }) =>
       postInterest({ service_id }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["interest"] });
+      queryClient.invalidateQueries({ queryKey: ["networking"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
 };
@@ -53,14 +54,15 @@ export const useDeleteInterest = () => {
     mutationFn: ({ service_id }: { service_id: string }) =>
       deleteInterest({ service_id }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["interest"] });
+      queryClient.invalidateQueries({ queryKey: ["networking"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
 };
 
 export const useGetMyInterest = () => {
   return useInfiniteQuery({
-    queryKey: ["my-interest"],
+    queryKey: ["networking", "my-interest"],
     queryFn: ({ pageParam = 1 }) => getMyInterest({ page: pageParam }),
     staleTime: 1000 * 60,
     initialPageParam: 1,
@@ -73,15 +75,19 @@ export const useGetMyInterest = () => {
 
 export const useGetPeopleWhoInterestMe = () => {
   return useQuery({
-    queryKey: ["people-who-interest-me"],
+    queryKey: ["networking", "people-who-interest-me"],
     queryFn: getPeopleWhoInterestMe,
     staleTime: 1000 * 60,
   });
 };
 
-export const useGetAmIInterestHim = (service_id: string) => {
+export const useGetAmIInterestHim = ({
+  service_id,
+}: {
+  service_id: string;
+}) => {
   return useQuery({
-    queryKey: ["am-i-interested", service_id],
+    queryKey: ["networking", "am-i-interested", service_id],
     queryFn: () => getAmIInterestHim({ service_id }),
     enabled: !!service_id,
     staleTime: 1000 * 60,
@@ -114,7 +120,7 @@ export const usePostNetwork = () => {
     mutationFn: ({ service_id }: { service_id: string }) =>
       PostNetwork({ service_id }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["is_networking"] });
+      queryClient.invalidateQueries({ queryKey: ["networking"] });
     },
   });
 };
@@ -123,10 +129,11 @@ export const usePatchAcceptNetwork = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ service_id }: { service_id: string }) =>
-      patchAcceptNetwork({ service_id }),
+    mutationFn: ({ network_id }: { network_id: string }) =>
+      patchAcceptNetwork({ network_id }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["network"] });
+      queryClient.invalidateQueries({ queryKey: ["networking"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
 };
@@ -135,10 +142,10 @@ export const usePatchRejectNetwork = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ service_id }: { service_id: string }) =>
-      patchRejectNetwork({ service_id }),
+    mutationFn: ({ network_id }: { network_id: string }) =>
+      patchRejectNetwork({ network_id }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["network"] });
+      queryClient.invalidateQueries({ queryKey: ["networking"] });
     },
   });
 };
@@ -150,14 +157,17 @@ export const useDeleteNetwork = () => {
     mutationFn: ({ network_id }: { network_id: string }) =>
       deleteNetwork({ network_id }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["is_networking"] });
+      queryClient.invalidateQueries({
+        queryKey: ["networking"],
+      });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
 };
 
 export const useGetMyNetwork = () => {
   return useQuery({
-    queryKey: ["my-network"],
+    queryKey: ["networking", "my-network"],
     queryFn: getMyNetwork,
     staleTime: 1000 * 60,
   });
@@ -173,7 +183,7 @@ export const useGetMyNetworkRequest = () => {
 
 export const useGetReceivedNetwork = () => {
   return useQuery({
-    queryKey: ["received-network"],
+    queryKey: ["networking", "received-network"],
     queryFn: getReceivedNetwork,
     staleTime: 1000 * 60,
   });
@@ -181,7 +191,7 @@ export const useGetReceivedNetwork = () => {
 
 export const useGetIsNetworking = ({ service_id }: { service_id: string }) => {
   return useQuery({
-    queryKey: ["is_networking"],
+    queryKey: ["networking", "is_networking"],
     queryFn: () => getIsNetworking({ service_id }),
     enabled: !!service_id,
     staleTime: 0,

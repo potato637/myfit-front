@@ -6,6 +6,7 @@ import {
   useGetMyInterest,
 } from "../../hooks/relationQueries";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 type NetworkingResultProps = {
   selectedTab:
@@ -13,8 +14,23 @@ type NetworkingResultProps = {
     | "receivedNetwork"
     | "sendInterest"
     | "receivedInterest";
+  searchTerm: string;
 };
-function NetworkingResult({ selectedTab }: NetworkingResultProps) {
+function NetworkingResult({ selectedTab, searchTerm }: NetworkingResultProps) {
+  const [isFiltering, setIsFiltering] = useState(false);
+
+  // Debounce the filtering effect
+  useEffect(() => {
+    if (searchTerm.trim()) {
+      setIsFiltering(true);
+      const timerId = setTimeout(() => {
+        setIsFiltering(false);
+      }, 300);
+      return () => clearTimeout(timerId);
+    } else {
+      setIsFiltering(false);
+    }
+  }, [searchTerm]);
   const navigate = useNavigate();
 
   const {
@@ -47,6 +63,7 @@ function NetworkingResult({ selectedTab }: NetworkingResultProps) {
     network: {
       data: network,
       message: "새로운 네트워크 관계를 만들어 보세요!",
+      id: "other_service_id",
       name: "other_service_name",
       profile_img: "other_service_profile_img",
       sector: "other_service_sector",
@@ -54,38 +71,60 @@ function NetworkingResult({ selectedTab }: NetworkingResultProps) {
     receivedNetwork: {
       data: receivedNetwork,
       message: "받은 요청이 없습니다.",
+      id: "sender_id",
       name: "sender_name",
       profile_img: "sender_profile_img",
-      sector: "sender_sector",
+      sector: "sender_service_sector",
     },
     sendInterest: {
       data: myInterestsData,
       message: "보낸 관심이 없습니다.",
+      id: "recipient_id",
       name: "recipient_service_name",
-      profile_img: "recipient_service_profile_img",
-      sector: "recipient_service_sector",
+      profile_img: "recipient_profile_img",
+      sector: "recipient_sector",
     },
     receivedInterest: {
       data: receivedInterests,
       message: "받은 관심이 없습니다.",
-      name: "sender_id",
+      id: "sender_id",
+      name: "sender_name",
       profile_img: "sender_profile_img",
       sector: "sender_sector",
     },
   };
 
+  // Filter users based on search term
+  const filteredUsers =
+    matchingData[selectedTab].data?.filter((user) => {
+      if (!searchTerm.trim()) return true;
+
+      const { name, sector, id } = matchingData[selectedTab];
+      const userName = user[name]?.toLowerCase() || "";
+      const userSector = user[sector]?.toLowerCase() || "";
+      const search = searchTerm.toLowerCase();
+
+      return userName.includes(search) || userSector.includes(search);
+    }) || [];
+
   return (
     <>
-      <div className="w-full h-auto">
-        {matchingData[selectedTab].data?.length ? (
-          matchingData[selectedTab].data.map((user) => {
-            const { name, profile_img, sector } = matchingData[selectedTab];
+      <div className="w-full h-auto flex flex-col gap-[20px]">
+        {isFiltering ? (
+          <div className="flex flex-col gap-[20px]">
+            <ProfileResultSkeleton />
+            <ProfileResultSkeleton />
+            <ProfileResultSkeleton />
+          </div>
+        ) : filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => {
+            const { name, profile_img, sector, id } = matchingData[selectedTab];
 
             return (
               <div
-                key={user.id}
+                key={user[id]}
                 className="ml-2 flex items-center gap-4"
-                onClick={() => navigate(`/feed/profile/${user.id}`)}
+                onClick={() => navigate(`/feed/profile/${user[id]}`)}
               >
                 <img
                   src={user[profile_img]}
@@ -103,7 +142,9 @@ function NetworkingResult({ selectedTab }: NetworkingResultProps) {
           })
         ) : (
           <p className="text-body2 text-ct-gray-200 text-center">
-            {matchingData[selectedTab].message}
+            {searchTerm.trim()
+              ? "검색 결과가 없습니다."
+              : matchingData[selectedTab].message}
           </p>
         )}
       </div>

@@ -61,6 +61,7 @@ function JobPreference() {
         high_sector: highSector,
         low_sector: lowSector,
       },
+      replace: true,
     });
   };
 

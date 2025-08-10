@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import InputField from "../../components/onboarding/InputField";
@@ -9,9 +9,17 @@ import CompanyDivisionModal from "../../components/onboarding/CompanyDivisionMod
 import EmploymentStatusModal from "../../components/onboarding/EmploymentStatusModal";
 import RegionModal from "../../components/onboarding/RegionModal";
 import SubRegionModal from "../../components/onboarding/SubRegionModal";
+import { useAuth } from "../../contexts/AuthContext";
+import { useGetProfile } from "../../hooks/mypageQueries";
+import { usePatchBusinessProfile } from "../../hooks/settingQueries";
 
 function CompanyProfile() {
+  const navigate = useNavigate();
   const { isModalOpen, setIsModalOpen } = useModal();
+  const { user } = useAuth();
+  const { data: profile } = useGetProfile({
+    service_id: user?.id?.toString() || "",
+  });
 
   // 상태 관리 - 빈 문자열로 초기화하여 controlled input 보장
   const [companyName, setCompanyName] = useState("");
@@ -23,6 +31,19 @@ function CompanyProfile() {
   const [division, setDivision] = useState("");
   const [industry, setIndustry] = useState("");
   const [website, setWebsite] = useState("");
+
+  useEffect(() => {
+    if (profile) {
+      setCompanyName(profile.result.user.name);
+      setShortIntro(profile.result.user.one_line_profile);
+      setRegion(profile.result.service.userArea.high_area);
+      setSubRegion(profile.result.service.userArea.low_area);
+      setEmploymentStatus(profile.result.service.recruiting_status);
+      setDivision(profile.result.service.low_sector);
+      setIndustry(profile.result.user.industry || "");
+      setWebsite(profile.result.user.link || "");
+    }
+  }, [profile]);
 
   // 모달 타입 관리
   const [modalType, setModalType] = useState<
@@ -36,11 +57,22 @@ function CompanyProfile() {
     setIsModalOpen(true);
   };
 
+  const { mutate: updateProfile } = usePatchBusinessProfile({
+    service_id: user?.id?.toString() || "",
+  });
+
   const handleSubmit = async () => {
-    try {
-    } catch (error) {
-      console.error("회사 프로필 수정 실패:", error);
-    }
+    updateProfile({
+      name: companyName,
+      one_line_profile: shortIntro,
+      team_division: division,
+      industry: industry,
+      high_area: region,
+      low_area: subRegion,
+      recruiting_status: employmentStatus,
+      link: website,
+    });
+    navigate("/mypage");
   };
 
   const TopBarContent = () => {

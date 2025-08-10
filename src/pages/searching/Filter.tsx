@@ -2,9 +2,10 @@ import TopBarContainer from "../../components/common/TopBarContainer";
 import BottomNavContainer from "../../components/layouts/BottomNavContainer";
 import { useLocation, useNavigate } from "react-router-dom";
 import PersonalInputField from "../../components/setting/PersonalInputField";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { z } from "zod";
 import { useModal } from "../../contexts/ui/modalContext";
+import { useCountCard } from "../../hooks/searchingQueries";
 import Modal from "../../components/ui/Modal";
 import RegionModal from "../../components/onboarding/RegionModal";
 import EmploymentStatusModal from "../../components/onboarding/EmploymentStatusModal";
@@ -25,12 +26,16 @@ function Filter() {
   const [keyword, setKeyword] = useState<string[]>([]);
   const [keywordInput, setKeywordInput] = useState("");
   const [keywordError, setKeywordError] = useState("");
-  const [selectedJob, setSelectedJob] = useState("");
+  const [_, setHighSector] = useState<string[]>([]);
+  const [lowSector, setLowSector] = useState<string[]>([]);
+  const [debouncedKeyword, setDebouncedKeyword] = useState<string[]>([]);
 
   useEffect(() => {
-    const { high_sector, low_sector } = location.state;
+    if (!location.state) return;
 
-    if (low_sector) setSelectedJob(low_sector);
+    const { high_sector, low_sector } = location.state;
+    if (high_sector) setHighSector(high_sector);
+    if (low_sector) setLowSector(low_sector);
   }, [location.state]);
 
   // Zod schema for keyword validation
@@ -38,6 +43,25 @@ function Filter() {
     keywords: z.array(
       z.string().max(3, "키워드는 최대 3개까지 입력 가능합니다")
     ),
+  });
+
+  // Debounce keyword input
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedKeyword(keyword);
+    }, 500);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [keyword]);
+
+  // Use the count card query
+  const { data: countData } = useCountCard({
+    area: region,
+    status: employmentStatus,
+    hope_job: lowSector[0], // Assuming we only need the first selected job
+    keywords: debouncedKeyword,
   });
 
   // Update keywords when input changes
@@ -113,7 +137,7 @@ function Filter() {
               <label className="ml-1 text-sub1 text-ct-black-200">직무</label>
               <input
                 type="text"
-                value={selectedJob}
+                value={lowSector}
                 readOnly
                 placeholder="직무를 선택해주세요"
                 className="w-full flex text-body1 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100 cursor-pointer"
@@ -121,7 +145,6 @@ function Filter() {
                   navigate("/searching/filter/job-select", {
                     state: {
                       from: "filter",
-                      selectedJob: selectedJob,
                     },
                   });
                 }}
@@ -138,6 +161,8 @@ function Filter() {
                     keywords: keyword,
                     region,
                     employmentStatus,
+                    lowSector,
+                    count: countData?.result?.count,
                   },
                 });
               }
@@ -148,7 +173,7 @@ function Filter() {
             }}
           >
             <span className="text-sub1 text-ct-black-200">
-              n개의 카드가 검색되었습니다.
+              {`${countData?.result?.count || 0}개의 카드가 검색되었습니다.`}
             </span>
           </div>
         </div>

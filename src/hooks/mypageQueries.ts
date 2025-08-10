@@ -19,7 +19,6 @@ export const useGetProfile = ({ service_id }: { service_id: string }) => {
   return useQuery({
     queryKey: ["profile", service_id],
     queryFn: () => getProfile({ service_id }),
-    staleTime: 1000 * 60,
   });
 };
 

@@ -3,19 +3,30 @@ import { useState } from "react";
 import { jobs } from "../../data/jobs";
 import SearchingSwipeItem from "../../components/searching/SearchingSwipeItem";
 import { useNavigate } from "react-router-dom";
+import { useSectorBaseSearching } from "../../hooks/searchingQueries";
 
 function Searching() {
   const [searchText, setSearchText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("기획/PM");
   const [selectedSkill, setSelectedSkill] = useState<string>("서비스 기획자");
+  const [sortOption, setSortOption] = useState<"latest" | "oldest">("latest");
   const currentCategory = jobs.find((j) => j.category === selectedCategory);
   const navigate = useNavigate();
+
+  // Use the search hook
+  const { data, isLoading, fetchNextPage } = useSectorBaseSearching({
+    high_sector: selectedCategory,
+    low_sector: selectedSkill,
+    sort: sortOption,
+  });
 
   const handleSearch = () => {
     if (searchText.trim()) {
       setSearchText("");
     }
   };
+
+  const cardsData = data?.pages.flatMap((page) => page.result.cards);
 
   return (
     <BottomNavContainer>
@@ -81,8 +92,17 @@ function Searching() {
       <div className="w-full ct-center flex-col">
         {/* 최신 순 및 필터 */}
         <div className="w-[340px] flex justify-between items-center">
-          <div>
-            <span className="text-sub2 text-ct-black-200">최신 순</span>
+          <div className="relative">
+            <select
+              value={sortOption}
+              onChange={(e) =>
+                setSortOption(e.target.value as "latest" | "oldest")
+              }
+              className="text-sub2 text-ct-black-200 bg-transparent appearance-none pr-6 focus:outline-none"
+            >
+              <option value="latest">최신 순</option>
+              <option value="oldest">오래된 순</option>
+            </select>
           </div>
           <div
             className="w-[60px] h-[25px] ct-center bg-ct-main-blue-100 rounded-[5px]"
@@ -94,8 +114,10 @@ function Searching() {
         </div>
 
         {/* 검색 결과 */}
-        <div className="w-full ct-center flex-col mt-[30px]">
-          <SearchingSwipeItem />
+        <div className="w-full ct-center flex-col mt-[30px] gap-[30px]">
+          {cardsData?.map((card) => (
+            <SearchingSwipeItem key={card.card_id} card={card} />
+          ))}
         </div>
       </div>
     </BottomNavContainer>

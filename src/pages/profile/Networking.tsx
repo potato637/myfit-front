@@ -1,5 +1,5 @@
 import TopBarContainer from "../../components/common/TopBarContainer";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BottomNavContainer from "../../components/layouts/BottomNavContainer";
 import NetworkingResult from "../../components/profile/NetworkingResult";
 
@@ -7,6 +7,19 @@ function Networking() {
   const [selectedTab, setSelectedTab] = useState<
     "network" | "receivedNetwork" | "sendInterest" | "receivedInterest"
   >("network");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
+  // Debounce search term
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [searchTerm]);
 
   return (
     <TopBarContainer>
@@ -16,6 +29,8 @@ function Networking() {
             <input
               placeholder="네이밍, 회사, 직무를 검색해보세요!"
               className="w-full pl-[12px] pr-[30px] py-[7px] placeholder:text-body2 placeholder:text-ct-gray-200 focus:outline-none"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
             <img
               alt="search"
@@ -94,7 +109,10 @@ function Networking() {
             </div>
           </div>
           <div className="w-[350px] mx-auto mt-[30px]">
-            <NetworkingResult selectedTab={selectedTab} />
+            <NetworkingResult
+              selectedTab={selectedTab}
+              searchTerm={debouncedSearchTerm}
+            />
           </div>
         </div>
       </BottomNavContainer>

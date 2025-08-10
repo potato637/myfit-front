@@ -30,6 +30,7 @@ export interface GetProfileResponse extends BaseResponse {
       grade_status: string;
       industry: string | null;
       team_division: string | null;
+      birth_date: string;
     };
     interest_count: number;
     network_count: number;

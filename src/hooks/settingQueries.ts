@@ -1,5 +1,10 @@
-import { useMutation } from "@tanstack/react-query";
-import { postLogout, patchResetPassword } from "../apis/settingAPI";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  postLogout,
+  patchResetPassword,
+  patchBusinessProfile,
+  PatchBusinessProfileProps,
+} from "../apis/settingAPI";
 import { useNavigate } from "react-router-dom";
 
 export const usePostLogout = () => {
@@ -22,6 +27,25 @@ export const usePatchResetPassword = () => {
     onSuccess: () => {
       logout();
       navigate("/onboarding");
+    },
+  });
+};
+
+export const usePatchBusinessProfile = ({
+  service_id,
+}: {
+  service_id: string;
+}) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (props: PatchBusinessProfileProps) =>
+      patchBusinessProfile(props),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["profile", service_id] });
+    },
+    onError: (error) => {
+      console.error("Failed to update profile status:", error);
     },
   });
 };

@@ -49,6 +49,7 @@ function PersonalProfile() {
     setEmploy(profile?.result.service.recruiting_status || "");
     setEducationLevel(profile?.result.user.Highest_grade || "");
     setAcademic(profile?.result.user.grade_status || "");
+    setBirthDate(profile?.result.user.birth_date.split("T")[0] || "");
   }, [profile]);
 
   useEffect(() => {
