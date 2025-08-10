@@ -6,7 +6,7 @@ import { useAuth } from "../../contexts/AuthContext";
 function Splash() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login: authLogin, setIsLoggedIn, isLoggedIn } = useAuth();
+  const { login: authLogin, setIsLoggedIn } = useAuth();
   // 폼 상태
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,10 +40,7 @@ function Splash() {
           username: response.result.name,
           email: response.result.email,
         });
-        console.log("set logged in true");
         setIsLoggedIn(true);
-        console.log("set logged in true done");
-        console.log(isLoggedIn);
         navigate("/feed"); // 메인 페이지로 이동
       }
     } catch (apiError) {

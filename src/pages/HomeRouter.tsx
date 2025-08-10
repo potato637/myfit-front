@@ -3,7 +3,6 @@ import { useAuth } from "../contexts/AuthContext";
 
 function HomeRouter() {
   const { isLoggedIn } = useAuth();
-  console.log("Home Router: ", isLoggedIn);
 
   if (isLoggedIn) {
     return <Navigate to="/feed" replace />;
