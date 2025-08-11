@@ -1,6 +1,7 @@
 import ProfileCardItem from "./ProfileCardItem";
 import { useGetCards } from "../../hooks/mypageQueries";
 import { useAuth } from "../../contexts/AuthContext";
+import ProfileAddCard from "./ProfileAddCard";
 
 function ProfileCardContainer({ serviceId }: { serviceId?: string }) {
   const { user } = useAuth();
@@ -23,17 +24,10 @@ function ProfileCardContainer({ serviceId }: { serviceId?: string }) {
           : "grid grid-cols-2 gap-3"
       }`}
     >
-      {cardsData?.length === 0 ? (
-        <p className="text-body1 text-ct-gray-200 text-center">
-          카드를 추가하여
-          <br />
-          나를 나타내보세요!
-        </p>
-      ) : (
-        cardsData?.map((card) => (
-          <ProfileCardItem key={card.id} card={card} serviceId={serviceId} />
-        ))
-      )}
+      <ProfileAddCard />
+      {cardsData?.map((card) => (
+        <ProfileCardItem key={card.id} card={card} serviceId={serviceId} />
+      ))}
     </div>
   );
 }

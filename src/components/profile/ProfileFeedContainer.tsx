@@ -1,6 +1,7 @@
 import ProfileFeedItem from "./ProfileFeedItem";
 import { useGetFeeds } from "../../hooks/mypageQueries";
 import { useAuth } from "../../contexts/AuthContext";
+import ProfileAddFeed from "./ProfileAddFeed";
 
 function ProfileFeedContainer({ serviceId }: { serviceId?: string }) {
   const { user } = useAuth();
@@ -23,21 +24,10 @@ function ProfileFeedContainer({ serviceId }: { serviceId?: string }) {
           : "grid grid-cols-3 gap-1"
       }`}
     >
-      {feedsData?.length === 0 ? (
-        <p className="text-body1 text-ct-gray-200 text-center">
-          피드를 추가하여
-          <br />
-          프로필을 꾸며보세요!
-        </p>
-      ) : (
-        feedsData?.map((feed) => (
-          <ProfileFeedItem
-            key={feed.feed_id}
-            feed={feed}
-            serviceId={serviceId}
-          />
-        ))
-      )}
+      <ProfileAddFeed />
+      {feedsData?.map((feed) => (
+        <ProfileFeedItem key={feed.feed_id} feed={feed} serviceId={serviceId} />
+      ))}
     </div>
   );
 }
