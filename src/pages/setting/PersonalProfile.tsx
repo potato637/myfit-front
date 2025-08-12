@@ -22,8 +22,8 @@ function PersonalProfile() {
   const [birthDate, setBirthDate] = useState("");
   const [employ, setEmploy] = useState("");
   const [educationLevel, setEducationLevel] = useState("");
-  const [highSector, setHighSector] = useState<string[]>([]);
-  const [lowSector, setLowSector] = useState<string[]>([]);
+  const [highSectorText, setHighSectorText] = useState("");
+  const [lowSectorText, setLowSectorText] = useState("");
   const [academic, setAcademic] = useState("");
   const [modalType, setModalType] = useState<
     "region" | "subregion" | "birth" | "academic" | "employment" | null
@@ -53,7 +53,13 @@ function PersonalProfile() {
   }, [profile]);
 
   useEffect(() => {
-    const state = location.state;
+    const state = location.state as
+      | {
+          prevData?: any;
+          high_sector?: string | string[] | null;
+          low_sector?: string | string[] | null;
+        }
+      | undefined;
     if (state?.prevData) {
       const data = state.prevData;
       setNickname(data.nickname || "");
@@ -64,13 +70,22 @@ function PersonalProfile() {
       setBirthDate(data.birthDate || "");
       setEmploy(data.employ || "");
       setAcademic(data.academic || "");
-
-      if (state.high_sector) setHighSector(state.high_sector);
-      if (state.low_sector) setLowSector(state.low_sector);
+    }
+    if (state?.high_sector !== undefined && state?.high_sector !== null) {
+      setHighSectorText(
+        Array.isArray(state.high_sector)
+          ? state.high_sector[0] ?? ""
+          : state.high_sector
+      );
+    }
+    if (state?.low_sector !== undefined && state?.low_sector !== null) {
+      setLowSectorText(
+        Array.isArray(state.low_sector)
+          ? state.low_sector.join(", ")
+          : state.low_sector
+      );
     }
   }, [location.state]);
-
-  const selectedSkillLabel = lowSector.join(", ");
 
   const isValid =
     nickname &&
@@ -97,7 +112,7 @@ function PersonalProfile() {
       high_area: region,
       low_area: subRegion,
       recruiting_status: employ,
-      low_sector: selectedSkillLabel,
+      low_sector: lowSectorText,
     });
     nav("/mypage");
   };
@@ -116,6 +131,7 @@ function PersonalProfile() {
       </div>
     );
   };
+
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
       <div className="pt-[19px] pb-[35px]">
@@ -174,7 +190,7 @@ function PersonalProfile() {
           />
           <PersonalInputField
             label="희망 직무를 선택해주세요"
-            value={selectedSkillLabel}
+            value={lowSectorText}
             placeholder="희망직무 입력"
             onClick={() =>
               nav("/mypage/setting/job-select", {
@@ -190,8 +206,8 @@ function PersonalProfile() {
                     shortIntro,
                     educationLevel,
                   },
-                  high_sector: highSector,
-                  low_sector: lowSector,
+                  high_sector: highSectorText,
+                  low_sector: lowSectorText,
                 },
               })
             }
@@ -210,7 +226,6 @@ function PersonalProfile() {
           />
         </div>
       </div>
-
       <Modal>
         {isModalOpen && modalType === "region" && (
           <RegionModal onConfirm={(val) => setRegion(val)} />
