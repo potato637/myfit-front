@@ -29,8 +29,7 @@ function BirthModal({ onConfirm }: { onConfirm: (val: string) => void }) {
 
   return (
     <div className="flex flex-col ct-center w-full h-full relative">
-      <div className="absolute w-[302px] top-[145px] left-[12px] h-[36px] bg-[#EAF6FF] z-10 pointer-events-none rounded-[6px]" />
-
+      <div className="absolute w-full top-[146px] left-0 h-[36px] bg-[#EAF6FF] z-10 pointer-events-none rounded-[6px]" />
       <span className="text-h2 text-ct-black-200 mt-[19px]">생년월일</span>
       <div className="w-full border-y border-[#A8A8A8] h-[208px] mt-[18px]">
         <Picker
