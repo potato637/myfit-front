@@ -54,47 +54,27 @@ export default function CommentModal({
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 현재 스크롤바 상태 저장
-    const hasScrollbar = document.body.scrollHeight > window.innerHeight;
-    const scrollbarWidth = hasScrollbar ? window.innerWidth - document.documentElement.clientWidth : 0;
+    // 기존 스타일 저장
+    const originalOverflow = document.body.style.overflow;
+    const originalWidth = document.body.style.width;
+    const originalPosition = document.body.style.position;
     
-    // 모든 고정 요소들에도 padding 적용
-    const fixedElements = document.querySelectorAll('[style*="position: fixed"], .fixed');
-    const originalPaddings: string[] = [];
-    
-    // body 및 고정 요소들의 원래 스타일 저장
-    const originalBodyOverflow = document.body.style.overflow;
-    const originalBodyPaddingRight = document.body.style.paddingRight;
-    
-    // 고정 요소들의 원래 padding 저장
-    fixedElements.forEach((element) => {
-      const el = element as HTMLElement;
-      originalPaddings.push(el.style.paddingRight);
-    });
-    
-    // body 스크롤 차단 및 레이아웃 시프트 방지
-    if (hasScrollbar) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-      
-      // 고정 요소들에도 같은 padding 적용
-      fixedElements.forEach((element) => {
-        const el = element as HTMLElement;
-        const currentPadding = parseInt(window.getComputedStyle(el).paddingRight) || 0;
-        el.style.paddingRight = `${currentPadding + scrollbarWidth}px`;
-      });
-    }
+    // body를 고정하고 스크롤바 공간을 없애는 대신 전체 폭을 고정
+    document.body.style.overflow = 'hidden';
+    document.body.style.width = '100%';
+    document.body.style.position = 'fixed';
+    document.body.style.top = '0';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
     
     return () => {
-      // 원래 상태로 복원
-      document.body.style.overflow = originalBodyOverflow;
-      document.body.style.paddingRight = originalBodyPaddingRight;
-      
-      // 고정 요소들도 원래 상태로 복원
-      fixedElements.forEach((element, index) => {
-        const el = element as HTMLElement;
-        el.style.paddingRight = originalPaddings[index];
-      });
+      // 원상 복구
+      document.body.style.overflow = originalOverflow;
+      document.body.style.width = originalWidth;
+      document.body.style.position = originalPosition;
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
     };
   }, []);
 
