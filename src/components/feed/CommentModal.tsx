@@ -37,7 +37,6 @@ export default function CommentModal({
   const [closing, setClosing] = useState(false);
   const [replyToCommentId, setReplyToCommentId] = useState<number | null>(null);
   const [replyToUserName, setReplyToUserName] = useState<string>("");
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   const handleRequestClose = () => setClosing(true);
 
@@ -61,22 +60,6 @@ export default function CommentModal({
     };
   }, []);
 
-  // 키보드 높이 감지 (모바일용)
-  useEffect(() => {
-    const handleResize = () => {
-      if (typeof window !== 'undefined') {
-        const vh = window.visualViewport?.height || window.innerHeight;
-        const windowHeight = window.screen.height;
-        const keyboardHeight = Math.max(0, windowHeight - vh - 100); // 100px 여유값
-        setKeyboardHeight(keyboardHeight);
-      }
-    };
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleResize);
-      return () => window.visualViewport?.removeEventListener('resize', handleResize);
-    }
-  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -144,15 +127,7 @@ export default function CommentModal({
         }}
         onClick={(e) => e.stopPropagation()} // 👈 모달 내부 클릭은 전파 방지
         onTouchMove={(e) => e.stopPropagation()} // 👈 모달 내부 터치는 허용
-        className="w-full bg-white rounded-t-[20px] flex flex-col"
-        style={{
-          height: keyboardHeight > 0 
-            ? `calc(100vh - ${keyboardHeight}px - env(safe-area-inset-top) - 20px)` 
-            : '75vh',
-          maxHeight: keyboardHeight > 0 
-            ? `calc(100vh - ${keyboardHeight}px - env(safe-area-inset-top) - 20px)` 
-            : '65vh'
-        }}
+        className="w-full h-[75vh] max-h-[65vh] bg-white rounded-t-[20px] flex flex-col"
       >
         {/* 핸들바 */}
         <div className="w-full flex justify-center py-2">
