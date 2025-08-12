@@ -4,7 +4,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import FeedTagContainer from "./FeedTagContainer";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FeedItem } from "../../apis/mypageAPI";
 import { useBottomSheet } from "../../contexts/ui/bottomSheetContext";
 import { useItemContext } from "../../contexts/ItemContext";
@@ -159,18 +159,25 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
   });
 
   const paginationRef = useRef<HTMLDivElement>(null);
-  const paginationConfig = {
-    clickable: true,
-    el: paginationRef.current || undefined,
-    bulletClass: "swiper-pagination-bullet",
-    bulletActiveClass: "swiper-pagination-bullet-active",
-    type: "bullets" as const,
-    dynamicBullets: true,
-    dynamicMainBullets: 4, // 최대 4개의 bullet만 표시
-    renderBullet: function (_: number, className: string) {
-      return '<span class="' + className + '"></span>';
-    },
-  };
+  const [paginationConfig, setPaginationConfig] = useState<any>(null);
+
+  useEffect(() => {
+    // 컴포넌트가 마운트된 후에만 pagination 설정
+    if (paginationRef.current) {
+      setPaginationConfig({
+        clickable: true,
+        el: paginationRef.current,
+        bulletClass: "swiper-pagination-bullet",
+        bulletActiveClass: "swiper-pagination-bullet-active",
+        type: "bullets" as const,
+        dynamicBullets: true,
+        dynamicMainBullets: 4,
+        renderBullet: function (_: number, className: string) {
+          return '<span class="' + className + '"></span>';
+        },
+      });
+    }
+  }, [item.images]); // item.images가 변경될 때마다 다시 설정
 
   return (
     <div className="w-full bg-ct-white rounded-[10px] p-[16px] flex flex-col gap-[10px] items-center">
@@ -195,7 +202,7 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
             spaceBetween={0}
             slidesPerView={1}
             centeredSlides={true}
-            pagination={paginationConfig}
+            pagination={paginationConfig || false}
           >
             {item.images.map((img) => (
               <SwiperSlide key={img} className="!h-auto">
