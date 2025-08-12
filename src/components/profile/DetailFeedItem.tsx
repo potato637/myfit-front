@@ -207,7 +207,10 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
               </SwiperSlide>
             ))}
           </Swiper>
-          <div ref={paginationRef} className="swiper-pagination absolute bottom-2 left-0 right-0"></div>
+          <div
+            ref={paginationRef}
+            className="swiper-pagination absolute bottom-2 left-0 right-0"
+          ></div>
         </div>
       </div>
       <div className="w-full flex justify-between items-center">
