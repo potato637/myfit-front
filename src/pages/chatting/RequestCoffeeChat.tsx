@@ -123,7 +123,7 @@ function RequestCoffeeChat() {
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
       <div className="w-full h-auto ct-center flex-col">
-        <div ref={dateRef} className="w-full">
+        <div ref={dateRef} className="w-full ct-center flex-col">
           <Calendar titleError={errors.title} />
           {errors.date && (
             <p className="mt-2 text-[12px] text-[#FF3B30] text-center">
@@ -132,7 +132,7 @@ function RequestCoffeeChat() {
           )}
         </div>
 
-        <div ref={timeRef} className="w-full my-10">
+        <div ref={timeRef} className="w-full my-10 ct-center flex-col">
           <Picker
             value={pickerValue}
             onChange={(newValue) =>
@@ -206,7 +206,7 @@ function RequestCoffeeChat() {
           )}
         </div>
 
-        <div ref={placeRef} className="w-full">
+        <div ref={placeRef} className="w-full ct-center flex-col">
           <PlacePicker />
           {errors.place && (
             <p className="mt-2 text-[12px] text-[#FF3B30] text-center">
