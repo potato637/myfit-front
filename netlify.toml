@@ -1,6 +1,6 @@
 [[redirects]]
-  from = "/api/*"
-  to = "http://3.36.59.150:3000/api/:splat"
+  from = "/api/*"
+  to = "https://myfit.my/api/:splat"
   status = 200
 
 [[redirects]]
