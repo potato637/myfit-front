@@ -67,12 +67,12 @@ export default function CommentModal({
     body.style.overflow = 'hidden';
     
     return () => {
-      // 원래 스크롤 위치로 복원
+      // 즉시 스크롤 위치 설정 후 스타일 복원
+      window.scrollTo(0, scrollY);
       body.style.position = originalPosition;
       body.style.top = originalTop;
       body.style.width = originalWidth;
       body.style.overflow = '';
-      window.scrollTo(0, scrollY);
     };
   }, []);
 
