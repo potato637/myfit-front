@@ -26,63 +26,62 @@ function Filter() {
   const [keyword, setKeyword] = useState<string[]>([]);
   const [keywordInput, setKeywordInput] = useState("");
   const [keywordError, setKeywordError] = useState("");
-  const [_, setHighSector] = useState<string[]>([]);
-  const [lowSector, setLowSector] = useState<string[]>([]);
+  const [highSectorText, setHighSectorText] = useState<string>("");
+  const [lowSectorText, setLowSectorText] = useState<string>("");
   const [debouncedKeyword, setDebouncedKeyword] = useState<string[]>([]);
 
   useEffect(() => {
     if (!location.state) return;
-
-    const { high_sector, low_sector } = location.state;
-    if (high_sector) setHighSector(high_sector);
-    if (low_sector) setLowSector(low_sector);
+    const s = location.state as {
+      high_sector?: string | string[] | null;
+      low_sector?: string | string[] | null;
+      high_sector_list?: string[];
+      low_sector_list?: string[];
+    };
+    if (s.high_sector !== undefined && s.high_sector !== null) {
+      setHighSectorText(
+        Array.isArray(s.high_sector) ? s.high_sector[0] ?? "" : s.high_sector
+      );
+    }
+    if (s.low_sector !== undefined && s.low_sector !== null) {
+      setLowSectorText(
+        Array.isArray(s.low_sector) ? s.low_sector[0] ?? "" : s.low_sector
+      );
+    } else if (Array.isArray(s.low_sector_list)) {
+      setLowSectorText(s.low_sector_list[0] ?? "");
+    }
   }, [location.state]);
 
-  // Zod schema for keyword validation
   const keywordSchema = z.object({
-    keywords: z.array(
-      z.string().max(3, "키워드는 최대 3개까지 입력 가능합니다")
-    ),
+    keywords: z
+      .array(z.string().min(1))
+      .max(3, "키워드는 최대 3개까지 입력 가능합니다"),
   });
 
-  // Debounce keyword input
   useEffect(() => {
     const timerId = setTimeout(() => {
       setDebouncedKeyword(keyword);
     }, 500);
-
-    return () => {
-      clearTimeout(timerId);
-    };
+    return () => clearTimeout(timerId);
   }, [keyword]);
 
-  // Use the count card query
   const { data: countData } = useCountCard({
     area: region,
     status: employmentStatus,
-    hope_job: lowSector[0], // Assuming we only need the first selected job
+    hope_job: lowSectorText,
     keywords: debouncedKeyword,
   });
 
-  // Update keywords when input changes
   const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setKeywordInput(value);
-
-    // Split by comma and trim whitespace
     const keywords = value
       .split(",")
       .map((k) => k.trim())
       .filter((k) => k.length > 0);
-
-    // Update keywords state regardless of validation
     setKeyword(keywords);
-
-    // Validate using zod
     const result = keywordSchema.safeParse({ keywords });
-
     if (!result.success) {
-      // Get the first error message
       const firstError =
         result.error.issues[0]?.message || "유효하지 않은 키워드입니다";
       setKeywordError(firstError);
@@ -137,7 +136,7 @@ function Filter() {
               <label className="ml-1 text-sub1 text-ct-black-200">직무</label>
               <input
                 type="text"
-                value={lowSector}
+                value={lowSectorText}
                 readOnly
                 placeholder="직무를 선택해주세요"
                 className="w-full flex text-body1 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100 cursor-pointer"
@@ -145,6 +144,8 @@ function Filter() {
                   navigate("/searching/filter/job-select", {
                     state: {
                       from: "filter",
+                      high_sector: highSectorText,
+                      low_sector: lowSectorText,
                     },
                   });
                 }}
@@ -154,14 +155,14 @@ function Filter() {
           <div
             className="mb-[30px] px-[40px] py-[10px] rounded-[100px] border-[1px] border-ct-main-blue-200 cursor-pointer"
             onClick={() => {
-              // Only navigate if there are no validation errors
               if (!keywordError) {
                 navigate("/searching/filter/result", {
                   state: {
                     keywords: keyword,
                     region,
                     employmentStatus,
-                    lowSector,
+                    lowSector: lowSectorText,
+                    lowSector_list: lowSectorText ? [lowSectorText] : [],
                     count: countData?.result?.count,
                   },
                 });
@@ -173,11 +174,10 @@ function Filter() {
             }}
           >
             <span className="text-sub1 text-ct-black-200">
-              {`${countData?.result?.count || 0}개의 카드가 검색되었습니다.`}
+              {(countData?.result?.count || 0) + "개의 카드가 검색되었습니다."}
             </span>
           </div>
         </div>
-
         <Modal>
           {isModalOpen && modalType === "region" && (
             <RegionModal onConfirm={(val) => setRegion(val)} />
