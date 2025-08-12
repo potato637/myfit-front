@@ -12,7 +12,6 @@ import RegisterAnnouncement from "../pages/recruiting/RegisterAnnouncement";
 import CompanySetting from "../pages/setting/CompanySetting";
 import AlarmSetting from "../pages/setting/AlarmSetting";
 import RegisterEmail from "../pages/onboarding/RegisterEmail";
-import RegisterMethod from "../pages/onboarding/RegisterMethod";
 import VerifiedSettingPage from "../pages/setting/VerifiedSettingPage";
 import Account from "../pages/setting/Account";
 import ResetPasssword from "../pages/setting/ResetPassword";
@@ -72,7 +71,6 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <Splash /> },
           { path: "selectmembers", element: <SelectMembers /> },
-          { path: "register-method", element: <RegisterMethod /> },
           { path: "register-email", element: <RegisterEmail /> },
           { path: "profile-register", element: <ProfileRegister /> },
           { path: "profile-card-register", element: <ProfileCardRegister /> },
