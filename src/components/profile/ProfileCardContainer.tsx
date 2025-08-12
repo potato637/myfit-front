@@ -19,13 +19,7 @@ function ProfileCardContainer({ serviceId }: { serviceId?: string }) {
   const cardsData = cards?.pages.flatMap((page) => page.result.cards);
 
   return (
-    <div
-      className={`${
-        cardsData?.length === 0
-          ? "ct-center h-[calc(100vh-450px)]"
-          : "grid grid-cols-2 gap-3"
-      }`}
-    >
+    <div className="grid grid-cols-2 gap-3">
       {location.pathname.startsWith("/mypage") && <ProfileAddCard />}
       {cardsData?.map((card) => (
         <ProfileCardItem key={card.id} card={card} serviceId={serviceId} />
