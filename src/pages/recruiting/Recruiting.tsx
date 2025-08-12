@@ -99,7 +99,7 @@ function Recruiting() {
           className="w-[70px] h-[24px] text-body1 font-Pretendard font-[500] text-ct-white bg-ct-main-blue-200 rounded-[5px]"
           onClick={() => nav("/recruiting/register")}
         >
-          공고 등록!!
+          공고 등록
         </button>
         <div
           className="flex gap-[4px] w-[105px] h-[24px] bg-ct-gray-100 rounded-[5px] ct-center"
