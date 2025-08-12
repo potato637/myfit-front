@@ -43,6 +43,23 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
+        navigateFallbackDenylist: [/^\/api/],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/.*\.amazonaws\.com\//,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "aws-sdk-cache",
+              networkTimeoutSeconds: 3,
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+        ],
+        skipWaiting: true,
+        // AWS SDK 관련 파일들을 캐시에서 제외
+        dontCacheBustURLsMatching: /\/@aws-sdk\//,
       },
 
       devOptions: {

@@ -121,7 +121,7 @@ export const useFeedMutations = ({
   };
 
   const handleCommentCreate = (commentText: string) => {
-    if (activePostId && commentText.trim()) {
+    if (activePostId && commentText.trim() && !createCommentMutation.isPending) {
       createCommentMutation.mutate({
         feedId: Number(activePostId),
         commentText: commentText.trim(),
@@ -130,7 +130,7 @@ export const useFeedMutations = ({
   };
 
   const handleReplyCreate = (commentText: string, parentCommentId: number) => {
-    if (activePostId && commentText.trim()) {
+    if (activePostId && commentText.trim() && !createReplyMutation.isPending) {
       createReplyMutation.mutate({
         feedId: Number(activePostId),
         commentText: commentText.trim(),
