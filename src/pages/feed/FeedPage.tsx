@@ -5,7 +5,7 @@ import FixedHeader from "../../components/feed/FixedHeader";
 import BottomNavContainer from "../../components/layouts/BottomNavContainer";
 import FeedCardSkeleton from "../../components/skeletons/feed/FeedCardSkeleton";
 import CommentModal from "../../components/feed/CommentModal";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import getTimeAgo from "../../utils/timeAgo";
 import { useAuth } from "../../contexts/AuthContext";
 import { useFeedInfiniteQuery } from "../../hooks/feed/useFeedInfiniteQuery";
@@ -122,14 +122,6 @@ export default function FeedPage() {
 
       <AnimatePresence>
         {activePostId && (
-          <>
-            <motion.div
-              className="fixed inset-0 bg-black/30 z-40"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setActivePostId(null)}
-            />
             <CommentModal
               postId={activePostId}
               comments={
@@ -148,7 +140,6 @@ export default function FeedPage() {
               hasNextPage={hasCommentsNextPage}
               isFetchingNextPage={isFetchingCommentsNextPage}
             />
-          </>
         )}
       </AnimatePresence>
     </BottomNavContainer>

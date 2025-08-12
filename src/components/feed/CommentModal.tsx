@@ -166,7 +166,7 @@ export default function CommentModal({
       transition={{ duration: 0.3 }}
       onClick={handleRequestClose} // 👈 배경 누르면 닫
       onTouchMove={(e) => e.preventDefault()} // 👈 iOS 터치 스크롤 차단
-      className="fixed inset-0 z-50 flex items-end justify-center"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/30"
     >
       <motion.div
         key="comment-modal"
