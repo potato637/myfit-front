@@ -184,7 +184,7 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
         )}
       </div>
       <style>{bulletStyles}</style>
-      <div className="relative pb-8">
+      <div className="w-full relative pb-8">
         <Swiper
           ref={swiperRef}
           modules={[Pagination]}
