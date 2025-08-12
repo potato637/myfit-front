@@ -54,16 +54,47 @@ export default function CommentModal({
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 스크롤바 너비 계산
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    // 현재 스크롤바 상태 저장
+    const hasScrollbar = document.body.scrollHeight > window.innerHeight;
+    const scrollbarWidth = hasScrollbar ? window.innerWidth - document.documentElement.clientWidth : 0;
+    
+    // 모든 고정 요소들에도 padding 적용
+    const fixedElements = document.querySelectorAll('[style*="position: fixed"], .fixed');
+    const originalPaddings: string[] = [];
+    
+    // body 및 고정 요소들의 원래 스타일 저장
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalBodyPaddingRight = document.body.style.paddingRight;
+    
+    // 고정 요소들의 원래 padding 저장
+    fixedElements.forEach((element) => {
+      const el = element as HTMLElement;
+      originalPaddings.push(el.style.paddingRight);
+    });
     
     // body 스크롤 차단 및 레이아웃 시프트 방지
-    document.body.style.overflow = 'hidden';
-    document.body.style.paddingRight = `${scrollbarWidth}px`;
+    if (hasScrollbar) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+      
+      // 고정 요소들에도 같은 padding 적용
+      fixedElements.forEach((element) => {
+        const el = element as HTMLElement;
+        const currentPadding = parseInt(window.getComputedStyle(el).paddingRight) || 0;
+        el.style.paddingRight = `${currentPadding + scrollbarWidth}px`;
+      });
+    }
     
     return () => {
-      document.body.style.overflow = '';
-      document.body.style.paddingRight = '';
+      // 원래 상태로 복원
+      document.body.style.overflow = originalBodyOverflow;
+      document.body.style.paddingRight = originalBodyPaddingRight;
+      
+      // 고정 요소들도 원래 상태로 복원
+      fixedElements.forEach((element, index) => {
+        const el = element as HTMLElement;
+        el.style.paddingRight = originalPaddings[index];
+      });
     };
   }, []);
 
