@@ -9,7 +9,7 @@ export default defineConfig({
     host: true,
     proxy: {
       "/api": {
-        target: "http://3.36.59.150:3000",
+        target: "https://myfit.my",
         changeOrigin: true,
         secure: false,
       },
