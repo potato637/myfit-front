@@ -16,20 +16,30 @@ export const useFeedComments = ({ activePostId }: UseFeedCommentsProps) => {
       }),
     initialPageParam: undefined as number | undefined,
     getNextPageParam: (lastPage) => {
-      const comments = lastPage.result.feeds;
-      console.log('🔄 [Pagination] getNextPageParam 체크:', {
-        commentsLength: comments.length,
-        hasMore: comments.length === 10,
-        lastCommentId: comments.length > 0 ? comments[comments.length - 1].id : null
-      });
-      
-      if (comments.length === 10) {
-        const nextPageParam = comments[comments.length - 1].id;
-        console.log('➡️ [Pagination] 다음 페이지 파라미터:', nextPageParam);
-        return nextPageParam;
+      // null/undefined 가드
+      if (!lastPage || !lastPage.result) {
+        console.log("⚠️ [Pagination] lastPage 또는 result가 없음");
+        return undefined;
       }
-      
-      console.log('🏁 [Pagination] 마지막 페이지 도달');
+
+      const pagination = lastPage.result.pagination;
+
+      console.log("🔄 [Pagination] getNextPageParam 체크:", {
+        hasMore: pagination?.hasMore,
+        nextCursor: pagination?.next_cursor,
+        commentsLength: lastPage.result.feeds?.length,
+      });
+
+      // 서버 pagination 정보 활용 (피드와 동일한 방식)
+      if (pagination?.hasMore) {
+        console.log(
+          "➡️ [Pagination] 서버 pagination 정보 사용:",
+          pagination.next_cursor
+        );
+        return pagination.next_cursor;
+      }
+
+      console.log("🏁 [Pagination] 마지막 페이지 도달");
       return undefined;
     },
     enabled: !!activePostId,

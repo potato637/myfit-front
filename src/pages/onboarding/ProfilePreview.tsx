@@ -7,7 +7,7 @@ import { useSignup } from "../../contexts/SignupContext";
 function CompanyPreview() {
   const location = useLocation();
   const { signupData } = useSignup();
-  
+
   // ProfileCardRegister에서 전달된 데이터
   const cardData = location.state?.cardData || {};
   const {
@@ -15,13 +15,13 @@ function CompanyPreview() {
     oneLineIntro = "기본 한줄 소개",
     detailedDescription = "기본 상세 설명",
     link = "",
-    keywords = []
+    keywords = [],
   } = cardData;
-  
+
   // SignupContext에서 사용자 정보 가져오기
   const userName = signupData.name || "사용자";
   const userJobTitle = signupData.highSector || keywords[0] || "키워드";
-  
+
   const TopBarContent = () => {
     return (
       <div className="flex ct-center">
@@ -38,9 +38,9 @@ function CompanyPreview() {
           {/* <-- 여기에 padding-bottom 주의 */}
           {/* ✅ 스텝 인디케이터 */}
           <div className="absolute top-[12px] right-0 flex items-center gap-[6px]">
-            <img src="/public/assets/onboarding/nonestep.svg" alt="none" />
-            <img src="/public/assets/onboarding/step2.svg" alt="현재 스텝 2" />
-            <img src="/public/assets/onboarding/nonestep.svg" alt="none" />
+            <img src="/assets/onboarding/nonestep.svg" alt="none" />
+            <img src="/assets/onboarding/step2.svg" alt="현재 스텝 2" />
+            <img src="/assets/onboarding/nonestep.svg" alt="none" />
           </div>
           {/* 카드 미리보기 */}
           <CardPreview
