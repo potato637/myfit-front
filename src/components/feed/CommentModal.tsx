@@ -134,12 +134,14 @@ export default function CommentModal({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
       onClick={handleRequestClose} // 👈 배경 누르면 닫
-      className="fixed inset-0 z-50 flex items-end justify-center"
+      className={`fixed inset-0 z-50 flex justify-center ${keyboardHeight > 0 ? 'items-start pt-8' : 'items-end'}`}
     >
       <motion.div
         key="comment-modal"
-        initial={{ y: "100%", opacity: 0 }}
-        animate={closing ? { y: "100%", opacity: 0 } : { y: 0, opacity: 1 }}
+        initial={{ y: keyboardHeight > 0 ? "-100%" : "100%", opacity: 0 }}
+        animate={closing 
+          ? { y: keyboardHeight > 0 ? "-100%" : "100%", opacity: 0 } 
+          : { y: 0, opacity: 1 }}
         transition={{
           y: { type: "spring", damping: 25, stiffness: 300, mass: 0.5 },
           opacity: { duration: 0.25, ease: "easeOut" },
