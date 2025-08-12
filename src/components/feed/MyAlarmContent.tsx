@@ -17,7 +17,7 @@ const mockAlarms: AlarmItem[] = [
     fromUser: {
       id: 101,
       name: "양승민",
-      avatarUrl: "/public/assets/feed/network1.svg",
+      avatarUrl: "/assets/feed/network1.svg",
     },
     message: "님이 네트워크 관계를 요청했어요.",
     time: "10분",
@@ -29,7 +29,7 @@ const mockAlarms: AlarmItem[] = [
     fromUser: {
       id: 102,
       name: "임호현",
-      avatarUrl: "/public/assets/feed/network1.svg",
+      avatarUrl: "/assets/feed/network1.svg",
     },
     message: "님이 네트워크 관계를 요청했어요.",
     time: "10분",
@@ -41,7 +41,7 @@ const mockAlarms: AlarmItem[] = [
     fromUser: {
       id: 102,
       name: "임호현",
-      avatarUrl: "/public/assets/feed/network1.svg",
+      avatarUrl: "/assets/feed/network1.svg",
     },
     message: "님이 회원님의 게시글을 좋아합니다.",
     time: "15분",
@@ -53,7 +53,7 @@ const mockAlarms: AlarmItem[] = [
     fromUser: {
       id: 103,
       name: "장예슬",
-      avatarUrl: "/public/assets/feed/network3.svg",
+      avatarUrl: "/assets/feed/network3.svg",
     },
     message: "님이 회원님의 게시글에 댓글을 남겼어요.",
     time: "22분",
@@ -89,7 +89,7 @@ function MyAlarmContent() {
   return unreadAlarms.length === 0 ? (
     <div className="flex flex-col items-center justify-center h-[calc(100vh-66px-89px)]">
       <img
-        src="/public/assets/feed/alarm.svg"
+        src="/assets/feed/alarm.svg"
         alt="빈 알림 이모지"
         className="mb-4"
       />
