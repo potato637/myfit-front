@@ -4,7 +4,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import FeedTagContainer from "./FeedTagContainer";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FeedItem } from "../../apis/mypageAPI";
 import { useBottomSheet } from "../../contexts/ui/bottomSheetContext";
 import { useItemContext } from "../../contexts/ItemContext";
@@ -18,9 +18,24 @@ import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import CommentModal from "../feed/CommentModal";
 
+const bulletStyles = `
+  .swiper-pagination-bullet {
+    width: 12px;
+    height: 4px;
+    border-radius: 2px;
+    background: #E5E7EB;
+    opacity: 1;
+    transition: all 0.3s ease;
+    margin: 0 2px !important;
+  }
+  .swiper-pagination-bullet-active {
+    width: 20px;
+    background: #3B82F6;
+  }
+`;
+
 function DetailFeedItem({ item }: { item: FeedItem }) {
-  const [_, setIsReady] = useState(false);
-  const paginationRef = useRef<HTMLDivElement>(null);
+  const swiperRef = useRef<any>(null);
   const { setIsBottomSheetOpen } = useBottomSheet();
   const { setItemId } = useItemContext();
   const location = useLocation();
@@ -143,9 +158,18 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
     enabled: !!item.feed_id, // activePostId가 있을 때만 실행
   });
 
-  useEffect(() => {
-    setIsReady(true);
-  }, []);
+  const paginationConfig = {
+    clickable: true,
+    el: ".swiper-pagination",
+    bulletClass: "swiper-pagination-bullet",
+    bulletActiveClass: "swiper-pagination-bullet-active",
+    type: "bullets" as const,
+    dynamicBullets: true,
+    dynamicMainBullets: 4, // 최대 4개의 bullet만 표시
+    renderBullet: function (_: number, className: string) {
+      return '<span class="' + className + '"></span>';
+    },
+  };
 
   return (
     <div className="w-full h-auto bg-ct-white rounded-[10px] p-[16px] flex flex-col gap-[10px] items-center">
@@ -159,28 +183,30 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
           />
         )}
       </div>
-      <Swiper
-        modules={[Pagination]}
-        pagination={{
-          el: paginationRef.current,
-          clickable: true,
-          dynamicBullets: true,
-          dynamicMainBullets: 4,
-        }}
-        className="mySwiper w-[343px] h-[359px]"
-      >
-        {item.images.map((img) => (
-          <SwiperSlide key={img}>
-            <img
-              className="w-[343px] h-[359px] rounded-[5px] object-cover"
-              src={img}
-              alt="활동 카드 이미지"
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-      <div className="w-full h-[10px] relative">
-        <div ref={paginationRef} className="absolute" />
+      <style>{bulletStyles}</style>
+      <div className="relative pb-8">
+        <Swiper
+          ref={swiperRef}
+          modules={[Pagination]}
+          spaceBetween={0}
+          slidesPerView={1}
+          centeredSlides={true}
+          pagination={paginationConfig}
+        >
+          {item.images.map((img) => (
+            <SwiperSlide key={img}>
+              <img
+                className="w-[343px] h-[359px] rounded-[5px] object-cover"
+                src={img}
+                alt="활동 카드 이미지"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        <div
+          className="swiper-pagination absolute bottom-2 left-0 right-0"
+          style={{ position: "absolute" }}
+        ></div>
       </div>
       <div className="w-full flex justify-between items-center">
         <div>
