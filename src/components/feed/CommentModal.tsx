@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CommentList from "../feed/CommentList";
 import { Comment } from "../../types/feed/comment";
-import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+// import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import CommentInputField, { CommentInputFieldRef } from "./CommentInputField";
 
 interface CommentModalProps {
@@ -53,10 +53,26 @@ export default function CommentModal({
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const target = modalRef.current;
-    if (target) disableBodyScroll(target);
+    // iOS에서 스크롤 위치 보존을 위한 로직
+    const scrollY = window.scrollY;
+    const body = document.body;
+    const originalPosition = body.style.position;
+    const originalTop = body.style.top;
+    const originalWidth = body.style.width;
+    
+    // iOS에서 스크롤 위치 고정
+    body.style.position = 'fixed';
+    body.style.top = `-${scrollY}px`;
+    body.style.width = '100%';
+    body.style.overflow = 'hidden';
+    
     return () => {
-      if (target) enableBodyScroll(target);
+      // 원래 스크롤 위치로 복원
+      body.style.position = originalPosition;
+      body.style.top = originalTop;
+      body.style.width = originalWidth;
+      body.style.overflow = '';
+      window.scrollTo(0, scrollY);
     };
   }, []);
 
