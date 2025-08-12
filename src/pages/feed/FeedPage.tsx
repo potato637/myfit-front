@@ -121,7 +121,6 @@ export default function FeedPage() {
       </div>
 
       <AnimatePresence>
-        <span>안녕하세요 테스트 용입니다.</span>
         {activePostId && (
           <>
             <motion.div
