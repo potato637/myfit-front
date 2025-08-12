@@ -5,6 +5,22 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { useEffect, useRef, useState } from "react";
 
+const bulletStyles = `
+  .swiper-pagination-bullet {
+    width: 12px;
+    height: 4px;
+    border-radius: 2px;
+    background: #E5E7EB;
+    opacity: 1;
+    transition: all 0.3s ease;
+    margin: 0 2px !important;
+  }
+  .swiper-pagination-bullet-active {
+    width: 20px;
+    background: #3B82F6;
+  }
+`;
+
 interface User {
   name: string;
   profileImage: string;
@@ -45,14 +61,26 @@ function FeedCard({
   onLikeClick?: () => void;
   onProfileClick?: () => void;
 }) {
+  const swiperRef = useRef<any>(null);
   const paginationRef = useRef<HTMLDivElement>(null);
-  const [isReady, setIsReady] = useState(false);
+  const [paginationConfig, setPaginationConfig] = useState<any>(null);
 
   useEffect(() => {
     if (paginationRef.current) {
-      setIsReady(true);
+      setPaginationConfig({
+        clickable: true,
+        el: paginationRef.current,
+        bulletClass: "swiper-pagination-bullet",
+        bulletActiveClass: "swiper-pagination-bullet-active",
+        type: "bullets" as const,
+        dynamicBullets: true,
+        dynamicMainBullets: 4,
+        renderBullet: function (_: number, className: string) {
+          return '<span class="' + className + '"></span>';
+        },
+      });
     }
-  }, []);
+  }, [post.images]);
 
   return (
     <div className="w-full bg-white rounded-[10px] flex flex-col gap-[12px]">
@@ -74,33 +102,33 @@ function FeedCard({
           <span className="text-sub2 text-ct-blue-gray-100">{user.job}</span>
         </div>
       </div>
-      {/* 피드 이미지 (Swiper) */}
-      {isReady && (
-        <Swiper
-          modules={[Pagination]}
-          pagination={{
-            el: paginationRef.current,
-            clickable: true,
-            dynamicBullets: true,
-          }}
-          className="w-full h-[360px]"
-        >
-          {post.images.map((img, index) => (
-            <SwiperSlide key={index}>
-              <img
-                src={img}
-                alt={`피드 이미지 ${index + 1}`}
-                className="w-full h-full object-cover rounded-lg"
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      )}
-      <div className="relative h-[20px] flex justify-center items-center">
-        <div
-          ref={paginationRef}
-          className="absolute left-1/2 -translate-x-1/2 flex justify-center w-full"
-        />
+      <div className="w-full flex flex-col items-center">
+        <style>{bulletStyles}</style>
+        <div className="w-full relative pb-8">
+          {" "}
+          <Swiper
+            ref={swiperRef}
+            modules={[Pagination]}
+            spaceBetween={0}
+            slidesPerView={1}
+            centeredSlides={true}
+            pagination={paginationConfig || false}
+          >
+            {post.images.map((img, index) => (
+              <SwiperSlide key={index} className="!h-auto">
+                <img
+                  src={img}
+                  alt={`피드 이미지 ${index + 1}`}
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+          <div
+            ref={paginationRef}
+            className="swiper-pagination absolute bottom-2 left-0 right-0"
+          ></div>
+        </div>
       </div>
       {/* 좋아요 / 댓글 */}
       <div className="flex justify-between items-center px-3">

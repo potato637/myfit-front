@@ -195,7 +195,6 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
         <style>{bulletStyles}</style>
         <div className="w-full relative pb-8">
           {" "}
-          {/* pb-8 추가로 bullet을 위한 공간 확보 */}
           <Swiper
             ref={swiperRef}
             modules={[Pagination]}
