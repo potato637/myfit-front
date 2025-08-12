@@ -82,7 +82,6 @@ function FeedCard({
             el: paginationRef.current,
             clickable: true,
             dynamicBullets: true,
-            dynamicMainBullets: 4,
           }}
           className="w-full h-[360px]"
         >
@@ -100,7 +99,7 @@ function FeedCard({
       <div className="relative h-[20px] flex justify-center items-center">
         <div
           ref={paginationRef}
-          className="absolute left-1/2 bottom-0 -translate-x-1/2"
+          className="absolute left-1/2 -translate-x-1/2 flex justify-center w-full"
         />
       </div>{" "}
       {/* 좋아요 / 댓글 */}

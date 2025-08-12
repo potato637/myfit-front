@@ -11,7 +11,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useFeedInfiniteQuery } from "../../hooks/feed/useFeedInfiniteQuery";
 import { useFeedMutations } from "../../hooks/feed/useFeedMutations";
 import { useFeedComments } from "../../hooks/feed/useFeedComments";
-import { useInfiniteScroll } from "../../hooks/common/useInfiniteScroll"; 
+import { useInfiniteScroll } from "../../hooks/common/useInfiniteScroll";
 import { FeedResponse } from "../../types/feed/feed";
 
 export default function FeedPage() {
@@ -54,7 +54,7 @@ export default function FeedPage() {
   return (
     <BottomNavContainer showBottomNav={!activePostId}>
       <FixedHeader />
-      <div className="pt-[66px] pb-[89px] px-[10px] bg-ct-white min-h-screen flex flex-col gap-6">
+      <div className="pt-[82px] pb-[89px] px-[10px] bg-ct-white min-h-screen flex flex-col gap-6">
         {isLoading
           ? Array(5)
               .fill(0)
@@ -88,9 +88,11 @@ export default function FeedPage() {
                   if (feed.user?.id) {
                     // 내가 작성한 피드라면 마이페이지로, 다른 사람 피드라면 해당 사용자 프로필로 이동
                     const isMyFeed = feed.user.id === user?.id;
-                    const targetPath = isMyFeed ? "/mypage" : `/feed/profile/${feed.user.id}`;
+                    const targetPath = isMyFeed
+                      ? "/mypage"
+                      : `/feed/profile/${feed.user.id}`;
                     console.log(
-                      `${isMyFeed ? '마이페이지' : '프로필 페이지'}로 이동:`,
+                      `${isMyFeed ? "마이페이지" : "프로필 페이지"}로 이동:`,
                       targetPath
                     );
                     navigate(targetPath);
@@ -130,13 +132,18 @@ export default function FeedPage() {
             />
             <CommentModal
               postId={activePostId}
-              comments={commentsData?.pages.flatMap(page => page.result.feeds) || []}
+              comments={
+                commentsData?.pages.flatMap((page) => page.result.feeds) || []
+              }
               onClose={() => setActivePostId(null)}
               onCommentCreate={handleCommentCreate}
               onReplyCreate={handleReplyCreate}
               onCommentDelete={handleCommentDelete}
               currentUserId={user?.id}
-              postOwnerId={allFeeds.find(feed => feed.feed_id === Number(activePostId))?.user?.id}
+              postOwnerId={
+                allFeeds.find((feed) => feed.feed_id === Number(activePostId))
+                  ?.user?.id
+              }
               fetchNextPage={fetchCommentsNextPage}
               hasNextPage={hasCommentsNextPage}
               isFetchingNextPage={isFetchingCommentsNextPage}
