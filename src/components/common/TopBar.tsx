@@ -10,7 +10,7 @@ function TopBar({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div className="w-full h-[66px] fixed top-0 left-0 right-0 ct-center bg-ct-white z-50 pt-safe">
+    <div className="w-full h-[calc(42px+env(safe-area-inset-top))] fixed top-0 left-0 right-0 ct-center bg-ct-white z-50 pt-safe">
       <img
         src="/assets/common/arrow.svg"
         alt="뒤로가기"
