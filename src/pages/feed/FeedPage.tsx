@@ -122,24 +122,24 @@ export default function FeedPage() {
 
       <AnimatePresence>
         {activePostId && (
-            <CommentModal
-              postId={activePostId}
-              comments={
-                commentsData?.pages.flatMap((page) => page.result.feeds) || []
-              }
-              onClose={() => setActivePostId(null)}
-              onCommentCreate={handleCommentCreate}
-              onReplyCreate={handleReplyCreate}
-              onCommentDelete={handleCommentDelete}
-              currentUserId={user?.id}
-              postOwnerId={
-                allFeeds.find((feed) => feed.feed_id === Number(activePostId))
-                  ?.user?.id
-              }
-              fetchNextPage={fetchCommentsNextPage}
-              hasNextPage={hasCommentsNextPage}
-              isFetchingNextPage={isFetchingCommentsNextPage}
-            />
+          <CommentModal
+            postId={activePostId}
+            comments={
+              commentsData?.pages.flatMap((page) => page.result.feeds) || []
+            }
+            onClose={() => setActivePostId(null)}
+            onCommentCreate={handleCommentCreate}
+            onReplyCreate={handleReplyCreate}
+            onCommentDelete={handleCommentDelete}
+            currentUserId={user?.id}
+            postOwnerId={
+              allFeeds.find((feed) => feed.feed_id === Number(activePostId))
+                ?.user?.id
+            }
+            fetchNextPage={fetchCommentsNextPage}
+            hasNextPage={hasCommentsNextPage}
+            isFetchingNextPage={isFetchingCommentsNextPage}
+          />
         )}
       </AnimatePresence>
     </BottomNavContainer>
