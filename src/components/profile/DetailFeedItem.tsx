@@ -172,7 +172,7 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
   };
 
   return (
-    <div className="w-full h-auto bg-ct-white rounded-[10px] p-[16px] flex flex-col gap-[10px] items-center">
+    <div className="w-full bg-ct-white rounded-[10px] p-[16px] flex flex-col gap-[10px] items-center">
       <div className="w-full h-[30px] px-[5px] py-[14px] flex items-center justify-between">
         <span className="text-ct-main-blue-100 text-body1">활동 피드</span>
         {isMine && (
@@ -183,30 +183,34 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
           />
         )}
       </div>
-      <style>{bulletStyles}</style>
-      <div className="w-full relative pb-8">
-        <Swiper
-          ref={swiperRef}
-          modules={[Pagination]}
-          spaceBetween={0}
-          slidesPerView={1}
-          centeredSlides={true}
-          pagination={paginationConfig}
-        >
-          {item.images.map((img) => (
-            <SwiperSlide key={img}>
-              <img
-                className="w-[343px] h-[359px] rounded-[5px] object-cover"
-                src={img}
-                alt="활동 카드 이미지"
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-        <div
-          className="swiper-pagination absolute bottom-2 left-0 right-0"
-          style={{ position: "absolute" }}
-        ></div>
+      <div className="w-full flex flex-col items-center">
+        <style>{bulletStyles}</style>
+        <div className="w-full relative pb-8">
+          {" "}
+          {/* pb-8 추가로 bullet을 위한 공간 확보 */}
+          <Swiper
+            ref={swiperRef}
+            modules={[Pagination]}
+            spaceBetween={0}
+            slidesPerView={1}
+            centeredSlides={true}
+            pagination={paginationConfig}
+          >
+            {item.images.map((img) => (
+              <SwiperSlide key={img} className="!h-auto">
+                <img
+                  className="w-[343px] h-[359px] rounded-[5px] object-cover"
+                  src={img}
+                  alt="활동 카드 이미지"
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+          <div
+            className="swiper-pagination absolute bottom-2 left-0 right-0"
+            style={{ position: "absolute" }}
+          ></div>
+        </div>
       </div>
       <div className="w-full flex justify-between items-center">
         <div>
