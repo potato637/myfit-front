@@ -4,7 +4,7 @@ import { useBottomSheet } from "../../contexts/ui/bottomSheetContext";
 import { useModal } from "../../contexts/ui/modalContext";
 import { useItemContext } from "../../contexts/ItemContext";
 
-function BottomSheetContent() {
+function BottomSheetContent({ type }: { type: "feed" | "card" }) {
   const navigate = useNavigate();
   const { setIsBottomSheetOpen } = useBottomSheet();
   const { setIsModalOpen } = useModal();
@@ -19,9 +19,12 @@ function BottomSheetContent() {
   return (
     <div className="w-full h-auto bg-ct-white ct-center flex-col gap-[15px]">
       <div className="w-[265px] flex flex-col items-start gap-[15px]">
-        <span className="text-h1 text-ct-black-300">피드 관리</span>
+        <span className="text-h1 text-ct-black-300">
+          {type === "feed" ? "피드 관리" : "카드 관리"}
+        </span>
         <p className="text-sub2 text-ct-gray-300">
-          프로필에 표시할 피드를 자유롭게 숨기거나 보여줄 수 있어요.
+          프로필에 표시할 {type === "feed" ? "피드" : "카드"}를 자유롭게
+          숨기거나 보여줄 수 있어요.
         </p>
       </div>
       <div
@@ -76,7 +79,7 @@ function BottomSheetContent() {
         }}
       >
         <span className="text-ct-gray-400 text-sub2 border-b-[1px] border-ct-gray-400">
-          피드 삭제
+          {type === "feed" ? "피드 삭제" : "카드 삭제"}
         </span>
       </div>
     </div>

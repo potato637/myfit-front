@@ -52,10 +52,10 @@ function FeedDetail() {
         )}
       </div>
       <BottomSheet>
-        <BottomSheetContent />
+        <BottomSheetContent type="feed" />
       </BottomSheet>
       <Modal>
-        <ModalContent />
+        <ModalContent type="feed" />
       </Modal>
     </TopBarContainer>
   );

@@ -13,6 +13,7 @@ import {
   deleteFeed,
   patchProfile,
   PatchProfileProps,
+  deleteCard,
 } from "../apis/mypageAPI";
 
 export const useGetProfile = ({ service_id }: { service_id: string }) => {
@@ -111,6 +112,20 @@ export const usePatchProfile = ({ service_id }: { service_id: string }) => {
     },
     onError: (error) => {
       console.error("Failed to update profile status:", error);
+    },
+  });
+};
+
+export const useDeleteCard = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ card_id }: { card_id: string }) => deleteCard({ card_id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cards"] });
+    },
+    onError: (error) => {
+      console.error("Failed to delete card:", error);
     },
   });
 };
