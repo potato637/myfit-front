@@ -24,37 +24,24 @@ export const formatDateWithDayAndTime = (timestamp: number | Date): string => {
 
   return `${year}.${month}.${day} (${dayOfWeek}) ${ampm} ${hours}:${minutes}`;
 };
-export const FormattedDate = (isoString: string): string => {
-  const date = new Date(isoString);
 
-  // KST로 보정 (UTC+9)
-  const kst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+const pad = (n: number) => String(n).padStart(2, "0");
 
-  const year = kst.getFullYear();
-  const month = String(kst.getMonth() + 1).padStart(2, "0");
-  const day = String(kst.getDate()).padStart(2, "0");
-  const days = ["일", "월", "화", "수", "목", "금", "토"];
-  const dayOfWeek = days[kst.getDay()];
-
-  return `${year}.${month}.${day} (${dayOfWeek})`;
+export const FormattedDate = (iso: string) => {
+  const d = new Date(iso); // ISO(Z) -> 로컬 Date
+  const y = d.getFullYear();
+  const m = pad(d.getMonth() + 1); // getMonth는 0~11, 로컬 기준
+  const day = pad(d.getDate());
+  return `${y}.${m}.${day}`;
 };
 
-export const FormattedTime = (isoString: string): string => {
-  const date = new Date(isoString);
-  const kst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
-
-  let hours = kst.getHours();
-  const minutes = String(kst.getMinutes()).padStart(2, "0");
-  const isPM = hours >= 12;
-  const ampm = isPM ? "PM" : "AM";
-
-  if (hours === 0) {
-    hours = 12;
-  } else if (hours > 12) {
-    hours -= 12;
-  }
-
-  return `${ampm} ${hours}:${minutes}`;
+export const FormattedTime = (iso: string) => {
+  const d = new Date(iso); // ISO(Z) -> 로컬 Date
+  let h = d.getHours(); // 로컬 시
+  const m = pad(d.getMinutes());
+  const ampm = h >= 12 ? "PM" : "AM";
+  h = h % 12 || 12;
+  return `${ampm} ${h}:${m}`;
 };
 function toISOString(
   timeStr: string,
