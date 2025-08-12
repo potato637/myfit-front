@@ -60,7 +60,7 @@ function InputField({
           maxLength={maxLength}
           rows={1}
           onInput={(e) => handleAutoResize(e.target as HTMLTextAreaElement)}
-          className="text-body1 font-sans placeholder:text-ct-gray-300 text-ct-black-200 w-full h-[44px] max-h-[88px] rounded-[10px] px-[26px] pt-[14px] pb-[12px] bg-ct-gray-100 resize-none overflow-y-auto"
+          className="text-sub1 font-sans placeholder:text-ct-gray-300 text-ct-black-200 w-full h-[44px] max-h-[88px] rounded-[10px] px-[26px] pt-[14px] pb-[12px] bg-ct-gray-100 resize-none overflow-y-auto"
         />
       ) : (
         <input
@@ -70,7 +70,7 @@ function InputField({
           onChange={onChange}
           onClick={onClick}
           maxLength={maxLength}
-          className="text-body1 font-sans placeholder:text-ct-gray-300 text-ct-black-200 w-full min-h-[44px] rounded-[10px] px-[26px] bg-ct-gray-100"
+          className="text-sub1 font-sans placeholder:text-ct-gray-300 text-ct-black-200 w-full min-h-[44px] rounded-[10px] px-[26px] bg-ct-gray-100"
         />
       )}
       {helperText && (

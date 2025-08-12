@@ -41,7 +41,7 @@ function PersonalInputField({
           readOnly={!!onClick}
           placeholder={placeholder}
           maxLength={maxLength}
-          className="w-full flex text-body1 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard h-[44px] max-h-[88px] rounded-[10px] px-[26px] py-[12px] bg-ct-gray-100 resize-none overflow-y-auto"
+          className="w-full flex text-sub1 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard h-[44px] max-h-[88px] rounded-[10px] px-[26px] py-[12px] bg-ct-gray-100 resize-none overflow-y-auto"
           onClick={onClick}
           onChange={onChange}
           onInput={(e) => {
@@ -57,7 +57,7 @@ function PersonalInputField({
           readOnly={!!onClick}
           placeholder={placeholder}
           maxLength={maxLength}
-          className="w-full flex text-body1 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100"
+          className="w-full flex text-sub1 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100"
           onClick={onClick}
           onChange={onChange}
         />
