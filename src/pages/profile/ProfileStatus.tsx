@@ -6,6 +6,7 @@ import {
 } from "../../hooks/mypageQueries";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const TopBarContent = ({ onSave }: { onSave: () => void }) => {
   return (
@@ -41,6 +42,7 @@ function ProfileStatus() {
       recruiting_status: isSelected,
       service_id: user?.id.toString() || "",
     });
+    toast.success("성공적으로 변경되었습니다!");
     navigate("/mypage");
   };
 
