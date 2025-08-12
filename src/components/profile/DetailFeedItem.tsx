@@ -158,9 +158,10 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
     enabled: !!item.feed_id, // activePostId가 있을 때만 실행
   });
 
+  const paginationRef = useRef<HTMLDivElement>(null);
   const paginationConfig = {
     clickable: true,
-    el: ".swiper-pagination",
+    el: paginationRef.current || undefined,
     bulletClass: "swiper-pagination-bullet",
     bulletActiveClass: "swiper-pagination-bullet-active",
     type: "bullets" as const,
@@ -206,10 +207,7 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
               </SwiperSlide>
             ))}
           </Swiper>
-          <div
-            className="swiper-pagination absolute bottom-2 left-0 right-0"
-            style={{ position: "absolute" }}
-          ></div>
+          <div ref={paginationRef} className="swiper-pagination absolute bottom-2 left-0 right-0"></div>
         </div>
       </div>
       <div className="w-full flex justify-between items-center">
