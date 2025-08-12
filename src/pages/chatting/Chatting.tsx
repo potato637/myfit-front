@@ -38,9 +38,15 @@ function Chatting() {
   const [isNearBottom, setIsNearBottom] = useState(true);
 
   const { data: partnerProfile } = usePartnerProfileQuery(numericRoomId);
-  const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
+  const { data, fetchNextPage, isFetchingNextPage, hasNextPage, refetch } =
     useChatMessageInfiniteQuery(numericRoomId);
   const { mutate: sendMessage } = useSendChatMessageMutation(numericRoomId);
+
+  useEffect(() => {
+    refetch().finally(() =>
+      requestAnimationFrame(() => scrollToBottom("auto"))
+    );
+  }, [numericRoomId]);
 
   useEffect(() => {
     setIsModalOpen(false);
@@ -137,6 +143,13 @@ function Chatting() {
       });
 
       prevPageCountRef.current = pages.length;
+    } else {
+      const allSorted = all; // 위에서 만든 all 재사용
+      const existing = new Set(messages.map((m: any) => m.id));
+      const incoming = allSorted.filter((m: any) => !existing.has(m.id));
+      if (incoming.length) {
+        prependMessages(incoming);
+      }
     }
   }, [
     data,
