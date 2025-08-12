@@ -132,7 +132,7 @@ function RequestCoffeeChat() {
           )}
         </div>
 
-        <div ref={timeRef} className="w-full my-10 ct-center flex-col">
+        <div ref={timeRef} className="w-full my-10">
           <Picker
             value={pickerValue}
             onChange={(newValue) =>
