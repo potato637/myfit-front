@@ -14,6 +14,7 @@ const CommentInputField = forwardRef<
   CommentInputFieldProps
 >(({ onSend }, ref) => {
   const [text, setText] = useState("");
+  const [isComposing, setIsComposing] = useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleSubmit = () => {
@@ -23,10 +24,18 @@ const CommentInputField = forwardRef<
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !isComposing) {
       e.preventDefault();
       handleSubmit();
     }
+  };
+
+  const handleCompositionStart = () => {
+    setIsComposing(true);
+  };
+
+  const handleCompositionEnd = () => {
+    setIsComposing(false);
   };
 
   useImperativeHandle(ref, () => ({
@@ -42,6 +51,8 @@ const CommentInputField = forwardRef<
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}
+          onCompositionStart={handleCompositionStart}
+          onCompositionEnd={handleCompositionEnd}
           className="w-full h-[54px] rounded-[1000px] border border-ct-gray-200 pl-5 pr-12 text-sub2 placeholder:text-ct-gray-300"
           placeholder="메시지를 입력하세요"
         />

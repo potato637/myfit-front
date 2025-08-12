@@ -23,6 +23,10 @@ import {
   ValidateCredentialsRequest,
   ValidateCredentialsResponse
 } from "../types/onboarding/validateCredentials";
+import {
+  VerifyUserRequest,
+  VerifyUserResponse
+} from "../types/onboarding/verifyUser";
 
 // 이메일 인증 코드 전송
 export const sendVerificationCode = async (request: SendCodeRequest): Promise<SendCodeResponse> => {
@@ -98,6 +102,19 @@ export const validateCredentials = async (request: ValidateCredentialsRequest): 
     return response.data;
   } catch (error) {
     console.error("❌ [API] 이메일/비밀번호 유효성 확인 실패:", error);
+    throw error;
+  }
+};
+
+// 사용자 검증 (이메일/비밀번호 유효성 및 중복 확인)
+export const verifyUser = async (request: VerifyUserRequest): Promise<VerifyUserResponse> => {
+  try {
+    console.log("🔵 [API] 사용자 검증 요청:", request);
+    const response = await apiClient.post<VerifyUserResponse>("/api/users/verify-user", request);
+    console.log("✅ [API] 사용자 검증 응답:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("❌ [API] 사용자 검증 실패:", error);
     throw error;
   }
 };

@@ -27,7 +27,7 @@ export default function CardPreview({
       {/* Header */}
       <div className="w-full h-[61px] flex items-center gap-[7px] bg-ct-white">
         <img
-          src="/public/assets/onboarding/profilepreview.svg"
+          src="/assets/onboarding/profilepreview.svg"
           alt="프로필 이미지"
         />
         <span className="text-sub1 text-ct-black-100">{companyName}</span>

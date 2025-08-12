@@ -106,7 +106,10 @@ function ImageUploadBox({
         />
       ) : (
         <>
-          <img src="/assets/common/pluswhite.svg" alt="사진 추가 아이콘" />
+          <img
+            src="/assets/common/pluswhite.svg"
+            alt="사진 추가 아이콘"
+          />
           <div
             className={`mt-[9.29px] text-center leading-normal ${textClassName}`}
           >

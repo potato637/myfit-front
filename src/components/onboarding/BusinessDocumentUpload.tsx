@@ -69,7 +69,7 @@ function BusinessDocumentUpload({
           <span className="text-body2 text-ct-gray-300 mb-[8px]">
             불러오기
           </span>
-          <img src="/public/assets/setting/plus.svg" alt="파일 추가" />
+          <img src="/assets/setting/plus.svg" alt="파일 추가" />
         </div>
       )}
     </div>
