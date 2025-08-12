@@ -143,6 +143,13 @@ function Chatting() {
       });
 
       prevPageCountRef.current = pages.length;
+    } else {
+      const allSorted = all; // 위에서 만든 all 재사용
+      const existing = new Set(messages.map((m: any) => m.id));
+      const incoming = allSorted.filter((m: any) => !existing.has(m.id));
+      if (incoming.length) {
+        prependMessages(incoming);
+      }
     }
   }, [
     data,
