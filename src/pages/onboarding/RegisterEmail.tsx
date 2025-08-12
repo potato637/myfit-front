@@ -9,7 +9,7 @@ import {
   registerEmailSchema,
 } from "../../validations/registerEmailSchema";
 import { useSignup } from "../../contexts/SignupContext";
-import { sendVerificationCode, validateAuthCode } from "../../apis/onboarding";
+import { sendVerificationCode, validateAuthCode, verifyUser } from "../../apis/onboarding";
 
 function RegisterEmail() {
   const navigate = useNavigate();
@@ -102,17 +102,46 @@ function RegisterEmail() {
     }
   };
 
-  const onSubmit = (data: RegisterEmailFormData) => {
-    // SignupContext에 이메일과 비밀번호 저장
-    const fullEmailAddress = `${data.email}@${data.domain}`;
-    updateEmail(fullEmailAddress);
-    updatePassword(data.password);
-    nextStep();
+  const onSubmit = async (data: RegisterEmailFormData) => {
+    try {
+      const fullEmailAddress = `${data.email}@${data.domain}`;
+      
+      // 사용자 검증 API 호출
+      console.log("🔐 사용자 검증 API 호출:", { email: fullEmailAddress, password: data.password });
+      const response = await verifyUser({
+        email: fullEmailAddress,
+        password: data.password
+      });
 
-    if (signupData.division === "personal") {
-      navigate("/onboarding/profile-register");
-    } else {
-      navigate("/onboarding/company-profile-register");
+      if (response.isSuccess) {
+        // 검증 성공 시 SignupContext에 이메일과 비밀번호 저장
+        updateEmail(fullEmailAddress);
+        updatePassword(data.password);
+        nextStep();
+
+        console.log("✅ 사용자 검증 성공, 다음 단계로 이동");
+        if (signupData.division === "personal") {
+          navigate("/onboarding/profile-register");
+        } else {
+          navigate("/onboarding/company-profile-register");
+        }
+      } else {
+        // 검증 실패 시 에러 메시지 표시
+        alert(response.message);
+      }
+    } catch (error: any) {
+      console.error("❌ 사용자 검증 실패:", error);
+      
+      // 서버 에러 응답 처리
+      if (error.response?.status === 400) {
+        alert("비밀번호가 유효하지 않습니다.");
+      } else if (error.response?.status === 409) {
+        alert("이미 회원가입된 이메일입니다.");
+      } else if (error.response?.status === 500) {
+        alert("서버에 문제가 발생하였습니다.");
+      } else {
+        alert("검증 중 오류가 발생했습니다. 다시 시도해주세요.");
+      }
     }
   };
 
