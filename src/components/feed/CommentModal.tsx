@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CommentList from "../feed/CommentList";
 import { Comment } from "../../types/feed/comment";
-// import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import CommentInputField, { CommentInputFieldRef } from "./CommentInputField";
 
 interface CommentModalProps {
@@ -54,10 +54,10 @@ export default function CommentModal({
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    
+    const target = modalRef.current;
+    if (target) disableBodyScroll(target);
     return () => {
-      document.body.style.overflow = '';
+      if (target) enableBodyScroll(target);
     };
   }, []);
 
