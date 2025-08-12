@@ -1,46 +1,79 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import { jobs } from "../../data/jobs";
 import { useLocation, useNavigate } from "react-router-dom";
 
+type From = "onboarding" | "recruit" | "filter";
+type Mode = "single" | "multi";
+
+type LocationState =
+  | {
+      from?: From;
+      prevData?: any;
+      high_sector?: string[] | string | null;
+      low_sector?: string[] | string | null;
+    }
+  | undefined;
+
 function JobPreference() {
-  const { state } = useLocation();
+  const { state } = useLocation() as { state: LocationState };
   const navigate = useNavigate();
 
   const from = state?.from;
-  const prevData = state?.prevData;
+  const mode: Mode =
+    from === "onboarding" || from === "filter" ? "single" : "multi";
 
-  const [selectedCategory, setSelectedCategory] = useState("개발/엔지니어링");
+  const initialSelectedCategory = useMemo(() => {
+    if (Array.isArray(state?.high_sector) && state?.high_sector.length > 0)
+      return state!.high_sector[0]!;
+    if (typeof state?.high_sector === "string" && state?.high_sector)
+      return state!.high_sector;
+    return "개발/엔지니어링";
+  }, [state?.high_sector]);
 
-  const [highSector, setHighSector] = useState<string[]>(
-    state?.high_sector ?? []
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    initialSelectedCategory
   );
-  const [lowSector, setLowSector] = useState<string[]>(state?.low_sector ?? []);
+
+  const [highSectorArr, setHighSectorArr] = useState<string[]>(
+    Array.isArray(state?.high_sector) ? state?.high_sector ?? [] : []
+  );
+  const [lowSectorArr, setLowSectorArr] = useState<string[]>(
+    Array.isArray(state?.low_sector) ? state?.low_sector ?? [] : []
+  );
+
+  const [highSectorOne, setHighSectorOne] = useState<string>(
+    typeof state?.high_sector === "string" ? state?.high_sector ?? "" : ""
+  );
+  const [lowSectorOne, setLowSectorOne] = useState<string>(
+    typeof state?.low_sector === "string" ? state?.low_sector ?? "" : ""
+  );
 
   const currentCategory = jobs.find((j) => j.category === selectedCategory);
 
   const toggleSkill = (category: string, skill: string) => {
-    const isSelected = lowSector.includes(skill);
-
-    if (isSelected) {
-      setLowSector((prev) => prev.filter((s) => s !== skill));
-
-      const stillHasOther = lowSector
-        .filter((s) => s !== skill)
-        .some((s) => {
-          return jobs.some(
-            (j) => j.category === category && j.skills.includes(s)
-          );
-        });
-
-      if (!stillHasOther) {
-        setHighSector((prev) => prev.filter((c) => c !== category));
+    if (mode === "multi") {
+      const picked = lowSectorArr.includes(skill);
+      if (picked) {
+        const nextLow = lowSectorArr.filter((s) => s !== skill);
+        setLowSectorArr(nextLow);
+        const stillHas = nextLow.some((s) =>
+          jobs.some((j) => j.category === category && j.skills.includes(s))
+        );
+        if (!stillHas)
+          setHighSectorArr((prev) => prev.filter((c) => c !== category));
+      } else {
+        setLowSectorArr((prev) => [...prev, skill]);
+        if (!highSectorArr.includes(category))
+          setHighSectorArr((prev) => [...prev, category]);
       }
     } else {
-      setLowSector((prev) => [...prev, skill]);
-
-      if (!highSector.includes(category)) {
-        setHighSector((prev) => [...prev, category]);
+      if (lowSectorOne === skill) {
+        setLowSectorOne("");
+        setHighSectorOne("");
+      } else {
+        setLowSectorOne(skill);
+        setHighSectorOne(category);
       }
     }
   };
@@ -55,14 +88,25 @@ function JobPreference() {
         ? "/searching/filter"
         : "/mypage/setting/profile";
 
-    navigate(dest, {
-      state: {
-        prevData: prevData,
-        high_sector: highSector,
-        low_sector: lowSector,
-      },
-      replace: true,
-    });
+    if (mode === "multi") {
+      navigate(dest, {
+        state: {
+          prevData: state?.prevData,
+          high_sector: highSectorArr,
+          low_sector: lowSectorArr,
+        },
+        replace: true,
+      });
+    } else {
+      navigate(dest, {
+        state: {
+          prevData: state?.prevData,
+          high_sector: highSectorOne || null,
+          low_sector: lowSectorOne || null,
+        },
+        replace: true,
+      });
+    }
   };
 
   const TopBarContent = () => (
@@ -76,6 +120,9 @@ function JobPreference() {
       </span>
     </div>
   );
+
+  const isChecked = (skill: string) =>
+    mode === "multi" ? lowSectorArr.includes(skill) : lowSectorOne === skill;
 
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
@@ -114,7 +161,7 @@ function JobPreference() {
                 className="w-[19px] h-[19px] rounded-full bg-ct-gray-100 ct-center"
                 onClick={() => toggleSkill(selectedCategory, skill)}
               >
-                {lowSector.includes(skill) && (
+                {isChecked(skill) && (
                   <div className="w-[13px] h-[13px] rounded-full bg-ct-main-blue-200" />
                 )}
               </button>
