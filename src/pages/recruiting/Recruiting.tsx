@@ -94,7 +94,7 @@ function Recruiting() {
         </div>
       </div>
 
-      <div className="mt-[118px] mb-[21px] flex justify-between items-center w-full max-w-[401px]">
+      <div className="mt-[90px] mb-[21px] flex justify-between items-center w-full max-w-[401px]">
         <button
           className="w-[70px] h-[24px] text-body1 font-Pretendard font-[500] text-ct-white bg-ct-main-blue-200 rounded-[5px]"
           onClick={() => nav("/recruiting/register")}
