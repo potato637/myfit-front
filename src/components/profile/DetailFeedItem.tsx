@@ -219,7 +219,7 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
       <div className="w-full">
         <p className="text-ct-black-300 text-body2">{item.feed_text}</p>
       </div>
-      <FeedTagContainer />
+      <FeedTagContainer tags={item.hashtags} />
 
       <AnimatePresence>
         {activePostId && (
