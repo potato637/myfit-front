@@ -20,8 +20,7 @@ function JobPreference() {
   const navigate = useNavigate();
 
   const from = state?.from as From;
-  const mode: Mode =
-    from === "onboarding" || from === "setting" ? "single" : "multi";
+  const mode: Mode = from === "recruit" ? "multi" : "single";
 
   const initialSelectedCategory = useMemo(() => {
     if (Array.isArray(state?.high_sector) && state?.high_sector.length > 0)
@@ -100,11 +99,15 @@ function JobPreference() {
         replace: true,
       });
     } else {
+      const highArr = highSectorOne ? [highSectorOne] : [];
+      const lowArr = lowSectorOne ? [lowSectorOne] : [];
       navigate(dest, {
         state: {
           prevData: state?.prevData,
-          high_sector: highSectorOne || null,
-          low_sector: lowSectorOne || null,
+          high_sector: highSectorOne || "",
+          low_sector: lowSectorOne || "",
+          high_sector_list: highArr,
+          low_sector_list: lowArr,
         },
         replace: true,
       });
