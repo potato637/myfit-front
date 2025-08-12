@@ -12,6 +12,7 @@ function App() {
         autoClose={2000}
         hideProgressBar
         closeOnClick={false}
+        closeButton={false}
         transition={Zoom}
       />
     </div>

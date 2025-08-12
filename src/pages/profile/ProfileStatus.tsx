@@ -42,7 +42,7 @@ function ProfileStatus() {
       recruiting_status: isSelected,
       service_id: user?.id.toString() || "",
     });
-    toast.success("저장되었습니다!");
+    toast.success("성공적으로 변경되었습니다!");
     navigate("/mypage");
   };
 
