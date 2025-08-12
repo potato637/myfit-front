@@ -55,10 +55,14 @@ function Introduction({
               {`${profile?.result.service.userArea.high_area} ${profile?.result.service.userArea.low_area}`}
             </span>
             <span className="text-body1 text-ct-sub-blue-300">
-              {profile?.result.service.low_sector}
+              {profile?.result.user.division === "personal"
+                ? profile?.result.service.low_sector
+                : profile?.result.user.team_division}
             </span>
             <span className="text-body1 text-ct-black-100 whitespace-nowrap">
-              {`${profile?.result.user.Highest_grade} ${profile?.result.user.grade_status}`}
+              {profile?.result.user.division === "personal"
+                ? `${profile?.result.user.Highest_grade} ${profile?.result.user.grade_status}`
+                : profile?.result.user.industry}
             </span>
           </div>
         </div>
