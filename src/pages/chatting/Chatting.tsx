@@ -38,9 +38,15 @@ function Chatting() {
   const [isNearBottom, setIsNearBottom] = useState(true);
 
   const { data: partnerProfile } = usePartnerProfileQuery(numericRoomId);
-  const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
+  const { data, fetchNextPage, isFetchingNextPage, hasNextPage, refetch } =
     useChatMessageInfiniteQuery(numericRoomId);
   const { mutate: sendMessage } = useSendChatMessageMutation(numericRoomId);
+
+  useEffect(() => {
+    refetch().finally(() =>
+      requestAnimationFrame(() => scrollToBottom("auto"))
+    );
+  }, [numericRoomId]);
 
   useEffect(() => {
     setIsModalOpen(false);
