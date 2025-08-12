@@ -54,7 +54,7 @@ export default function FeedPage() {
   return (
     <BottomNavContainer showBottomNav={!activePostId}>
       <FixedHeader />
-      <div className="pt-[66px] pb-[89px] px-[10px] bg-ct-white min-h-screen flex flex-col gap-6">
+      <div className="pt-[82px] pb-[89px] px-[10px] bg-ct-white min-h-screen flex flex-col gap-6">
         {isLoading
           ? Array(5)
               .fill(0)
