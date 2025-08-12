@@ -151,10 +151,10 @@ export default function CommentModal({
         className="w-full bg-white rounded-t-[20px] flex flex-col"
         style={{
           height: keyboardHeight > 0 
-            ? `calc(100vh - ${keyboardHeight}px - 60px)` 
+            ? `calc(100vh - ${keyboardHeight}px - env(safe-area-inset-top) - 20px)` 
             : '75vh',
           maxHeight: keyboardHeight > 0 
-            ? `calc(100vh - ${keyboardHeight}px - 60px)` 
+            ? `calc(100vh - ${keyboardHeight}px - env(safe-area-inset-top) - 20px)` 
             : '65vh'
         }}
       >
