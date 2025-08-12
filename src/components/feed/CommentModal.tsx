@@ -53,26 +53,11 @@ export default function CommentModal({
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // iOS에서 스크롤 위치 보존을 위한 로직
-    const scrollY = window.scrollY;
-    const body = document.body;
-    const originalPosition = body.style.position;
-    const originalTop = body.style.top;
-    const originalWidth = body.style.width;
-    
-    // iOS에서 스크롤 위치 고정
-    body.style.position = 'fixed';
-    body.style.top = `-${scrollY}px`;
-    body.style.width = '100%';
-    body.style.overflow = 'hidden';
+    // 단순히 overflow만 차단
+    document.body.style.overflow = 'hidden';
     
     return () => {
-      // 즉시 스크롤 위치 설정 후 스타일 복원
-      window.scrollTo(0, scrollY);
-      body.style.position = originalPosition;
-      body.style.top = originalTop;
-      body.style.width = originalWidth;
-      body.style.overflow = '';
+      document.body.style.overflow = '';
     };
   }, []);
 
