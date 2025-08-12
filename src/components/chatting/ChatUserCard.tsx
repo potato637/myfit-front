@@ -20,8 +20,15 @@ export interface dataprops {
 interface ChatUserDataProps {
   data: dataprops;
 }
+
 function ChatUserCard({ data }: ChatUserDataProps) {
   const nav = useNavigate();
+  function truncateText(text: string, maxLength: number) {
+    if (!text) return "";
+    return text.length > maxLength
+      ? text.slice(0, maxLength - 3) + "..."
+      : text;
+  }
   return (
     <div
       className="h-[54px] flex gap-[10px] mb-[24px]"
@@ -50,8 +57,11 @@ function ChatUserCard({ data }: ChatUserDataProps) {
           }`}
         >
           {data.last_message.type === "COFFEECHAT"
-            ? `${data.last_message.sender_name} ${data.last_message.message}`
-            : data.last_message.message}
+            ? `${data.last_message.sender_name} ${truncateText(
+                data.last_message.message,
+                30
+              )}`
+            : truncateText(data.last_message.message, 64)}
         </span>
       </div>
     </div>
