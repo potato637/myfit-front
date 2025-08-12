@@ -54,27 +54,10 @@ export default function CommentModal({
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 기존 스타일 저장
-    const originalOverflow = document.body.style.overflow;
-    const originalWidth = document.body.style.width;
-    const originalPosition = document.body.style.position;
-    
-    // body를 고정하고 스크롤바 공간을 없애는 대신 전체 폭을 고정
     document.body.style.overflow = 'hidden';
-    document.body.style.width = '100%';
-    document.body.style.position = 'fixed';
-    document.body.style.top = '0';
-    document.body.style.left = '0';
-    document.body.style.right = '0';
     
     return () => {
-      // 원상 복구
-      document.body.style.overflow = originalOverflow;
-      document.body.style.width = originalWidth;
-      document.body.style.position = originalPosition;
-      document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
+      document.body.style.overflow = '';
     };
   }, []);
 
