@@ -1,4 +1,5 @@
 import apiInstance from "../apiClient";
+import { divisionType } from "./chatting";
 
 export interface CoffeeChatRequest {
   coffeechat_id?: number;
@@ -75,6 +76,7 @@ export interface CoffeeChatListResponse {
           age: number;
           job: string;
           profile_img: string;
+          division: divisionType;
         };
         scheduled_at: string;
         place: string;

@@ -30,8 +30,13 @@ function Calendar({ titleError = false }: { titleError?: boolean }) {
           onChange={(e) => setSelectedTitle(e.target.value)}
           aria-invalid={titleError}
         />
+        {titleError && (
+          <p className="text-[12px] ml-2 text-[#FF3B30]">
+            필수 입력 사항입니다
+          </p>
+        )}
       </div>
-
+      <div></div>
       <div className="w-full h-auto ct-center gap-2 mb-[50px]">
         <img
           src="/assets/chatting/chevronLeft.svg"
