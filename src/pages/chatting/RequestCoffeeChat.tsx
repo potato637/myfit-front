@@ -122,17 +122,21 @@ function RequestCoffeeChat() {
 
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
-      <div className="w-full h-auto ct-center flex-col">
+      <div
+        className={`w-full h-auto ct-center flex-col ${
+          errors.date ? "outline outline-1 outline-[#FF3B30]" : ""
+        }`}
+      >
         <div ref={dateRef} className="w-full ct-center flex-col">
           <Calendar titleError={errors.title} />
-          {errors.date && (
-            <p className="mt-2 text-[12px] text-[#FF3B30] text-center">
-              필수 입력 사항입니다
-            </p>
-          )}
         </div>
 
-        <div ref={timeRef} className="w-full my-10">
+        <div
+          ref={timeRef}
+          className={`w-full my-10 ${
+            errors.time ? "outline outline-1 outline-[#FF3B30]" : ""
+          }`}
+        >
           <Picker
             value={pickerValue}
             onChange={(newValue) =>
@@ -199,20 +203,15 @@ function RequestCoffeeChat() {
               <span>분</span>
             </div>
           </Picker>
-          {errors.time && (
-            <p className="mt-2 text-[12px] text-[#FF3B30] text-center">
-              필수 입력 사항입니다
-            </p>
-          )}
         </div>
 
-        <div ref={placeRef} className="w-full ct-center flex-col">
+        <div
+          ref={placeRef}
+          className={`w-full ct-center flex-col ${
+            errors.place ? "outline outline-1 outline-[#FF3B30]" : ""
+          }`}
+        >
           <PlacePicker />
-          {errors.place && (
-            <p className="mt-2 text-[12px] text-[#FF3B30] text-center">
-              필수 입력 사항입니다
-            </p>
-          )}
         </div>
 
         <button
