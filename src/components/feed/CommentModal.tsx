@@ -112,7 +112,9 @@ export default function CommentModal({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
       onClick={handleRequestClose} // 👈 배경 누르면 닫
+      onTouchStart={(e) => e.preventDefault()} // 👈 터치 시작부터 차단
       onTouchMove={(e) => e.preventDefault()} // 👈 iOS 터치 스크롤 차단
+      onTouchEnd={(e) => e.preventDefault()} // 👈 터치 끝까지 차단
       className="fixed inset-0 z-50 flex items-end justify-center bg-black/30"
     >
       <motion.div
@@ -127,7 +129,9 @@ export default function CommentModal({
           if (closing) onClose();
         }}
         onClick={(e) => e.stopPropagation()} // 👈 모달 내부 클릭은 전파 방지
-        onTouchMove={(e) => e.stopPropagation()} // 👈 모달 내부 터치는 허용
+        onTouchStart={(e) => e.stopPropagation()} // 👈 모달 내부 터치 시작 허용
+        onTouchMove={(e) => e.stopPropagation()} // 👈 모달 내부 터치 무브 허용
+        onTouchEnd={(e) => e.stopPropagation()} // 👈 모달 내부 터치 끝 허용
         className="w-full h-[75vh] max-h-[65vh] bg-white rounded-t-[20px] flex flex-col"
       >
         {/* 핸들바 */}
