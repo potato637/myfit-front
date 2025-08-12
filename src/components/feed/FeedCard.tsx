@@ -101,7 +101,7 @@ function FeedCard({
           ref={paginationRef}
           className="absolute left-1/2 -translate-x-1/2 flex justify-center w-full"
         />
-      </div>{" "}
+      </div>
       {/* 좋아요 / 댓글 */}
       <div className="flex justify-between items-center px-3">
         <span className="text-body2 text-ct-gray-300">{post.timeAgo}</span>
