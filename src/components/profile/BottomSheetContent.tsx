@@ -58,14 +58,14 @@ function BottomSheetContent() {
         />
         <span className="text-sub2 text-ct-black-200 ml-[14px]">숨기기</span>
       </div>
-      <div className="w-full flex justify-between">
-        <div 
-          className="bg-ct-light-blue-100 w-[152px] h-[46px] rounded-[10px] ct-center cursor-pointer hover:bg-ct-light-blue-200 transition-colors"
+      <div className="w-full flex justify-between gap-[15px]">
+        <div
+          className="bg-ct-light-blue-100 flex-1 h-[46px] rounded-[10px] ct-center cursor-pointer hover:bg-ct-light-blue-200 transition-colors"
           onClick={handleEdit}
         >
           <span className="text-sub2 text-ct-sub-blue-300">수정하기</span>
         </div>
-        <div className="bg-ct-main-blue-100 w-[152px] h-[46px] rounded-[10px] ct-center">
+        <div className="bg-ct-main-blue-100 flex-1 h-[46px] rounded-[10px] ct-center">
           <span className="text-sub2 text-ct-white">저장하기</span>
         </div>
       </div>
