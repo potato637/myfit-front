@@ -54,7 +54,7 @@ function ChattingList() {
           </span>
         </div>
       ) : (
-        <div className="flex-1 flex-col w-full mt-[26px] pl-[20px]">
+        <div className="flex-1 flex-col w-full mt-[26px] px-[20px]">
           {data?.pages.map((page) =>
             page.result.chatting_rooms.map((room) => (
               <ChatUserCard key={room.chatting_room_id} data={room} />
