@@ -10,8 +10,11 @@ import { useNavigate } from "react-router-dom";
 const TopBarContent = ({ onSave }: { onSave: () => void }) => {
   return (
     <div className="relative w-full ct-center">
-      <span className="text-ct-black-100 text-h1">나의 상태</span>
-      <div className="absolute right-[22px]" onClick={onSave}>
+      <span className="text-h2 text-ct-black-100">나의 상태</span>
+      <div
+        className="absolute right-[22px] text-sub2 text-ct-black-200"
+        onClick={onSave}
+      >
         <span>완료</span>
       </div>
     </div>
