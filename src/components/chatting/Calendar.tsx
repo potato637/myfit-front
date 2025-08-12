@@ -3,7 +3,7 @@ import { getCalendarData } from "../../utils/date";
 import Month from "./Month";
 import { useCoffeeChat } from "../../contexts/coffeeChatContext";
 
-function Calendar() {
+function Calendar({ titleError = false }: { titleError?: boolean }) {
   const { selectedTitle, setSelectedTitle } = useCoffeeChat();
   const [selectedMonth, setSelectedMonth] = useState<number>(0);
   const calendarData = getCalendarData();
@@ -22,12 +22,19 @@ function Calendar() {
       <div className="w-full flex flex-col gap-[10px] mb-[57px]">
         <span className="text-sub1 text-ct-black-100">커피챗 제목</span>
         <input
-          className="w-full h-[40px] bg-ct-gray-100 rounded-[10px] px-[14px] py-[12px] placeholder-ct-gray-200 placeholder:text-body1"
+          className={`w-full h-[40px] bg-ct-gray-100 rounded-[10px] px-[14px] py-[12px] placeholder-ct-gray-200 placeholder:text-body1 ${
+            titleError ? "outline outline-1 outline-[#FF3B30]" : ""
+          }`}
           placeholder="자유롭게 작성해보세요!"
           value={selectedTitle}
           onChange={(e) => setSelectedTitle(e.target.value)}
+          aria-invalid={titleError}
         />
+        {titleError && (
+          <p className="text-[12px] text-[#FF3B30]">필수 입력 사항입니다</p>
+        )}
       </div>
+
       <div className="w-full h-auto ct-center gap-2 mb-[50px]">
         <img
           src="/assets/chatting/chevronLeft.svg"
@@ -47,6 +54,7 @@ function Calendar() {
           onClick={handleChevronRight}
         />
       </div>
+
       <Month data={calendarData.get(monthArray[selectedMonth]) || []} />
     </div>
   );
