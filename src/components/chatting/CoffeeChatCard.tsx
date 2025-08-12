@@ -3,6 +3,7 @@ import { useModal } from "../../contexts/ui/modalContext";
 import Modal from "../ui/Modal";
 import CancelModal from "./Modal/CancelModal";
 import { useCoffeeChatModal } from "../../contexts/CoffeeChatModalContext";
+import { divisionType } from "../../apis/chatting/chatting";
 
 export interface CoffeeChatData {
   coffeechat_id: number;
@@ -12,6 +13,7 @@ export interface CoffeeChatData {
     age: number;
     job: string;
     profile_img: string;
+    division: divisionType;
   };
   scheduled_at: string; // e.g., "2025-05-21T15:30:00Z"
   place: string;
@@ -68,7 +70,8 @@ function CoffeeChatCard({ data }: CoffeeChatCardProps) {
           </span>
           <span className="flex gap-[4px]">
             <span className="text-[16px] font-[700] text-ct-black-300">
-              {data.opponent.name} / {data.opponent.age}
+              {data.opponent.name}
+              {data.opponent.division === "personal" && `/${data.opponent.age}`}
             </span>
             <span className="text-[16px] font-[400] text-ct-black-300">
               {data.opponent.job}
