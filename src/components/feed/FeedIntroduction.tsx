@@ -44,7 +44,7 @@ function FeedIntroduction() {
             </span>
           </div>
         </div>
-        <div className="w-[80px] h-full flex flex-col justify-between">
+        <div className="w-[90px] h-full flex flex-col justify-between">
           <div className="w-full h-[29px] rounded-[3px] ct-center bg-ct-main-blue-200">
             <span className="text-ct-white text-body1">
               {profile?.result.service.recruiting_status}
