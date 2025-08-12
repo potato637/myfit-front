@@ -16,8 +16,21 @@ export interface ActivityCardRequest {
 
 /** 성공 응답 */
 export interface ActivityCardSuccessResponse {
+  /** 성공 여부 */
+  isSuccess: boolean;
+  /** 상태 코드 */
+  code: number;
   /** 처리 결과 메시지 */
-  message: string; // ex) "이력/활동 카드 등록이 완료되었습니다."
+  message: string; // ex) "첫 이력/활동 카드 등록 및 로그인 성공"
+  /** 응답 결과 데이터 */
+  result: {
+    /** 카드 ID */
+    card_id: number;
+    /** 처리 메시지 */
+    message: string; // ex) "이력/활동 카드 등록 성공"
+    /** 서비스 사용자 ID */
+    service_id: number;
+  };
 }
 
 /** 에러 응답 */

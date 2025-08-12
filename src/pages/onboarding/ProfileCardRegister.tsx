@@ -87,11 +87,9 @@ function ProfileCardRegister() {
 
       const response = await createActivityCard(cardRequest);
 
-      if (response.message) {
+      if (response.isSuccess) {
         console.log("✅ [ProfileCardRegister] 카드 등록 성공:", response);
-        navigate("/onboarding", {
-          state: { message: "카드 등록이 완료되었습니다! 로그인해주세요." },
-        });
+        navigate("/feed");
       } else {
         throw new Error("카드 등록 실패");
       }
@@ -120,8 +118,8 @@ function ProfileCardRegister() {
         {/* ✅ 스텝 인디케이터 */}
         <div className="absolute top-[8px] right-0 flex items-center gap-[6px]">
           {/* 스텝 아이콘 */}
-          <img src="/public/assets/onboarding/nonestep.svg" alt="none" />
-          <img src="/public/assets/onboarding/step2.svg" alt="현재 스텝 2" />
+          <img src="/assets/onboarding/nonestep.svg" alt="none" />
+          <img src="/assets/onboarding/step2.svg" alt="현재 스텝 2" />
         </div>
         <div className="flex flex-col mt-[25px] mb-[31px]">
           {/* 안내 텍스트 */}

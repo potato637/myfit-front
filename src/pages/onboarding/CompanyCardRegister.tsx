@@ -47,26 +47,29 @@ function CompanyCardRegister() {
 
       // 필수 데이터 검증
       if (!signupData.serviceId) {
-        console.error("❌ [CompanyCardRegister] service_id가 없습니다:", signupData);
+        console.error(
+          "❌ [CompanyCardRegister] service_id가 없습니다:",
+          signupData
+        );
         alert("회원가입 정보가 없습니다. 다시 로그인해주세요.");
         return;
       }
-      
+
       if (!oneLineIntro.trim() || !detailedDescription.trim()) {
         alert("한줄 소개와 상세 설명을 모두 입력해주세요.");
         return;
       }
-      
+
       if (keywords.length === 0) {
         alert("키워드를 최소 1개 이상 선택해주세요.");
         return;
       }
-      
+
       if (!cardImageUrl) {
         alert("카드 이미지를 업로드해주세요.");
         return;
       }
-      
+
       // 이력/활동 카드 등록 API 호출
       const cardRequest: ActivityCardRequest = {
         service_id: signupData.serviceId!, // 위에서 null 체크 완료
@@ -74,15 +77,15 @@ function CompanyCardRegister() {
         card_one_line_profile: oneLineIntro.trim(),
         detailed_profile: detailedDescription.trim(),
         link: link.trim(),
-        keyword_text: keywords
+        keyword_text: keywords,
       };
 
       console.log("🎯 [CompanyCardRegister] 카드 등록 요청:", cardRequest);
       console.log("🔍 [CompanyCardRegister] SignupData 상태:", signupData);
-      
+
       const response = await createActivityCard(cardRequest);
 
-      if (response.message) {
+      if (response.isSuccess) {
         console.log("✅ [CompanyCardRegister] 카드 등록 성공:", response);
         navigate("/onboarding/company-verification");
       } else {
@@ -90,7 +93,7 @@ function CompanyCardRegister() {
       }
     } catch (error: any) {
       console.error("❌ [CompanyCardRegister] 카드 등록 실패:", error);
-      
+
       // 구체적인 에러 메시지 표시
       if (error.response?.status === 400) {
         alert("입력 정보를 다시 확인해주세요.");
@@ -113,8 +116,8 @@ function CompanyCardRegister() {
         {/* ✅ 스텝 인디케이터 */}
         <div className="absolute top-[8px] right-0 flex items-center gap-[6px]">
           {/* 스텝 아이콘 */}
-          <img src="/public/assets/onboarding/nonestep.svg" alt="none" />
-          <img src="/public/assets/onboarding/step2.svg" alt="현재 스텝 2" />
+          <img src="/assets/onboarding/nonestep.svg" alt="none" />
+          <img src="/assets/onboarding/step2.svg" alt="현재 스텝 2" />
         </div>
         <div className="flex flex-col mt-[25px] mb-[31px]">
           {/* 안내 텍스트 */}

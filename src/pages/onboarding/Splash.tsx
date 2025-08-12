@@ -6,7 +6,7 @@ import { useAuth } from "../../contexts/AuthContext";
 function Splash() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login: authLogin, setIsLoggedIn } = useAuth();
+  const { login: authLogin } = useAuth();
   // 폼 상태
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,7 +40,6 @@ function Splash() {
           username: response.result.name,
           email: response.result.email,
         });
-        setIsLoggedIn(true);
         navigate("/feed"); // 메인 페이지로 이동
       }
     } catch (apiError) {
@@ -146,31 +145,6 @@ function Splash() {
           <button onClick={() => navigate("/onboarding/selectmembers")}>
             회원가입
           </button>
-        </div>
-
-        {/* 소셜 로그인 구분선 */}
-        <div className="flex items-center w-full mb-[18px]">
-          <div className="flex-grow h-px bg-ct-gray-200" />
-          <p className="px-[12px] text-ct-gray-200 text-body2 whitespace-nowrap">
-            소셜 계정으로 로그인
-          </p>
-          <div className="flex-grow h-px bg-ct-gray-200" />
-        </div>
-
-        {/* 소셜 로그인 아이콘 */}
-        <div className="flex gap-[19px]">
-          {[
-            { alt: "카카오 로그인", src: "flash_kakao_logo.svg" },
-            { alt: "구글 로그인", src: "flash_google_logo.svg" },
-            { alt: "네이버 로그인", src: "flash_naver_logo.svg" },
-          ].map(({ alt, src }) => (
-            <img
-              key={alt}
-              src={`/assets/onboarding/${src}`}
-              alt={alt}
-              className="w-[54px] h-[54px] rounded-full"
-            />
-          ))}
         </div>
       </div>
     </div>
