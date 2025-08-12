@@ -1,9 +1,9 @@
-import { useMemo, useState } from "react";
+import { useState, useMemo } from "react";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import { jobs } from "../../data/jobs";
 import { useLocation, useNavigate } from "react-router-dom";
 
-type From = "onboarding" | "recruit" | "filter";
+type From = "onboarding" | "recruit" | "filter" | "setting" | undefined;
 type Mode = "single" | "multi";
 
 type LocationState =
@@ -19,15 +19,15 @@ function JobPreference() {
   const { state } = useLocation() as { state: LocationState };
   const navigate = useNavigate();
 
-  const from = state?.from;
+  const from = state?.from as From;
   const mode: Mode =
-    from === "onboarding" || from === "filter" ? "single" : "multi";
+    from === "onboarding" || from === "setting" ? "single" : "multi";
 
   const initialSelectedCategory = useMemo(() => {
     if (Array.isArray(state?.high_sector) && state?.high_sector.length > 0)
-      return state!.high_sector[0]!;
+      return state!.high_sector[0] as string;
     if (typeof state?.high_sector === "string" && state?.high_sector)
-      return state!.high_sector;
+      return state!.high_sector as string;
     return "개발/엔지니어링";
   }, [state?.high_sector]);
 
@@ -86,6 +86,8 @@ function JobPreference() {
         ? "/recruiting/register"
         : from === "filter"
         ? "/searching/filter"
+        : from === "setting"
+        ? "/mypage/setting/profile"
         : "/mypage/setting/profile";
 
     if (mode === "multi") {
