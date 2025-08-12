@@ -250,3 +250,24 @@ export const patchProfile = async (
     throw error;
   }
 };
+
+export interface DeleteCardResponse extends BaseResponse {
+  result: {
+    deleted_card_id: number;
+  };
+}
+export const deleteCard = async ({
+  card_id,
+}: {
+  card_id: string;
+}): Promise<DeleteCardResponse> => {
+  try {
+    const { data } = await apiClient.delete<DeleteCardResponse>(
+      `/api/cards/${card_id}`
+    );
+    return data;
+  } catch (error) {
+    console.error("deleteCard error:", error);
+    throw error;
+  }
+};
