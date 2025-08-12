@@ -134,6 +134,7 @@ export default function CommentModal({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
       onClick={handleRequestClose} // 👈 배경 누르면 닫
+      onTouchMove={(e) => e.preventDefault()} // 👈 iOS 터치 스크롤 차단
       className="fixed inset-0 z-50 flex items-end justify-center"
     >
       <motion.div
@@ -148,6 +149,7 @@ export default function CommentModal({
           if (closing) onClose();
         }}
         onClick={(e) => e.stopPropagation()} // 👈 모달 내부 클릭은 전파 방지
+        onTouchMove={(e) => e.stopPropagation()} // 👈 모달 내부 터치는 허용
         className="w-full bg-white rounded-t-[20px] flex flex-col"
         style={{
           height: keyboardHeight > 0 
