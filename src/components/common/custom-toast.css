@@ -1,3 +1,19 @@
-.custom-toast-success {
-  border: 1px solid green;
+/* Toast container */
+.Toastify__toast-container {
+  width: 70%; /* Narrower width */
+  left: 50%;
+  bottom: 80px;
+  transform: translateX(-50%); /* Center horizontally */
+  padding: 0px; /* Remove default padding */
+}
+
+/* Toast content */
+.Toastify__toast {
+  min-height: auto;
+  padding: 15px; /* Reduced padding */
+  margin: 0 auto; /* Center the toast */
+  width: 100%;
+  max-width: 100%;
+  border-radius: 60px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }

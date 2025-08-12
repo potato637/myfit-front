@@ -7,8 +7,6 @@ import {
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import "../../components/common/custom-toast.css";
-import CustomToast from "../../components/common/CustomToast";
 
 const TopBarContent = ({ onSave }: { onSave: () => void }) => {
   return (
@@ -44,9 +42,7 @@ function ProfileStatus() {
       recruiting_status: isSelected,
       service_id: user?.id.toString() || "",
     });
-    toast(<CustomToast message="저장되었습니다!" />, {
-      className: "custom-toast-success",
-    });
+    toast.success("저장되었습니다!");
     navigate("/mypage");
   };
 
