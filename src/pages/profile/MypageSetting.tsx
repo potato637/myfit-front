@@ -23,16 +23,25 @@ function MypageSetting() {
       TopBarContent={<span className="text-h2 text-ct-black-100">설정</span>}
     >
       <BottomNavContainer>
-        <div className="w-full h-full mt-[80px]">
-          <div className="px-[26px] py-[12px]" onClick={handleProfileClick}>
+        <div className="w-full h-full mt-[21px]">
+          <div
+            className="w-full h-[47.97px] text-left pl-[32px] flex items-center"
+            onClick={handleProfileClick}
+          >
             <span className="text-sub2 text-ct-black-200">프로필 관리</span>
           </div>
           <hr />
-          <div className="px-[26px] py-[12px]" onClick={handleAccountClick}>
+          <div
+            className="w-full h-[47.97px] text-left pl-[32px] flex items-center"
+            onClick={handleAccountClick}
+          >
             <span className="text-sub2 text-ct-black-200">계정</span>
           </div>
           <hr />
-          <div className="px-[26px] py-[12px]" onClick={handleAlarmClick}>
+          <div
+            className="w-full h-[47.97px] text-left pl-[32px] flex items-center"
+            onClick={handleAlarmClick}
+          >
             <span className="text-sub2 text-ct-black-200">알림설정</span>
           </div>
         </div>
