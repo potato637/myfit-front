@@ -32,6 +32,10 @@ export interface CommentsResponse {
   message: string;
   result: {
     feeds: Comment[]; // comments 대신 feeds
+    pagination: {
+      hasMore: boolean;
+      next_cursor: number;
+    };
   };
 }
 

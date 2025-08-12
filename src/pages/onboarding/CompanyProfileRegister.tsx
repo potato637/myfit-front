@@ -106,9 +106,9 @@ function CompanyProfileRegister() {
         {/* ✅ 스텝 인디케이터 */}
         <div className="absolute top-[8px] right-0 flex items-center gap-[6px]">
           {/* 스텝 아이콘 */}
-          <img src="/public/assets/onboarding/step1.svg" alt="현재 스텝 1" />
-          <img src="/public/assets/onboarding/nonestep.svg" alt="none" />
-          <img src="/public/assets/onboarding/nonestep.svg" alt="none" />
+          <img src="/assets/onboarding/step1.svg" alt="현재 스텝 1" />
+          <img src="/assets/onboarding/nonestep.svg" alt="none" />
+          <img src="/assets/onboarding/nonestep.svg" alt="none" />
         </div>
         <InputField
           label="회사/팀 이름"
