@@ -33,7 +33,7 @@ function PostFeed() {
   // 피드 작성 mutation
   const createFeedMutation = useMutation({
     mutationFn: createFeed,
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("게시글이 작성되었습니다!");
       // 피드 목록 새로고침
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
