@@ -1,6 +1,7 @@
 export interface VerifyUserRequest {
   email: string;
   password: string;
+  authCode: string;
 }
 
 export interface VerifyUserResponse {

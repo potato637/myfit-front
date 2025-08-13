@@ -104,14 +104,21 @@ function RegisterEmail() {
   };
 
   const onSubmit = async (data: RegisterEmailFormData) => {
+    // 인증번호가 검증되지 않았으면 에러 표시
+    if (!codeVerified) {
+      toast.error("인증번호를 먼저 확인해주세요.");
+      return;
+    }
+
     try {
       const fullEmailAddress = `${data.email}@${data.domain}`;
       
       // 사용자 검증 API 호출
-      console.log("🔐 사용자 검증 API 호출:", { email: fullEmailAddress, password: data.password });
+      console.log("🔐 사용자 검증 API 호출:", { email: fullEmailAddress, password: data.password, authCode: data.authCode });
       const response = await verifyUser({
         email: fullEmailAddress,
-        password: data.password
+        password: data.password,
+        authCode: data.authCode
       });
 
       if (response.isSuccess) {
@@ -302,7 +309,7 @@ function RegisterEmail() {
             type="submit"
             text="다음 단계로 이동"
             onClick={() => {}}
-            disabled={!isValid || isSubmitting}
+            disabled={!isValid || isSubmitting || !codeVerified}
           />
         </div>
       </form>
