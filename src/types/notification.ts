@@ -8,7 +8,7 @@ export interface Notification {
   notification_id: number;
   receiver_id: number;
   sender_id: number;
-  type: "FEED" | "COMMENT" | "LIKE" | "FOLLOW"; // 필요에 따라 추가 가능
+  type: "FEED" | "NETWORK";
   feed_id?: number; // FEED 타입일 때만 존재
   message: string;
   is_read: boolean;

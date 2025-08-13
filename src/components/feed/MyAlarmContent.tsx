@@ -1,9 +1,11 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useNotifications, useMarkAllAsReadMutation } from "../../hooks/useNotifications";
 import type { Notification } from "../../types/notification";
 import getTimeAgo from "../../utils/timeAgo";
 
 function MyAlarmContent() {
+  const navigate = useNavigate();
   const { data: notificationsData, isLoading } = useNotifications();
   const markAllAsReadMutation = useMarkAllAsReadMutation();
 
@@ -23,13 +25,13 @@ function MyAlarmContent() {
     // 클릭 시 해당 타입에 따라 페이지 이동 로직
     switch (notification.type) {
       case "NETWORK":
-        console.log("프로필 페이지로 이동", notification.sender.service_id);
+        // 네트워크 관련 알림 - 해당 유저의 프로필 페이지로 이동
+        navigate(`/feed/profile/${notification.sender.service_id}`);
         break;
       case "FEED":
-      case "COMMENT":
-      case "LIKE":
+        // 피드 관련 알림 (좋아요, 댓글 등) - 해당 피드로 이동
         if (notification.feed_id) {
-          console.log("해당 게시글로 이동", notification.feed_id);
+          navigate(`/feed?feedId=${notification.feed_id}`);
         }
         break;
     }
