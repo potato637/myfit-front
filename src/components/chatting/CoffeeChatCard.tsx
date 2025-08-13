@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../contexts/ui/modalContext";
-import Modal from "../ui/Modal";
 import CancelModal from "./Modal/CancelModal";
 import { useCoffeeChatModal } from "../../contexts/CoffeeChatModalContext";
 import { divisionType } from "../../apis/chatting/chatting";
@@ -24,7 +23,7 @@ interface CoffeeChatCardProps {
 }
 
 function CoffeeChatCard({ data }: CoffeeChatCardProps) {
-  const { setIsModalOpen } = useModal();
+  const { openModal } = useModal();
   const { setEditMode } = useCoffeeChatModal();
   const nav = useNavigate();
 
@@ -88,7 +87,14 @@ function CoffeeChatCard({ data }: CoffeeChatCardProps) {
       <div className="flex gap-[4.75px] justify-end mr-[12px] mt-[13px]">
         <button
           className="w-[121px] h-[26px] rounded-[4.81px] bg-ct-gray-100 text-[15px] font-[400] text-ct-black-300"
-          onClick={() => setIsModalOpen(true)}
+          onClick={() =>
+            openModal(
+              <CancelModal
+                coffeechat_id={data.coffeechat_id}
+                roomId={data.chatting_room_id}
+              />
+            )
+          }
         >
           취소
         </button>
@@ -102,12 +108,6 @@ function CoffeeChatCard({ data }: CoffeeChatCardProps) {
           재요청
         </button>
       </div>
-      <Modal>
-        <CancelModal
-          coffeechat_id={data.coffeechat_id}
-          roomId={data.chatting_room_id}
-        />
-      </Modal>
     </div>
   );
 }

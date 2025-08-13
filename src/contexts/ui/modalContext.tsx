@@ -34,17 +34,8 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ModalContext.Provider value={{ openModal, closeModal }}>
       {children}
-      <div
-        className="fixed inset-0 w-full h-full bg-ct-black-100/50 z-[9999] flex justify-center items-center overflow-y-auto"
-        onClick={handleOutsideClick}
-      >
-        <div
-          ref={modalRef}
-          className="w-[333px] my-8 bg-ct-white rounded-[30px]"
-        >
-          {content}
-        </div>
-      </div>
+
+      {content}
     </ModalContext.Provider>
   );
 };

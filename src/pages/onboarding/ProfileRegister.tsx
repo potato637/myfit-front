@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import AcademicStatusModal from "../../components/onboarding/AcademicStatusModal";
 import PersonalInputField from "../../components/setting/PersonalInputField";
-import Modal from "../../components/ui/Modal";
 import { useModal } from "../../contexts/ui/modalContext";
 import EmploymentStatusModal from "../../components/onboarding/EmploymentStatusModal";
 import BirthModal from "../../components/onboarding/BirthModal";
@@ -33,7 +32,7 @@ type JobState =
   | undefined;
 
 function ProfileRegister() {
-  const { isModalOpen, setIsModalOpen } = useModal();
+  const { openModal } = useModal();
   const { signupData, updateProfileInfo, nextStep } = useSignup();
 
   const [nickname, setNickname] = useState(signupData.name || "");
@@ -59,9 +58,6 @@ function ProfileRegister() {
   const [lowSectorError, setLowSectorError] = useState("");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [modalType, setModalType] = useState<
-    "region" | "subregion" | "birth" | "academic" | "employment" | null
-  >(null);
 
   const nicknameRef = useRef<HTMLDivElement>(null);
   const birthRef = useRef<HTMLDivElement>(null);
@@ -71,13 +67,6 @@ function ProfileRegister() {
   const lowSectorRef = useRef<HTMLDivElement>(null);
   const educationRef = useRef<HTMLDivElement>(null);
   const academicRef = useRef<HTMLDivElement>(null);
-
-  const openModal = (
-    type: "region" | "subregion" | "birth" | "academic" | "employment"
-  ) => {
-    setModalType(type);
-    setIsModalOpen(true);
-  };
 
   const nav = useNavigate();
   const location = useLocation();
@@ -177,7 +166,16 @@ function ProfileRegister() {
               label="나이"
               value={birthDate}
               placeholder="생년월일 입력"
-              onClick={() => openModal("birth")}
+              onClick={() =>
+                openModal(
+                  <BirthModal
+                    onConfirm={(val) => {
+                      setBirthDate(val);
+                      if (val) setBirthError("");
+                    }}
+                  />
+                )
+              }
               error={birthError}
             />
           </div>
@@ -187,7 +185,16 @@ function ProfileRegister() {
               label="주 활동 지역"
               value={region}
               placeholder="주 활동지역 입력"
-              onClick={() => openModal("region")}
+              onClick={() =>
+                openModal(
+                  <RegionModal
+                    onConfirm={(val) => {
+                      setRegion(val);
+                      if (val) setRegionError("");
+                    }}
+                  />
+                )
+              }
               error={regionError}
             />
           </div>
@@ -202,7 +209,15 @@ function ProfileRegister() {
                   setSubRegionError("먼저 주 활동 지역을 선택해주세요.");
                 } else {
                   setSubRegionError("");
-                  openModal("subregion");
+                  openModal(
+                    <SubRegionModal
+                      value={region}
+                      onConfirm={(val) => {
+                        setSubRegion(val);
+                        if (val) setSubRegionError("");
+                      }}
+                    />
+                  );
                 }
               }}
               error={subRegionError}
@@ -214,7 +229,16 @@ function ProfileRegister() {
               label="현재 구인/구직 상태를 알려주세요!"
               value={employ}
               placeholder="구인/구직 상태 입력"
-              onClick={() => openModal("employment")}
+              onClick={() =>
+                openModal(
+                  <EmploymentStatusModal
+                    onConfirm={(val) => {
+                      setEmploy(val);
+                      if (val) setEmployError("");
+                    }}
+                  />
+                )
+              }
               error={employError}
             />
           </div>
@@ -273,7 +297,16 @@ function ProfileRegister() {
               label="재학/졸업 상태를 입력해주세요"
               value={academic}
               placeholder="재학/졸업 상태 입력"
-              onClick={() => openModal("academic")}
+              onClick={() =>
+                openModal(
+                  <AcademicStatusModal
+                    onConfirm={(val) => {
+                      setAcademic(val);
+                      if (val) setAcademicError("");
+                    }}
+                  />
+                )
+              }
               error={academicError}
             />
           </div>
@@ -390,50 +423,6 @@ function ProfileRegister() {
           />
         </div>
       </div>
-
-      <Modal>
-        {isModalOpen && modalType === "region" && (
-          <RegionModal
-            onConfirm={(val) => {
-              setRegion(val);
-              if (val) setRegionError("");
-            }}
-          />
-        )}
-        {isModalOpen && modalType === "subregion" && (
-          <SubRegionModal
-            value={region}
-            onConfirm={(val) => {
-              setSubRegion(val);
-              if (val) setSubRegionError("");
-            }}
-          />
-        )}
-        {isModalOpen && modalType === "birth" && (
-          <BirthModal
-            onConfirm={(val) => {
-              setBirthDate(val);
-              if (val) setBirthError("");
-            }}
-          />
-        )}
-        {isModalOpen && modalType === "academic" && (
-          <AcademicStatusModal
-            onConfirm={(val) => {
-              setAcademic(val);
-              if (val) setAcademicError("");
-            }}
-          />
-        )}
-        {isModalOpen && modalType === "employment" && (
-          <EmploymentStatusModal
-            onConfirm={(val) => {
-              setEmploy(val);
-              if (val) setEmployError("");
-            }}
-          />
-        )}
-      </Modal>
     </TopBarContainer>
   );
 }

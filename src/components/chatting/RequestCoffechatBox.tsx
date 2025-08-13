@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useChatting } from "../../contexts/ChattingContext";
 import { useModal } from "../../contexts/ui/modalContext";
 import { useGetCoffeeChatDetailQuery } from "../../hooks/chatting/coffeechat";
-import Modal from "../ui/Modal";
 import AcceptModal from "./Modal/AcceptModal";
 import EditPendingModal from "./Modal/EditPendingModal";
 import PendingModal from "./Modal/PendingModal";
@@ -25,7 +24,7 @@ function RequestCoffeeChatBox({
   coffeechat_id,
   status,
 }: RequestCoffeeChatProps) {
-  const { setIsModalOpen } = useModal();
+  const { openModal } = useModal();
   const { roomId } = useChatting();
   const { user } = useAuth();
   const { refetch } = useGetCoffeeChatDetailQuery(roomId!, coffeechat_id, {
@@ -53,7 +52,7 @@ function RequestCoffeeChatBox({
       setModalComponent(<EditPendingModal data={ChatDetail} />);
     }
 
-    setIsModalOpen(true);
+    openModal(modalComponent);
   };
 
   return (
@@ -70,8 +69,6 @@ function RequestCoffeeChatBox({
           onClick={handleClick}
         />
       )}
-
-      <Modal>{modalComponent}</Modal>
     </div>
   );
 }

@@ -2,7 +2,6 @@ import Calendar from "../../components/chatting/Calendar";
 import PlacePicker from "../../components/chatting/PlacePicker";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import { useModal } from "../../contexts/ui/modalContext";
-import Modal from "../../components/ui/Modal";
 import RequestModal from "../../components/chatting/Modal/RequestModal";
 import EditConfirmedModal from "../../components/chatting/Modal/EditConfirmedModal";
 import { useCoffeeChatModal } from "../../contexts/CoffeeChatModalContext";
@@ -16,8 +15,8 @@ const TopBarContent = () => {
 };
 
 function RequestCoffeeChat() {
-  const { setIsModalOpen } = useModal();
-  const { editMode, modalType, setModalType } = useCoffeeChatModal();
+  const { openModal } = useModal();
+  const { editMode } = useCoffeeChatModal();
   const {
     selectedDate,
     selectedTime,
@@ -114,8 +113,16 @@ function RequestCoffeeChat() {
       return;
     }
 
-    setModalType(editMode ? "editConfirm" : "request");
-    setIsModalOpen(true);
+    if (editMode && coffeechatId) {
+      openModal(
+        <EditConfirmedModal
+          roomId={Number(chattingRoomId)}
+          coffeechatId={coffeechatId}
+        />
+      );
+    } else {
+      openModal(<RequestModal roomId={Number(chattingRoomId)} />);
+    }
   };
 
   const label = editMode ? "수정하기" : "요청하기";
@@ -217,18 +224,6 @@ function RequestCoffeeChat() {
           {label}
         </button>
       </div>
-
-      <Modal>
-        {modalType === "request" && (
-          <RequestModal roomId={Number(chattingRoomId)} />
-        )}
-        {modalType === "editConfirm" && coffeechatId && (
-          <EditConfirmedModal
-            roomId={Number(chattingRoomId)}
-            coffeechatId={coffeechatId}
-          />
-        )}
-      </Modal>
     </TopBarContainer>
   );
 }
