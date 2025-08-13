@@ -25,7 +25,7 @@ function CompanyInputField({
         onChange={(e) => onChange?.(e.target.value)}
         value={value}
         placeholder={placeholder}
-        className="text-[15px] font-[400] placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[41px] w-[349px] rounded-[10px] pl-[26px] bg-ct-gray-100"
+        className="text-[15px] font-[400] scrollbar-hide resize-none placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[41px] w-[349px] rounded-[10px] pl-[26px] bg-ct-gray-100"
         onClick={onClick}
       />
       <div className="flex gap-[5px] ml-[12px]">
