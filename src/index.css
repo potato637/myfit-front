@@ -23,6 +23,10 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+body.modal-open {
+  overflow: hidden;
+}
+
 *,
 *::before,
 *::after {
