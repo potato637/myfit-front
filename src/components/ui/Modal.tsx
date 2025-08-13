@@ -18,12 +18,22 @@ function Modal({ children }: { children: React.ReactNode }) {
 
   return (
     <div
-      className="fixed left-0 right-0 bottom-0 top-0 bg-ct-black-100/50 z-[9999] ct-center"
+      className="fixed top-0 left-0 right-0 bottom-0 w-full h-full bg-ct-black-100/50 z-[9999] flex justify-center items-center overflow-y-auto"
       onClick={handleOutsideClick}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: '100vw',
+        height: '100vh',
+        overflow: 'auto'
+      }}
     >
       <div
         ref={modalRef}
-        className="w-[333px] h-[auto] ct-center bg-ct-white rounded-[30px]"
+        className="w-[333px] my-8 bg-ct-white rounded-[30px]"
       >
         {children}
       </div>
