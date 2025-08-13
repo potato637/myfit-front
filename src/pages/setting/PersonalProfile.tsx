@@ -28,12 +28,14 @@ function PersonalProfile() {
   const [modalType, setModalType] = useState<
     "region" | "subregion" | "birth" | "academic" | "employment" | null
   >(null);
+
   const openModal = (
     type: "region" | "subregion" | "birth" | "academic" | "employment"
   ) => {
     setModalType(type);
     setIsModalOpen(true);
   };
+
   const nav = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
@@ -49,17 +51,23 @@ function PersonalProfile() {
     setEmploy(profile?.result.service.recruiting_status || "");
     setEducationLevel(profile?.result.user.Highest_grade || "");
     setAcademic(profile?.result.user.grade_status || "");
-    setBirthDate(profile?.result.user.birth_date.split("T")[0] || "");
+    setBirthDate(
+      profile?.result.user.birth_date
+        ? profile.result.user.birth_date.split("T")[0]
+        : ""
+    );
+    setLowSectorText(profile?.result.service.low_sector || "");
   }, [profile]);
 
   useEffect(() => {
     const state = location.state as
       | {
           prevData?: any;
-          high_sector?: string | string[] | null;
-          low_sector?: string | string[] | null;
+          high_sector?: string | null;
+          low_sector?: string | null;
         }
       | undefined;
+
     if (state?.prevData) {
       const data = state.prevData;
       setNickname(data.nickname || "");
@@ -71,19 +79,12 @@ function PersonalProfile() {
       setEmploy(data.employ || "");
       setAcademic(data.academic || "");
     }
+
     if (state?.high_sector !== undefined && state?.high_sector !== null) {
-      setHighSectorText(
-        Array.isArray(state.high_sector)
-          ? state.high_sector[0] ?? ""
-          : state.high_sector
-      );
+      setHighSectorText(state.high_sector || "");
     }
     if (state?.low_sector !== undefined && state?.low_sector !== null) {
-      setLowSectorText(
-        Array.isArray(state.low_sector)
-          ? state.low_sector.join(", ")
-          : state.low_sector
-      );
+      setLowSectorText(state.low_sector || "");
     }
   }, [location.state]);
 
