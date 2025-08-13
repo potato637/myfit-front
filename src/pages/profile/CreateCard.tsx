@@ -17,7 +17,7 @@ function CreateCard() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 폼 데이터 상태
-  const [cardImageUrl, setCardImageUrl] = useState<string>(""); // S3 업로드된 이미지 URL
+  const [cardImageUrl, setCardImageUrl] = useState<string>("");
   const [oneLineIntro, setOneLineIntro] = useState("");
   const [detailedDescription, setDetailedDescription] = useState("");
   const [link, setLink] = useState("");
@@ -87,7 +87,9 @@ function CreateCard() {
       const response = await createActivityCard(cardRequest);
       console.log("Card created successfully:", response);
       // Invalidate the cards query to refetch the updated list
-      await queryClient.invalidateQueries({ queryKey: ["cards", user?.id?.toString()] });
+      await queryClient.invalidateQueries({
+        queryKey: ["cards", user?.id?.toString()],
+      });
       navigate("/mypage");
     } catch (error: any) {
       console.error("❌ [CompanyCardRegister] 카드 등록 실패:", error);
