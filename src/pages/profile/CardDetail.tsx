@@ -9,7 +9,7 @@ import BottomSheetContent from "../../components/profile/BottomSheetContent";
 import ModalContent from "../../components/profile/ModalContent";
 import { useAuth } from "../../contexts/AuthContext";
 import { useGetCards } from "../../hooks/mypageQueries";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useEffect, useRef } from "react";
 
 const TopBarContent = () => {
@@ -34,28 +34,28 @@ function CardDetail() {
   });
 
   const cardsData = card?.pages.flatMap((page) => page.result.cards);
-  const cardsRef = useRef<{[key: string]: HTMLDivElement | null}>({});
+  const cardsRef = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   // Scroll to the card with the ID from the URL hash
   useEffect(() => {
     if (!cardsData || cardsData.length === 0) return;
 
     // Get the ID from the URL hash (removing the # if present)
-    const cardId = window.location.hash.replace('#', '');
+    const cardId = window.location.hash.replace("#", "");
     if (!cardId) return;
 
     // Find the card with the matching ID
-    const targetCard = cardsData.find(card => card.id === cardId);
+    const targetCard = cardsData.find((card) => card.id === cardId);
     if (!targetCard) return;
 
     // Scroll to the card
     const cardElement = cardsRef.current[cardId];
     if (cardElement) {
-      cardElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      
+      cardElement.scrollIntoView({ behavior: "smooth", block: "start" });
+
       // Update the URL to remove the hash after scrolling
       const newUrl = window.location.pathname + window.location.search;
-      window.history.replaceState({}, '', newUrl);
+      window.history.replaceState({}, "", newUrl);
     }
   }, [cardsData]);
 
@@ -80,8 +80,8 @@ function CardDetail() {
           <>
             <DetailIntroduction />
             {cardsData?.map((card) => (
-              <div 
-                key={card.id} 
+              <div
+                key={card.id}
                 ref={(el) => setCardRef(el, card.id)}
                 id={`card-${card.id}`}
               >
