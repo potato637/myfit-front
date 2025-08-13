@@ -18,7 +18,7 @@ function Modal({ children }: { children: React.ReactNode }) {
 
   return (
     <div
-      className="fixed inset-0 bg-ct-black-100/50 z-[9999] ct-center"
+      className="fixed left-0 right-0 bottom-0 top-0 bg-ct-black-100/50 z-[9999] ct-center"
       onClick={handleOutsideClick}
     >
       <div
