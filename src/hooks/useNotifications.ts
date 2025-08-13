@@ -36,6 +36,8 @@ export const useInfiniteNotifications = () => {
  * 미확인 알림 개수 조회
  */
 export const useUnreadNotifications = () => {
+  console.log("🪝 useUnreadNotifications 훅 호출됨");
+  
   return useQuery({
     queryKey: ["notifications", "unread"],
     queryFn: getUnreadNotifications,

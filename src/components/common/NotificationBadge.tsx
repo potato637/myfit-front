@@ -10,7 +10,11 @@ interface NotificationBadgeProps {
  * 미확인 알림이 있을 때 빨간 점 또는 개수를 표시
  */
 function NotificationBadge({ children, className = "" }: NotificationBadgeProps) {
+  console.log("🎯 NotificationBadge 컴포넌트 렌더링됨");
+  
   const { data, isLoading, isError } = useUnreadNotifications();
+  
+  console.log("📊 useUnreadNotifications 상태:", { data, isLoading, isError });
 
   const hasUnread = data?.isSuccess && data.result.has_unread;
   const unreadCount = data?.isSuccess ? data.result.unread_count : 0;

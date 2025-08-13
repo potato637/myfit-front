@@ -9,8 +9,16 @@ import { NotificationApiResponse, UnreadNotificationApiResponse } from "../types
 export const getNotifications = async (cursor?: number): Promise<NotificationApiResponse> => {
   const params = cursor ? { cursor: cursor.toString() } : {};
   
-  const response = await apiInstance.get("/notifications", { params });
-  return response.data;
+  console.log("🔍 알림 목록 조회 API 호출:", { cursor, params });
+  
+  try {
+    const response = await apiInstance.get("/notifications", { params });
+    console.log("✅ 알림 목록 조회 성공:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("❌ 알림 목록 조회 실패:", error);
+    throw error;
+  }
 };
 
 /**
@@ -18,8 +26,21 @@ export const getNotifications = async (cursor?: number): Promise<NotificationApi
  * @returns 미확인 알림 존재 여부와 개수
  */
 export const getUnreadNotifications = async (): Promise<UnreadNotificationApiResponse> => {
-  const response = await apiInstance.get("/notifications/unread");
-  return response.data;
+  console.log("🔍 미확인 알림 개수 조회 API 호출");
+  
+  try {
+    const response = await apiInstance.get("/notifications/unread");
+    console.log("✅ 미확인 알림 개수 조회 성공:", response.data);
+    console.log("📡 응답 상태:", response.status);
+    console.log("📋 응답 헤더:", response.headers);
+    return response.data;
+  } catch (error: any) {
+    console.error("❌ 미확인 알림 개수 조회 실패:", error);
+    console.error("📡 에러 상태:", error.response?.status);
+    console.error("📋 에러 응답:", error.response?.data);
+    console.error("🔐 요청 헤더:", error.config?.headers);
+    throw error;
+  }
 };
 
 /**
