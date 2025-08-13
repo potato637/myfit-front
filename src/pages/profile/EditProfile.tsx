@@ -5,7 +5,6 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import * as config from "../../config/aws";
 import { useUpdateProfileImage } from "../../hooks/mypageQueries";
-import ProfileImgUploader from "../../components/profile/ProfileImgUploader";
 
 function EditProfile({
   imageUrl,
@@ -80,7 +79,7 @@ function EditProfile({
         await updateProfileImage({ profile_img: imageUrl });
       }
       setEditProfile(false);
-      window.location.reload(); // 페이지 새로고침으로 변경사항 반영
+      window.location.reload();
     } catch (error) {
       console.error("프로필 업데이트 실패:", error);
     } finally {
@@ -136,7 +135,9 @@ function EditProfile({
               src="/assets/profile/profileImgChange.svg"
               alt="프로필 이미지 수정"
             />
-            <span className="text-sub1 text-ct-white">수정</span>
+            <span className="text-sub1 text-ct-white">
+              {isUploading ? "저장 중..." : "수정"}
+            </span>
           </div>
         </div>
       </div>
