@@ -110,7 +110,7 @@ function InputField({
       {error ? (
         <p
           id={`${label}-error`}
-          className="mt-[6px] text-body2 text-ct-red-100 ml-[3px]"
+          className="mt-[6px] text-body2 text-ct-red-100 ml-[13px]"
         >
           {error}
         </p>
