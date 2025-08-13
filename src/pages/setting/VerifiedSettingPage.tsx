@@ -40,7 +40,7 @@ function VerifiedSettingPage() {
         </span>
         <div className="flex items-center">
           <VerifiedUploadBox
-            className="mt-[21px] w-[334px] h-[107px] rounded-[10px] bg-[#D9D9D9]"
+            className="mt-[21px] w-[334px] min-h-[107px] rounded-[10px] bg-[#D9D9D9]"
             textClassName="text-body2 text-[#797979] font-Pretendard"
             onUploadSuccess={(url) => setFileUrl(url)}
           />
