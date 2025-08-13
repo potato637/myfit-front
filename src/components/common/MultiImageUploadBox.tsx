@@ -3,6 +3,7 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import { awsBucketName, awsIdentityPoolId, awsRegion } from "../../config/aws";
+import { toast } from "react-toastify";
 
 interface MultiImageUploadBoxProps {
   className?: string;
@@ -67,7 +68,7 @@ function MultiImageUploadBox({
   // 파일 처리 함수
   const handleFiles = async (files: FileList) => {
     if (images.length >= maxImages) {
-      alert(`최대 ${maxImages}개의 이미지만 업로드할 수 있습니다.`);
+      toast.error(`최대 ${maxImages}개의 이미지만 업로드할 수 있습니다.`);
       return;
     }
 
@@ -76,7 +77,7 @@ function MultiImageUploadBox({
     const filesToProcess = fileArray.slice(0, availableSlots);
 
     if (fileArray.length > availableSlots) {
-      alert(`${availableSlots}개의 이미지만 추가됩니다.`);
+      toast.error(`${availableSlots}개의 이미지만 추가됩니다.`);
     }
 
     setIsUploading(true);
@@ -99,7 +100,7 @@ function MultiImageUploadBox({
       onImagesChange([...images, ...uploadedUrls]);
     } catch (error: any) {
       console.error("이미지 업로드 실패:", error);
-      alert(error.message || "이미지 업로드에 실패했습니다.");
+      toast.error(error.message || "이미지 업로드에 실패했습니다.");
     } finally {
       setIsUploading(false);
     }

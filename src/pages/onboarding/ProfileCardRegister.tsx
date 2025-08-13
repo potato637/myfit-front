@@ -7,6 +7,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { createActivityCard } from "../../apis/onboarding";
 import { ActivityCardRequest } from "../../types/common/activityCard";
 import { useSignup } from "../../contexts/SignupContext";
+import { toast } from "react-toastify";
 
 function ProfileCardRegister() {
   const navigate = useNavigate();
@@ -52,23 +53,23 @@ function ProfileCardRegister() {
           "❌ [ProfileCardRegister] service_id가 없습니다:",
           signupData
         );
-        alert("회원가입 정보가 없습니다. 다시 로그인해주세요.");
+        toast.error("회원가입 정보가 없습니다. 다시 로그인해주세요.");
         return;
       }
 
       if (!oneLineIntro.trim() || !detailedDescription.trim()) {
-        alert("한줄 소개와 상세 설명을 모두 입력해주세요.");
+        toast.error("한줄 소개와 상세 설명을 모두 입력해주세요.");
         return;
       }
 
       if (keywords.length === 0) {
-        alert("키워드를 최소 1개 이상 선택해주세요.");
+        toast.error("키워드를 최소 1개 이상 선택해주세요.");
         return;
       }
 
       // 이미지 URL 처리
       if (!cardImageUrl) {
-        alert("카드 이미지를 업로드해주세요.");
+        toast.error("카드 이미지를 업로드해주세요.");
         return;
       }
 
@@ -88,7 +89,6 @@ function ProfileCardRegister() {
       const response = await createActivityCard(cardRequest);
 
       if (response.isSuccess) {
-        console.log("✅ [ProfileCardRegister] 카드 등록 성공:", response);
         navigate("/feed");
       } else {
         throw new Error("카드 등록 실패");
@@ -98,15 +98,15 @@ function ProfileCardRegister() {
 
       // 구체적인 에러 메시지 표시
       if (error.response?.status === 400) {
-        alert("입력 정보를 다시 확인해주세요.");
+        toast.error("입력 정보를 다시 확인해주세요.");
       } else if (error.response?.status === 401) {
-        alert("로그인이 필요합니다. 다시 로그인해주세요.");
+        toast.error("로그인이 필요합니다. 다시 로그인해주세요.");
         navigate("/onboarding/");
         return;
       } else if (error.response?.status === 500) {
-        alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        toast.error("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
       } else {
-        alert("카드 등록에 실패했습니다. 다시 시도해주세요.");
+        toast.error("카드 등록에 실패했습니다. 다시 시도해주세요.");
       }
     } finally {
       setIsSubmitting(false);
@@ -133,7 +133,6 @@ function ProfileCardRegister() {
             initialPreview={cardImageUrl} // 복원된 이미지 전달
             onUploadSuccess={(url) => {
               setCardImageUrl(url); // S3 업로드된 URL 저장
-              console.log("✅ 카드 이미지 업로드 성공:", url);
             }}
             S3Folder="cards/profile" // 개인 카드 이미지용 폴더
           />

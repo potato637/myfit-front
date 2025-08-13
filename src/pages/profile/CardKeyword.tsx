@@ -10,7 +10,7 @@ function CardKeyword() {
   const location = useLocation();
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   const [activeCategory, setActiveCategory] = useState<
-    "프로그래밍" | "디자인" | "데이터 분석" | "마케팅"
+    "프로그래밍" | "디자인" | "데이터 분석" | "마케팅" | "제품&서비스" | "협업&조직문화" | "성과" | "창업&리더십" | "콘텐츠" | "프로젝트" | "외부경험&대외활동" | "자격&교육"
   >("프로그래밍");
 
   // ProfileCardRegister에서 전달된 기존 키워드 로드

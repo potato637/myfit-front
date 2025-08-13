@@ -10,6 +10,7 @@ import {
 } from "../../validations/registerEmailSchema";
 import { useSignup } from "../../contexts/SignupContext";
 import { sendVerificationCode, validateAuthCode, verifyUser } from "../../apis/onboarding";
+import { toast } from "react-toastify";
 
 function RegisterEmail() {
   const navigate = useNavigate();
@@ -119,7 +120,6 @@ function RegisterEmail() {
         updatePassword(data.password);
         nextStep();
 
-        console.log("✅ 사용자 검증 성공, 다음 단계로 이동");
         if (signupData.division === "personal") {
           navigate("/onboarding/profile-register");
         } else {
@@ -127,20 +127,20 @@ function RegisterEmail() {
         }
       } else {
         // 검증 실패 시 에러 메시지 표시
-        alert(response.message);
+        toast.error(response.message);
       }
     } catch (error: any) {
       console.error("❌ 사용자 검증 실패:", error);
       
       // 서버 에러 응답 처리
       if (error.response?.status === 400) {
-        alert("비밀번호가 유효하지 않습니다.");
+        toast.error("비밀번호가 유효하지 않습니다.");
       } else if (error.response?.status === 409) {
-        alert("이미 회원가입된 이메일입니다.");
+        toast.error("이미 회원가입된 이메일입니다.");
       } else if (error.response?.status === 500) {
-        alert("서버에 문제가 발생하였습니다.");
+        toast.error("서버에 문제가 발생하였습니다.");
       } else {
-        alert("검증 중 오류가 발생했습니다. 다시 시도해주세요.");
+        toast.error("검증 중 오류가 발생했습니다. 다시 시도해주세요.");
       }
     }
   };

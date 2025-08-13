@@ -1,4 +1,4 @@
-type CategoryType = "프로그래밍" | "디자인" | "데이터 분석" | "마케팅";
+type CategoryType = "프로그래밍" | "디자인" | "데이터 분석" | "마케팅" | "제품&서비스" | "협업&조직문화" | "성과" | "창업&리더십" | "콘텐츠" | "프로젝트" | "외부경험&대외활동" | "자격&교육";
 
 interface KeywordCategoryTabsProps {
   activeCategory: CategoryType;
@@ -14,26 +14,32 @@ function KeywordCategoryTabs({
     "디자인",
     "데이터 분석",
     "마케팅",
+    "제품&서비스",
+    "협업&조직문화",
+    "성과",
+    "창업&리더십",
+    "콘텐츠",
+    "프로젝트",
+    "외부경험&대외활동",
+    "자격&교육",
   ];
 
   return (
     <div className="border-b border-ct-gray-200 pb-2">
-      <div className="flex justify-center">
-        <div className="flex gap-[34px] w-fit">
-          {categories.map((category) => (
-            <button
-              key={category}
-              className={`${
-                activeCategory === category
-                  ? "text-sub1 text-ct-black-200"
-                  : "text-sub2 text-ct-gray-300"
-              }`}
-              onClick={() => onSelectCategory(category)}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
+      <div className="flex px-4 overflow-x-scroll whitespace-nowrap scrollbar-hide">
+        {categories.map((category) => (
+          <button
+            key={category}
+            className={`flex-shrink-0 px-[17px] ${
+              activeCategory === category
+                ? "text-sub1 text-ct-black-200"
+                : "text-sub2 text-ct-gray-300"
+            }`}
+            onClick={() => onSelectCategory(category)}
+          >
+            {category}
+          </button>
+        ))}
       </div>
     </div>
   );
