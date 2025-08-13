@@ -77,24 +77,21 @@ export const countCard = async ({
           area,
           status,
           hope_job,
-          ...(keywords && { keywords }), // Only include keywords if it exists
+          ...(keywords && { keywords }),
         },
         paramsSerializer: (params) => {
-          // Handle array parameters by repeating the key for each value
           const searchParams = new URLSearchParams();
 
           Object.entries(params).forEach(([key, value]) => {
             if (value === undefined || value === null) return;
 
             if (Array.isArray(value)) {
-              // For arrays, append each value with the same key
               value.forEach((item) => {
                 if (item !== undefined && item !== null) {
                   searchParams.append(key, item);
                 }
               });
             } else {
-              // For non-array values, append normally
               searchParams.append(key, value);
             }
           });
