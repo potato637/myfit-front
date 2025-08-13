@@ -2,31 +2,49 @@ import {
   ReactNode,
   createContext,
   useContext,
-  useEffect,
   useState,
+  useRef,
+  useCallback,
 } from "react";
 
 interface ModalContextType {
-  isModalOpen: boolean;
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  openModal: (node: ReactNode) => void;
+  closeModal: () => void;
 }
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [content, setContent] = useState<ReactNode | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (isModalOpen) {
-      document.body.classList.add("modal-open");
-    } else {
-      document.body.classList.remove("modal-open");
+  const openModal = useCallback((node: ReactNode) => {
+    setContent(node);
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setContent(null);
+  }, []);
+  const handleOutsideClick = (e: React.MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+      closeModal();
     }
-  }, [isModalOpen]);
+  };
 
   return (
-    <ModalContext.Provider value={{ isModalOpen, setIsModalOpen }}>
+    <ModalContext.Provider value={{ openModal, closeModal }}>
       {children}
+      <div
+        className="fixed inset-0 w-full h-full bg-ct-black-100/50 z-[9999] flex justify-center items-center overflow-y-auto"
+        onClick={handleOutsideClick}
+      >
+        <div
+          ref={modalRef}
+          className="w-[333px] my-8 bg-ct-white rounded-[30px]"
+        >
+          {content}
+        </div>
+      </div>
     </ModalContext.Provider>
   );
 };
