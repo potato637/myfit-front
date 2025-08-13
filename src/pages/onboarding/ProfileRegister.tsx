@@ -120,15 +120,16 @@ function ProfileRegister() {
 
   const hasSpecial = (s: string) => /[^a-zA-Z0-9가-힣 ]/.test(s || "");
 
-  useEffect(() => {
-    if (!nickname) {
-      setNicknameError("닉네임을 입력해주세요");
-    } else if (hasSpecial(nickname)) {
+  const handleNicknameChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const val = e.target.value;
+    setNickname(val);
+    if (!val) setNicknameError("닉네임을 입력해주세요");
+    else if (/[^a-zA-Z0-9가-힣 ]/.test(val))
       setNicknameError("특수문자는 사용이 불가합니다");
-    } else {
-      setNicknameError("");
-    }
-  }, [nickname]);
+    else setNicknameError("");
+  };
 
   const validateAndScroll = () => {
     let firstErrorEl: HTMLElement | null = null;
@@ -211,10 +212,8 @@ function ProfileRegister() {
             <PersonalInputField
               label="닉네임"
               value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
+              onChange={handleNicknameChange}
               error={nicknameError}
-              maxLength={10}
-              showCounter
             />
           </div>
 
@@ -222,7 +221,9 @@ function ProfileRegister() {
             <PersonalInputField
               label="한줄 소개"
               value={shortIntro}
-              onChange={(e) => setShortIntro(e.target.value)}
+              onChange={(e) => {
+                setShortIntro(e.target.value);
+              }}
               multiline
               maxLength={50}
               showCounter
@@ -295,7 +296,6 @@ function ProfileRegister() {
                   gradeStatus: academic,
                   educationLevel: educationLevel,
                 });
-
                 const state: JobState = {
                   prevData: {
                     region,
@@ -310,7 +310,6 @@ function ProfileRegister() {
                   high_sector: highSectorText,
                   low_sector: lowSectorText,
                 };
-
                 (document.activeElement as HTMLElement | null)?.blur();
                 nav("/onboarding/jobpreference", { state });
               }}
@@ -322,7 +321,10 @@ function ProfileRegister() {
             <PersonalInputField
               label="최종 학력을 입력해주세요"
               value={educationLevel}
-              onChange={(e) => setEducationLevel(e.target.value)}
+              onChange={(e) => {
+                setEducationLevel(e.target.value);
+                if (educationError && e.target.value) setEducationError("");
+              }}
               placeholder="최종학력 입력"
               error={educationError}
             />
@@ -396,22 +398,45 @@ function ProfileRegister() {
 
       <Modal>
         {isModalOpen && modalType === "region" && (
-          <RegionModal onConfirm={(val) => setRegion(val)} />
+          <RegionModal
+            onConfirm={(val) => {
+              setRegion(val);
+              if (val) setRegionError("");
+            }}
+          />
         )}
         {isModalOpen && modalType === "subregion" && (
           <SubRegionModal
             value={region}
-            onConfirm={(val) => setSubRegion(val)}
+            onConfirm={(val) => {
+              setSubRegion(val);
+              if (val) setSubRegionError("");
+            }}
           />
         )}
         {isModalOpen && modalType === "birth" && (
-          <BirthModal onConfirm={(val) => setBirthDate(val)} />
+          <BirthModal
+            onConfirm={(val) => {
+              setBirthDate(val);
+              if (val) setBirthError("");
+            }}
+          />
         )}
         {isModalOpen && modalType === "academic" && (
-          <AcademicStatusModal onConfirm={(val) => setAcademic(val)} />
+          <AcademicStatusModal
+            onConfirm={(val) => {
+              setAcademic(val);
+              if (val) setAcademicError("");
+            }}
+          />
         )}
         {isModalOpen && modalType === "employment" && (
-          <EmploymentStatusModal onConfirm={(val) => setEmploy(val)} />
+          <EmploymentStatusModal
+            onConfirm={(val) => {
+              setEmploy(val);
+              if (val) setEmployError("");
+            }}
+          />
         )}
       </Modal>
     </TopBarContainer>
