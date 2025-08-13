@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import NotificationBadge from "../common/NotificationBadge";
 
 function FixedHeader() {
   const navigate = useNavigate(); // ✅ 훅 사용
@@ -19,7 +20,9 @@ function FixedHeader() {
             <img src="/assets/feed/plus.svg" alt="피드 작성" />
           </button>
           <button onClick={() => navigate("/feed/alarm")}>
-            <img src="/assets/feed/ringbell.svg" alt="알림" />
+            <NotificationBadge>
+              <img src="/assets/feed/ringbell.svg" alt="알림" />
+            </NotificationBadge>
           </button>
         </div>
       </div>
