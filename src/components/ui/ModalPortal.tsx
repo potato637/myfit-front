@@ -34,7 +34,7 @@ const ModalPortal = ({ children, onClose }: ModalPortalProps) => {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     document.addEventListener("keydown", handleEscape);
-    
+
     return () => {
       document.body.style.overflow = "unset";
       document.removeEventListener("keydown", handleEscape);
@@ -43,11 +43,11 @@ const ModalPortal = ({ children, onClose }: ModalPortalProps) => {
 
   return createPortal(
     <div
-      className="fixed inset-0 w-full h-full bg-ct-black-100/50 z-[9999] flex justify-center items-center overflow-y-auto"
+      className="fixed inset-0 w-full h-full bg-ct-black-100/50 z-[9999] ct-center"
       onClick={handleOutsideClick}
     >
-      <div 
-        ref={modalRef} 
+      <div
+        ref={modalRef}
         className="w-[333px] my-8 bg-ct-white rounded-[30px]"
         onClick={(e) => e.stopPropagation()}
       >
