@@ -28,7 +28,7 @@ function PersonalInputField({
   return (
     <div className="flex flex-col gap-[11px] w-full mb-[10px]">
       <div className="flex justify-between items-center">
-        <label className="ml-1 text-sub1 text-ct-black-200">{label}</label>
+        <label className="ml-1 text-body1 text-ct-black-200">{label}</label>
         {showCounter && maxLength && (
           <span className="text-body2 text-ct-gray-300">
             {currentLength}/{maxLength}

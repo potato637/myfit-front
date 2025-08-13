@@ -43,7 +43,7 @@ function InputField({
   return (
     <div className="mb-[27px]">
       <div className="flex justify-between items-center mb-[8px]">
-        <label className="pl-[7px] text-sub1 text-ct-black-200">{label}</label>
+        <label className="pl-[7px] text-body1 text-ct-black-200">{label}</label>
         {showCounter && maxLength && (
           <span className="text-body2 text-ct-gray-300">
             {currentLength}/{maxLength}
