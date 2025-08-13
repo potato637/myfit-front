@@ -19,7 +19,7 @@ function FixedHeader() {
             <img src="/assets/feed/plus.svg" alt="피드 작성" />
           </button>
           <button onClick={() => navigate("/feed/alarm")}>
-            <img src="/assets/feed/ringbell.svg" alt="알림" />
+            <img src="/assets/feed/emptyalarm.svg" alt="알림" />
           </button>
         </div>
       </div>

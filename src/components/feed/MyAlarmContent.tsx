@@ -89,7 +89,7 @@ function MyAlarmContent() {
   return unreadAlarms.length === 0 ? (
     <div className="flex flex-col items-center justify-center h-[calc(100vh-66px-89px)]">
       <img
-        src="/assets/feed/emptyalarm.svg"
+        src="/assets/feed/alarm.svg"
         alt="빈 알림 이모지"
         className="mb-4"
       />
