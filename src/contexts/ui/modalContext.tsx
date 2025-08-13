@@ -19,10 +19,12 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [content, setContent] = useState<ReactNode | null>(null);
 
   const openModal = useCallback((node: ReactNode) => {
+    document.body.classList.add("modal-open");
     setContent(node);
   }, []);
 
   const closeModal = useCallback(() => {
+    document.body.classList.remove("modal-open");
     setContent(null);
   }, []);
 
