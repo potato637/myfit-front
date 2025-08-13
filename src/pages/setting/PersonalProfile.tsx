@@ -15,6 +15,7 @@ import { useAuth } from "../../contexts/AuthContext";
 function PersonalProfile() {
   const { isModalOpen, setIsModalOpen } = useModal();
   const [nickname, setNickname] = useState("");
+  const [nicknameError, setNicknameError] = useState("");
   const [shortIntro, setShortIntro] = useState("");
   const [region, setRegion] = useState("");
   const [subRegion, setSubRegion] = useState("");
@@ -42,6 +43,8 @@ function PersonalProfile() {
   const { data: profile } = useGetProfile({
     service_id: user?.id.toString() || "",
   });
+
+  const hasSpecialChars = (s: string) => /[^a-zA-Z0-9가-힣 ]/.test(s || "");
 
   useEffect(() => {
     setNickname(profile?.result.user.name || "");
@@ -94,8 +97,15 @@ function PersonalProfile() {
     }
   }, [location.state]);
 
+  useEffect(() => {
+    if (hasSpecialChars(nickname))
+      setNicknameError("특수문자는 사용이 불가합니다");
+    else setNicknameError("");
+  }, [nickname]);
+
   const isValid =
     nickname &&
+    !nicknameError &&
     shortIntro &&
     region &&
     subRegion &&
@@ -109,6 +119,10 @@ function PersonalProfile() {
   });
 
   const handleSubmit = () => {
+    if (hasSpecialChars(nickname)) {
+      setNicknameError("특수문자는 사용이 불가합니다");
+      return;
+    }
     if (!isValid) return;
     updateProfile({
       name: nickname,
@@ -147,9 +161,7 @@ function PersonalProfile() {
             label="닉네임"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
-            maxLength={10}
-            showCounter={true}
-            disallowSpecialChars={true}
+            error={nicknameError}
           />
           <div className="flex flex-col gap-[8px]">
             <PersonalInputField
