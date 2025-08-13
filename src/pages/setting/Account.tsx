@@ -38,7 +38,11 @@ function Account() {
           </button>
           <button
             className="w-full h-[47.97px] text-left pl-[32px] text-sub1 font-Pretendard text-ct-black-100 border-b border-ct-gray-100"
-            onClick={() => openModal(<DeleteAccountModal />)}
+            onClick={() => openModal(
+              <DeleteAccountModal 
+                onDelete={() => nav("/onboarding")} 
+              />
+            )}
           >
             회원 탈퇴
           </button>

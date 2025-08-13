@@ -43,7 +43,9 @@ function PersonalProfile() {
         return;
       }
       setSubRegionError("");
-      openModal(<SubRegionModal value={region} onConfirm={(val) => setSubRegion(val)} />);
+      openModal(
+        <SubRegionModal value={region} onConfirm={(val) => setSubRegion(val)} />
+      );
     } else if (type === "birth") {
       openModal(<BirthModal onConfirm={(val) => setBirthDate(val)} />);
     } else if (type === "academic") {
@@ -298,7 +300,6 @@ function PersonalProfile() {
           />
         </div>
       </div>
-
     </TopBarContainer>
   );
 }
