@@ -273,6 +273,7 @@ function CompanyProfileRegister() {
             label="업종"
             placeholder="입력"
             value={industry}
+            error={industryError}
             onChange={(e) => {
               setIndustry(e.target.value);
               if (industryError && e.target.value.trim()) setIndustryError("");
@@ -285,11 +286,6 @@ function CompanyProfileRegister() {
               </>
             }
           />
-          {industryError && (
-            <span className="text-body2 text-ct-red-100 pl-[13px]">
-              {industryError}
-            </span>
-          )}
         </div>
 
         <InputField

@@ -21,15 +21,20 @@ function CompanyProfile() {
     service_id: user?.id?.toString() || "",
   });
 
-  // 상태 관리 - 빈 문자열로 초기화하여 controlled input 보장
   const [companyName, setCompanyName] = useState("");
+  const [companyNameError, setCompanyNameError] = useState("");
   const [shortIntro, setShortIntro] = useState("");
+  const [shortIntroError, setShortIntroError] = useState("");
   const [region, setRegion] = useState("");
+  const [regionError, setRegionError] = useState("");
   const [subRegion, setSubRegion] = useState("");
   const [subRegionError, setSubRegionError] = useState("");
   const [employmentStatus, setEmploymentStatus] = useState("");
+  const [employmentStatusError, setEmploymentStatusError] = useState("");
   const [division, setDivision] = useState("");
+  const [divisionError, setDivisionError] = useState("");
   const [industry, setIndustry] = useState("");
+  const [industryError, setIndustryError] = useState("");
   const [website, setWebsite] = useState("");
 
   useEffect(() => {
@@ -45,7 +50,6 @@ function CompanyProfile() {
     }
   }, [profile]);
 
-  // 모달 타입 관리
   const [modalType, setModalType] = useState<
     "region" | "subregion" | "employment" | "division" | null
   >(null);
@@ -62,6 +66,38 @@ function CompanyProfile() {
   });
 
   const handleSubmit = async () => {
+    if (!companyName.trim()) setCompanyNameError("회사/팀 이름을 입력해주세요");
+    else setCompanyNameError("");
+
+    if (!shortIntro.trim()) setShortIntroError("한줄 소개를 입력해주세요");
+    else setShortIntroError("");
+
+    if (!region) setRegionError("주 활동 지역을 선택해주세요");
+    else setRegionError("");
+
+    if (!subRegion) setSubRegionError("세부 활동 지역을 선택해주세요");
+
+    if (!employmentStatus)
+      setEmploymentStatusError("구인/구직 상태를 선택해주세요");
+    else setEmploymentStatusError("");
+
+    if (!division) setDivisionError("구분을 선택해주세요");
+    else setDivisionError("");
+
+    if (!industry.trim()) setIndustryError("업종을 입력해주세요");
+    else setIndustryError("");
+
+    const isValid =
+      companyName &&
+      shortIntro &&
+      region &&
+      subRegion &&
+      employmentStatus &&
+      division &&
+      industry;
+
+    if (!isValid) return;
+
     updateProfile({
       name: companyName,
       one_line_profile: shortIntro,
@@ -98,6 +134,7 @@ function CompanyProfile() {
           placeholder="입력해주세요"
           value={companyName}
           onChange={(e) => setCompanyName(e.target.value)}
+          error={companyNameError}
         />
         <InputField
           label="한줄 소개"
@@ -115,12 +152,14 @@ function CompanyProfile() {
               </span>
             </>
           }
+          error={shortIntroError}
         />
         <PersonalInputField
           label="주 활동 지역"
           value={region}
           placeholder="'시/도' 를 선택해주세요!"
           onClick={() => openModal("region")}
+          error={regionError}
         />
         <PersonalInputField
           label="주 활동 세부 지역"
@@ -141,12 +180,14 @@ function CompanyProfile() {
           value={employmentStatus}
           placeholder="현재 구직중!"
           onClick={() => openModal("employment")}
+          error={employmentStatusError}
         />
         <PersonalInputField
-          label="구분"
+          label="구분!"
           value={division}
           placeholder="선택"
           onClick={() => openModal("division")}
+          error={divisionError}
         />
         <InputField
           label="업종"
@@ -160,6 +201,7 @@ function CompanyProfile() {
               있지 않다면, 향후 등록 예정인 업종으로 기재해주세요! (변경 가능)
             </>
           }
+          error={industryError}
         />
         <InputField
           label="회사 공식 웹사이트 링크(선택)"
