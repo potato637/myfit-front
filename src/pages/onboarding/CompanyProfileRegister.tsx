@@ -187,17 +187,13 @@ function CompanyProfileRegister() {
             label="회사/팀 이름"
             placeholder="입력해주세요"
             value={companyName}
+            error={companyNameError}
             onChange={(e) => {
               setCompanyName(e.target.value);
               if (companyNameError && e.target.value.trim())
                 setCompanyNameError("");
             }}
           />
-          {companyNameError && (
-            <span className="text-body2 text-ct-red-100 pl-[13px]">
-              {companyNameError}
-            </span>
-          )}
         </div>
 
         <div ref={shortIntroRef}>
@@ -213,6 +209,7 @@ function CompanyProfileRegister() {
             }}
             maxLength={50}
             showCounter={true}
+            error={shortIntroError}
             helperText={
               <>
                 한줄로 나에 대해 나타내보세요! <br />
@@ -222,11 +219,6 @@ function CompanyProfileRegister() {
               </>
             }
           />
-          {shortIntroError && (
-            <span className="text-body2 text-ct-red-100 pl-[13px]">
-              {shortIntroError}
-            </span>
-          )}
         </div>
 
         <div ref={regionRef}>
