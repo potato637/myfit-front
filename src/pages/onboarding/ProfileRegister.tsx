@@ -214,6 +214,8 @@ function ProfileRegister() {
               value={nickname}
               onChange={handleNicknameChange}
               error={nicknameError}
+              maxLength={10}
+              showCounter
             />
           </div>
 

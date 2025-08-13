@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomCTAButton from "../../components/common/BottomCTAButton";
 import TopBarContainer from "../../components/common/TopBarContainer";
-import InputField from "../../components/onboarding/InputField";
 import PersonalInputField from "../../components/setting/PersonalInputField";
 import Modal from "../../components/ui/Modal";
 import { useModal } from "../../contexts/ui/modalContext";
@@ -19,7 +18,6 @@ function CompanyProfileRegister() {
   const { signupData, nextStep, updateProfileInfo } = useSignup();
   const navigate = useNavigate();
 
-  // 상태 관리 - 빈 문자열로 초기화하여 controlled input 보장
   const [companyName, setCompanyName] = useState("");
   const [shortIntro, setShortIntro] = useState("");
   const [region, setRegion] = useState("");
@@ -31,7 +29,21 @@ function CompanyProfileRegister() {
   const [website, setWebsite] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 모달 타입 관리
+  const [companyNameError, setCompanyNameError] = useState("");
+  const [shortIntroError, setShortIntroError] = useState("");
+  const [regionError, setRegionError] = useState("");
+  const [employmentStatusError, setEmploymentStatusError] = useState("");
+  const [divisionError, setDivisionError] = useState("");
+  const [industryError, setIndustryError] = useState("");
+
+  const companyNameRef = useRef<HTMLDivElement>(null);
+  const shortIntroRef = useRef<HTMLDivElement>(null);
+  const regionRef = useRef<HTMLDivElement>(null);
+  const subRegionRef = useRef<HTMLDivElement>(null);
+  const employmentRef = useRef<HTMLDivElement>(null);
+  const divisionRef = useRef<HTMLDivElement>(null);
+  const industryRef = useRef<HTMLDivElement>(null);
+
   const [modalType, setModalType] = useState<
     "region" | "subregion" | "employment" | "division" | null
   >(null);
@@ -43,11 +55,73 @@ function CompanyProfileRegister() {
     setIsModalOpen(true);
   };
 
+  const validateAndScroll = () => {
+    let firstErrorEl: HTMLElement | null = null;
+
+    if (!companyName.trim()) {
+      setCompanyNameError("회사/팀 이름을 입력해주세요");
+      firstErrorEl = firstErrorEl || companyNameRef.current;
+    } else {
+      setCompanyNameError("");
+    }
+
+    if (!shortIntro.trim()) {
+      setShortIntroError("한줄 소개를 입력해주세요");
+      firstErrorEl = firstErrorEl || shortIntroRef.current;
+    } else {
+      setShortIntroError("");
+    }
+
+    if (!region) {
+      setRegionError("주 활동 지역을 선택해주세요");
+      firstErrorEl = firstErrorEl || regionRef.current;
+    } else {
+      setRegionError("");
+    }
+
+    if (!subRegion) {
+      setSubRegionError("세부 활동 지역을 선택해주세요");
+      firstErrorEl = firstErrorEl || subRegionRef.current;
+    }
+
+    if (!employmentStatus) {
+      setEmploymentStatusError("구인/구직 상태를 선택해주세요");
+      firstErrorEl = firstErrorEl || employmentRef.current;
+    } else {
+      setEmploymentStatusError("");
+    }
+
+    if (!division) {
+      setDivisionError("구분을 선택해주세요");
+      firstErrorEl = firstErrorEl || divisionRef.current;
+    } else {
+      setDivisionError("");
+    }
+
+    if (!industry.trim()) {
+      setIndustryError("업종을 입력해주세요");
+      firstErrorEl = firstErrorEl || industryRef.current;
+    } else {
+      setIndustryError("");
+    }
+
+    if (firstErrorEl) {
+      firstErrorEl.scrollIntoView({ behavior: "smooth", block: "center" });
+      const focusable = firstErrorEl.querySelector(
+        "input, textarea"
+      ) as HTMLElement | null;
+      focusable?.focus();
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async () => {
+    if (!validateAndScroll()) return;
+
     try {
       setIsSubmitting(true);
 
-      // 회사 회원가입 API 호출
       const companyRequest: CompanyProfileRequest = {
         email: signupData.email,
         password: signupData.password,
@@ -62,19 +136,9 @@ function CompanyProfileRegister() {
         link: website,
       };
 
-      console.log(
-        "🏢 [CompanyProfileRegister] 회사 회원가입 요청:",
-        companyRequest
-      );
       const response = await companySignUp(companyRequest);
 
       if (response.isSuccess) {
-        console.log(
-          "✅ [CompanyProfileRegister] 회사 회원가입 성공:",
-          response
-        );
-
-        // SignupContext에 회사 정보 업데이트
         updateProfileInfo({
           name: companyName,
           oneLineProfile: shortIntro,
@@ -82,7 +146,7 @@ function CompanyProfileRegister() {
           industry: industry,
           website: website,
           recruitingStatus: employmentStatus,
-          serviceId: response.result?.service_id || 0, // service_id 저장
+          serviceId: response.result?.service_id || 0,
         });
 
         nextStep();
@@ -100,91 +164,124 @@ function CompanyProfileRegister() {
   const TopBarContent = () => {
     return <span className="text-h2 font-sans text-ct-black-300">프로필</span>;
   };
+
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
       <div className="relative flex flex-col pt-[24px] mx-[22px] border-t border-ct-gray-200">
-        {/* ✅ 스텝 인디케이터 */}
         <div className="absolute top-[8px] right-0 flex items-center gap-[6px]">
-          {/* 스텝 아이콘 */}
           <img src="/assets/onboarding/step1.svg" alt="현재 스텝 1" />
           <img src="/assets/onboarding/nonestep.svg" alt="none" />
           <img src="/assets/onboarding/nonestep.svg" alt="none" />
         </div>
-        <InputField
-          label="회사/팀 이름"
-          placeholder="입력해주세요"
-          value={companyName}
-          onChange={(e) => setCompanyName(e.target.value)}
-        />
-        <InputField
-          label="한줄 소개"
-          as="textarea"
-          placeholder="50자 이내"
-          value={shortIntro}
-          onChange={(e) => setShortIntro(e.target.value)}
-          maxLength={50}
-          showCounter={true}
-          helperText={
-            <>
-              한줄로 나에 대해 나타내보세요! <br />
-              <span className="block">
-                EX. 저는 워라밸보다 연봉에 더 욕심이 있어요.
-              </span>
-            </>
-          }
-        />
+
+        <div ref={companyNameRef}>
+          <PersonalInputField
+            label="회사/팀 이름"
+            placeholder="입력해주세요"
+            value={companyName}
+            onChange={(e) => {
+              setCompanyName(e.target.value);
+              if (companyNameError && e.target.value.trim())
+                setCompanyNameError("");
+            }}
+            error={companyNameError}
+          />
+        </div>
+
+        <div ref={shortIntroRef} className="flex flex-col gap-[8px]">
+          <PersonalInputField
+            label="한줄 소개"
+            multiline
+            placeholder="50자 이내"
+            value={shortIntro}
+            onChange={(e) => {
+              setShortIntro(e.target.value);
+              if (shortIntroError && e.target.value.trim())
+                setShortIntroError("");
+            }}
+            maxLength={50}
+            showCounter
+            error={shortIntroError}
+          />
+          <span className="text-body1 text-ct-gray-200 ml-[10px]">
+            한줄로 나에 대해 나타내보세요!
+            <br />
+            EX. 저는 워라밸보다 연봉에 더 욕심이 있어요.
+          </span>
+        </div>
+
+        <div ref={regionRef}>
+          <PersonalInputField
+            label="주 활동 지역"
+            value={region}
+            placeholder="'시/도' 를 선택해주세요!"
+            onClick={() => openModal("region")}
+            error={regionError}
+          />
+        </div>
+
+        <div ref={subRegionRef}>
+          <PersonalInputField
+            label="주 활동 세부 지역"
+            value={subRegion}
+            placeholder="세부 활동 지역을 선택해주세요"
+            onClick={() => {
+              if (!region) {
+                setSubRegionError("먼저 주 활동 지역을 선택해주세요.");
+              } else {
+                setSubRegionError("");
+                openModal("subregion");
+              }
+            }}
+            error={subRegionError}
+          />
+        </div>
+
+        <div ref={employmentRef}>
+          <PersonalInputField
+            label="현재 구인/구직 상태"
+            value={employmentStatus}
+            placeholder="현재 구직중!"
+            onClick={() => openModal("employment")}
+            error={employmentStatusError}
+          />
+        </div>
+
+        <div ref={divisionRef}>
+          <PersonalInputField
+            label="구분"
+            value={division}
+            placeholder="선택"
+            onClick={() => openModal("division")}
+            error={divisionError}
+          />
+        </div>
+
+        <div ref={industryRef} className="flex flex-col gap-[8px]">
+          <PersonalInputField
+            label="업종"
+            placeholder="입력"
+            value={industry}
+            onChange={(e) => {
+              setIndustry(e.target.value);
+              if (industryError && e.target.value.trim()) setIndustryError("");
+            }}
+            error={industryError}
+          />
+          <span className="text-body1 text-ct-gray-200 ml-[10px]">
+            사업자등록증 기준 업종을 기재해주세요. 아직 사업자등록이 되어
+            <br />
+            있지 않다면, 향후 등록 예정인 업종으로 기재해주세요! (변경 가능)
+          </span>
+        </div>
+
         <PersonalInputField
-          label="주 활동 지역"
-          value={region}
-          placeholder="'시/도' 를 선택해주세요!"
-          onClick={() => openModal("region")}
-        />
-        <PersonalInputField
-          label="주 활동 세부 지역"
-          value={subRegion}
-          placeholder="세부 활동 지역을 선택해주세요"
-          onClick={() => {
-            if (!region) {
-              setSubRegionError("먼저 주 활동 지역을 선택해주세요.");
-            } else {
-              setSubRegionError("");
-              openModal("subregion");
-            }
-          }}
-          error={subRegionError}
-        />
-        <PersonalInputField
-          label="현재 구인/구직 상태"
-          value={employmentStatus}
-          placeholder="현재 구직중!"
-          onClick={() => openModal("employment")}
-        />
-        <PersonalInputField
-          label="구분"
-          value={division}
-          placeholder="선택"
-          onClick={() => openModal("division")}
-        />
-        <InputField
-          label="업종"
-          placeholder="입력"
-          value={industry}
-          onChange={(e) => setIndustry(e.target.value)}
-          helperText={
-            <>
-              사업자등록증 기준 업종을 기재해주세요. 아직 사업자등록이 되어
-              <br />
-              있지 않다면, 향후 등록 예정인 업종으로 기재해주세요! (변경 가능)
-            </>
-          }
-        />
-        <InputField
           label="회사 공식 웹사이트 링크(선택)"
           placeholder="선택"
           value={website}
           onChange={(e) => setWebsite(e.target.value)}
-          helperText={<>링크 등록 시, 자동으로 프로필 페이지에 기재 됩니다.</>}
         />
+
         <BottomCTAButton
           text={isSubmitting ? "등록 중..." : "첫 카드 등록하러 가기"}
           onClick={handleSubmit}
@@ -194,21 +291,37 @@ function CompanyProfileRegister() {
 
       <Modal>
         {isModalOpen && modalType === "region" && (
-          <RegionModal onConfirm={(val) => setRegion(val)} />
+          <RegionModal
+            onConfirm={(val) => {
+              setRegion(val);
+              if (val) setRegionError("");
+            }}
+          />
         )}
         {isModalOpen && modalType === "subregion" && (
           <SubRegionModal
             value={region}
-            onConfirm={(val) => setSubRegion(val)}
+            onConfirm={(val) => {
+              setSubRegion(val);
+              if (val) setSubRegionError("");
+            }}
           />
         )}
         {isModalOpen && modalType === "employment" && (
           <EmploymentStatusModal
-            onConfirm={(val) => setEmploymentStatus(val)}
+            onConfirm={(val) => {
+              setEmploymentStatus(val);
+              if (val) setEmploymentStatusError("");
+            }}
           />
         )}
         {isModalOpen && modalType === "division" && (
-          <CompanyDivisionModal onConfirm={(val) => setDivision(val)} />
+          <CompanyDivisionModal
+            onConfirm={(val) => {
+              setDivision(val);
+              if (val) setDivisionError("");
+            }}
+          />
         )}
       </Modal>
     </TopBarContainer>
