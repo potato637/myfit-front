@@ -29,7 +29,13 @@ function CardDetail() {
   const service_id = isMine
     ? user?.id?.toString()
     : location.pathname.split("/")[3];
-  const { data: card, isFetching } = useGetCards({
+  const {
+    data: card,
+    isFetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetCards({
     service_id: service_id || "",
   });
 
@@ -44,31 +50,40 @@ function CardDetail() {
     const cardId = window.location.hash.replace("#", "");
     if (!cardId) return;
 
-    // Find the card with the matching ID
+    // Find the card with the matching ID in the current data
     const targetCard = cardsData.find((card) => card.id === cardId);
-    if (!targetCard) return;
-
-    // Scroll to the card with offset for the fixed header and introduction
-    const cardElement = cardsRef.current[cardId];
-    if (cardElement) {
-      // Calculate the height of the fixed elements (header + introduction)
-      const headerHeight = 60; // Adjust this value based on your header height
-      const introductionHeight = 80; // Adjust this value based on your introduction height
-      const offset = headerHeight + introductionHeight;
-      
-      // Calculate the scroll position
-      const elementPosition = cardElement.getBoundingClientRect().top + window.pageYOffset;
-      const offsetPosition = elementPosition - offset;
-      
-      // Smooth scroll to the calculated position
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-      
-      // Update the URL to remove the hash after scrolling
-      const newUrl = window.location.pathname + window.location.search;
-      window.history.replaceState({}, "", newUrl);
+    
+    // If we have the target card, scroll to it
+    if (targetCard) {
+      // Use a small timeout to ensure the DOM is updated
+      const timer = setTimeout(() => {
+        const cardElement = cardsRef.current[cardId];
+        if (cardElement) {
+          // Calculate the height of the fixed elements (header + introduction)
+          const headerHeight = 60; // Adjust this value based on your header height
+          const introductionHeight = 80; // Adjust this value based on your introduction height
+          const offset = headerHeight + introductionHeight;
+          
+          // Calculate the scroll position
+          const elementPosition = cardElement.getBoundingClientRect().top + window.pageYOffset;
+          const offsetPosition = Math.max(0, elementPosition - offset);
+          
+          // Smooth scroll to the calculated position
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+          
+          // Update the URL to remove the hash after scrolling
+          const newUrl = window.location.pathname + window.location.search;
+          window.history.replaceState({}, "", newUrl);
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    } 
+    // If we don't have the target card but there are more pages to load, fetch the next page
+    else if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
     }
   }, [cardsData]);
 
