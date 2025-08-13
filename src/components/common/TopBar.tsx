@@ -1,11 +1,20 @@
 import { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
-function TopBar({ children }: { children: ReactNode }) {
+type Props = {
+  children: ReactNode;
+  backTo?: string;
+  replace?: boolean;
+};
+
+function TopBar({ children, backTo, replace = true }: Props) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    console.log("🔙 뒤로가기 버튼 클릭됨");
+    if (backTo) {
+      navigate(backTo, { replace });
+      return;
+    }
     navigate(-1);
   };
 
