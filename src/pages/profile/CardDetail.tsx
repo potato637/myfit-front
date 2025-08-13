@@ -38,7 +38,6 @@ function CardDetail() {
 
   const cardsData = card?.pages.flatMap((page) => page.result.cards);
   const cardsRef = useRef<{ [key: string]: HTMLDivElement | null }>({});
-  const { openModal } = useModal();
 
   // Scroll to the card with the ID from the URL hash
   useEffect(() => {
