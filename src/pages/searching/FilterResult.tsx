@@ -22,7 +22,7 @@ function FilterResult() {
     area: state?.region,
     status: state?.employmentStatus,
     hope_job: state?.hope_job,
-    keywords: state?.keyword,
+    keywords: state?.keywords,
   });
 
   const allCards = data?.pages.flatMap((page) => page.result.cards) || [];
