@@ -36,7 +36,23 @@ export default defineConfig({
         display: "standalone",
         orientation: "portrait",
         background_color: "#ffffff",
-        icons: [],
+        icons: [
+          {
+            src: "/assets/icon/icon.svg",
+            sizes: "any",
+            type: "image/svg+xml",
+          },
+          {
+            src: "/assets/icon/icon-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "/assets/icon/icon-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+        ],
       },
 
       workbox: {
