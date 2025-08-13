@@ -16,12 +16,13 @@ function TopBarContent() {
 function FilterResult() {
   const { state } = useLocation();
   const [viewType, setViewType] = useState<"swipe" | "list">("swipe");
+  console.log(state);
 
   const { data, fetchNextPage, hasNextPage, isLoading } = useFilterResult({
     area: state?.region,
     status: state?.employmentStatus,
-    hope_job: state?.lowSector,
-    keywords: state?.keyword,
+    hope_job: state?.hope_job,
+    keywords: state?.keywords,
   });
 
   const allCards = data?.pages.flatMap((page) => page.result.cards) || [];

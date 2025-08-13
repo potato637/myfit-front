@@ -158,11 +158,10 @@ function Filter() {
               if (!keywordError) {
                 navigate("/searching/filter/result", {
                   state: {
-                    keywords: keyword,
+                    keywords: debouncedKeyword,
                     region,
                     employmentStatus,
-                    lowSector: lowSectorText,
-                    lowSector_list: lowSectorText ? [lowSectorText] : [],
+                    hope_job: lowSectorText,
                     count: countData?.result?.count,
                   },
                 });
