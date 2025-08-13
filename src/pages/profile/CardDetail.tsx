@@ -4,7 +4,6 @@ import DetailIntroductionSkeleton from "../../components/skeletons/mypage/Detail
 import DetailCardItemSkeleton from "../../components/skeletons/mypage/DetailCardItemSkeleton";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import { useAuth } from "../../contexts/AuthContext";
-import { useModal } from "../../contexts/ui/modalContext";
 import { useGetCards } from "../../hooks/mypageQueries";
 import { useLocation } from "react-router-dom";
 import { useEffect, useRef } from "react";
