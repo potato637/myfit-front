@@ -122,7 +122,7 @@ function PersonalProfile() {
   const handleSubmit = () => {
     if (hasSpecialChars(nickname)) {
       setNicknameError("특수문자는 사용이 불가합니다");
-      toast.error("닉네임에서 특수문자는 사용불가합니다.");
+      toast.error("올바른 입력값을 입력해주세요");
       return;
     }
     if (!isValid) return;
