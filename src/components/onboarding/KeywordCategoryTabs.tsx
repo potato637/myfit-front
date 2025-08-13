@@ -26,22 +26,20 @@ function KeywordCategoryTabs({
 
   return (
     <div className="border-b border-ct-gray-200 pb-2">
-      <div className="overflow-x-auto scrollbar-hide">
-        <div className="flex gap-[34px] w-fit px-4">
-          {categories.map((category) => (
-            <button
-              key={category}
-              className={`whitespace-nowrap flex-shrink-0 ${
-                activeCategory === category
-                  ? "text-sub1 text-ct-black-200"
-                  : "text-sub2 text-ct-gray-300"
-              }`}
-              onClick={() => onSelectCategory(category)}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
+      <div className="overflow-x-scroll whitespace-nowrap scrollbar-hide px-4">
+        {categories.map((category) => (
+          <button
+            key={category}
+            className={`inline-block px-[17px] ${
+              activeCategory === category
+                ? "text-sub1 text-ct-black-200"
+                : "text-sub2 text-ct-gray-300"
+            }`}
+            onClick={() => onSelectCategory(category)}
+          >
+            {category}
+          </button>
+        ))}
       </div>
     </div>
   );
