@@ -132,6 +132,9 @@ function PersonalProfile() {
       return;
     }
 
+    if (!nickname) setNicknameError("닉네임을 입력해주세요");
+    else setNicknameError("");
+
     if (!shortIntro) setShortIntroError("한줄 소개를 입력해주세요");
     else setShortIntroError("");
 
