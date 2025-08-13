@@ -11,6 +11,7 @@ import SubRegionModal from "../../components/onboarding/SubRegionModal";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGetProfile, usePatchProfile } from "../../hooks/mypageQueries";
 import { useAuth } from "../../contexts/AuthContext";
+import { toast } from "react-toastify";
 
 function PersonalProfile() {
   const { isModalOpen, setIsModalOpen } = useModal();
@@ -121,6 +122,7 @@ function PersonalProfile() {
   const handleSubmit = () => {
     if (hasSpecialChars(nickname)) {
       setNicknameError("특수문자는 사용이 불가합니다");
+      toast.error("닉네임에서 특수문자는 사용불가합니다.");
       return;
     }
     if (!isValid) return;
@@ -162,6 +164,8 @@ function PersonalProfile() {
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
             error={nicknameError}
+            maxLength={10}
+            showCounter={true}
           />
           <div className="flex flex-col gap-[8px]">
             <PersonalInputField
