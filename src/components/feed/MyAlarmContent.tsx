@@ -1,141 +1,125 @@
-import { useNavigate } from "react-router-dom";
-import { useInfiniteNotifications } from "../../hooks/useNotifications";
-import { Notification } from "../../types/notification";
-import { formatDistanceToNow } from "date-fns";
-import { ko } from "date-fns/locale";
+import { useState } from "react";
+
+// 🔔 알림의 형태 정의
+interface AlarmItem {
+  id: number;
+  type: "network" | "like" | "comment";
+  fromUser: { id: number; name: string; avatarUrl: string };
+  message: string;
+  time: string;
+  isRead: boolean;
+}
+
+const mockAlarms: AlarmItem[] = [
+  {
+    id: 1,
+    type: "network",
+    fromUser: {
+      id: 101,
+      name: "양승민",
+      avatarUrl: "/assets/feed/network1.svg",
+    },
+    message: "님이 네트워크 관계를 요청했어요.",
+    time: "10분",
+    isRead: false,
+  },
+  {
+    id: 2,
+    type: "network",
+    fromUser: {
+      id: 102,
+      name: "임호현",
+      avatarUrl: "/assets/feed/network1.svg",
+    },
+    message: "님이 네트워크 관계를 요청했어요.",
+    time: "10분",
+    isRead: false,
+  },
+  {
+    id: 3,
+    type: "like",
+    fromUser: {
+      id: 102,
+      name: "임호현",
+      avatarUrl: "/assets/feed/network1.svg",
+    },
+    message: "님이 회원님의 게시글을 좋아합니다.",
+    time: "15분",
+    isRead: true,
+  },
+  {
+    id: 4,
+    type: "comment",
+    fromUser: {
+      id: 103,
+      name: "장예슬",
+      avatarUrl: "/assets/feed/network3.svg",
+    },
+    message: "님이 회원님의 게시글에 댓글을 남겼어요.",
+    time: "22분",
+    isRead: true,
+  },
+];
 
 function MyAlarmContent() {
-  const navigate = useNavigate();
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage
-  } = useInfiniteNotifications();
+  const [alarms, setAlarms] = useState<AlarmItem[]>(mockAlarms);
 
-  // 모든 페이지의 알림들을 하나의 배열로 합치기
-  const allNotifications: Notification[] = data?.pages?.flatMap(page => 
-    page.isSuccess ? page.result.notifications : []
-  ) || [];
+  const handleClick = (alarm: AlarmItem) => {
+    // 클릭 시 읽음 처리 + 이동 로직 예:
+    setAlarms((prev) =>
+      prev.map((item) =>
+        item.id === alarm.id ? { ...item, isRead: true } : item
+      )
+    );
 
-  // 알림 클릭 처리
-  const handleNotificationClick = (notification: Notification) => {
-    switch (notification.type) {
-      case "FEED":
-        if (notification.feed_id) {
-          navigate(`/feed/${notification.feed_id}`);
-        }
+    switch (alarm.type) {
+      case "network":
+        console.log("프로필 페이지로 이동", alarm.fromUser.id);
         break;
-      case "COMMENT":
-        if (notification.feed_id) {
-          navigate(`/feed/${notification.feed_id}`);
-        }
-        break;
-      default:
-        console.log("알림 클릭:", notification);
+      case "like":
+      case "comment":
+        console.log("해당 게시글로 이동", alarm.id);
         break;
     }
   };
 
-  // 시간 포맷팅
-  const formatNotificationTime = (createdAt: string) => {
-    try {
-      return formatDistanceToNow(new Date(createdAt), { 
-        addSuffix: true, 
-        locale: ko 
-      });
-    } catch {
-      return "방금 전";
-    }
-  };
+  // 🔽 [추가] 읽지 않은 알림만 필터링
+  const unreadAlarms = alarms.filter((alarm) => !alarm.isRead);
 
-  // 더 보기 버튼 클릭
-  const handleLoadMore = () => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  };
-
-  // 에러 상태
-  if (isError) {
-    return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-66px-89px)]">
-        <p className="text-sub2 text-ct-red-100">알림을 불러오는데 실패했습니다.</p>
-        <p className="text-body3 text-ct-gray-300 mt-2">
-          {error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다."}
-        </p>
-      </div>
-    );
-  }
-
-  // 로딩 상태
-  if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-66px-89px)]">
-        <div className="animate-spin w-8 h-8 border-2 border-ct-main-blue-100 border-t-transparent rounded-full"></div>
-        <p className="text-sub2 text-ct-gray-200 mt-4">알림을 불러오는 중...</p>
-      </div>
-    );
-  }
-
-  // 알림이 없는 경우
-  if (allNotifications.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-66px-89px)]">
-        <img
-          src="/assets/feed/alarm.svg"
-          alt="빈 알림 이모지"
-          className="mb-4"
-        />
-        <p className="text-sub2 text-ct-gray-200">새로운 알림이 없습니다.</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="mt-[10px]">
-      <ul className="space-y-[4px]">
-        {allNotifications.map((notification) => (
-          <li
-            key={notification.notification_id}
-            onClick={() => handleNotificationClick(notification)}
-            className={`flex items-center px-[22px] py-4 cursor-pointer ${
-              !notification.is_read ? "bg-[#F0F7FF]" : "bg-ct-white"
-            }`}
-          >
-            <img
-              src={notification.sender.profile_img}
-              alt={notification.sender.name}
-              className="w-10 h-10 rounded-full"
-            />
-            <div className="flex-1 ml-3">
-              <p className="text-body2 text-ct-black-200">
-                {notification.message}
-              </p>
-            </div>
-            <span className="text-body3 text-ct-gray-300 ml-2">
-              {formatNotificationTime(notification.created_at)}
-            </span>
-          </li>
-        ))}
-      </ul>
-      
-      {/* 무한 스크롤 로딩 버튼 */}
-      {hasNextPage && (
-        <div className="flex justify-center py-4">
-          <button
-            onClick={handleLoadMore}
-            disabled={isFetchingNextPage}
-            className="px-4 py-2 text-sub2 text-ct-main-blue-100 disabled:opacity-50"
-          >
-            {isFetchingNextPage ? "로딩 중..." : "더 보기"}
-          </button>
-        </div>
-      )}
+  return unreadAlarms.length === 0 ? (
+    <div className="flex flex-col items-center justify-center h-[calc(100vh-66px-89px)]">
+      <img
+        src="/assets/feed/emptyalarm.svg"
+        alt="빈 알림 이모지"
+        className="mb-4"
+      />
+      <p className="text-sub2 text-ct-gray-200">새로운 알림이 없습니다.</p>
     </div>
+  ) : (
+    <ul className="mt-[10px]  space-y-[4px]">
+      {alarms.map((alarm) => (
+        <li
+          key={alarm.id}
+          onClick={() => handleClick(alarm)}
+          className={`flex items-center px-[22px] py-4 cursor-pointer ${
+            !alarm.isRead ? "bg-[#F0F7FF]" : "bg-ct-white"
+          }`}
+        >
+          <img
+            src={alarm.fromUser.avatarUrl}
+            alt={alarm.fromUser.name}
+            className="w-10 h-10 rounded-full"
+          />
+          <div className="flex-1 ml-3">
+            <p className="text-body2 text-ct-black-200">
+              <span className="font-medium">{alarm.fromUser.name}</span>
+              {alarm.message}
+            </p>
+          </div>
+          <span className="text-body3 text-ct-gray-300 ml-2">{alarm.time}</span>
+        </li>
+      ))}
+    </ul>
   );
 }
 
