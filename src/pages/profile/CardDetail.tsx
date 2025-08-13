@@ -7,6 +7,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useGetCards } from "../../hooks/mypageQueries";
 import { useLocation } from "react-router-dom";
 import { useEffect, useRef } from "react";
+import BottomSheet from "../../components/ui/BottomSheet";
+import BottomSheetContent from "../../components/profile/BottomSheetContent";
 
 const TopBarContent = () => {
   return (
@@ -116,7 +118,9 @@ function CardDetail() {
           </>
         )}
       </div>
-      {/* Modal content will be rendered by the ModalProvider */}
+      <BottomSheet>
+        <BottomSheetContent type="card" />
+      </BottomSheet>
     </TopBarContainer>
   );
 }
