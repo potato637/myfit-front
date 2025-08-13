@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 interface BusinessDocumentUploadProps {
   className?: string;
@@ -30,13 +31,13 @@ function BusinessDocumentUpload({
     // 10MB 제한 체크
     const maxSize = 10 * 1024 * 1024; // 10MB in bytes
     if (file.size > maxSize) {
-      alert("파일 크기는 최대 10MB까지 가능합니다.");
+      toast.error("파일 크기는 최대 10MB까지 가능합니다.");
       return;
     }
 
     // 이미지 파일만 허용
     if (!file.type.startsWith('image/')) {
-      alert("이미지 파일만 업로드 가능합니다.");
+      toast.error("이미지 파일만 업로드 가능합니다.");
       return;
     }
 

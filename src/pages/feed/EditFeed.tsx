@@ -7,6 +7,7 @@ import TopBarContainer from "../../components/common/TopBarContainer";
 import MultiImageUploadBox from "../../components/common/MultiImageUploadBox";
 import KeywordInput from "../../components/feed/KeywordInput";
 import BottomNav from "../../components/layouts/BottomNav";
+import { toast } from "react-toastify";
 
 export default function EditFeed() {
   const { feedId } = useParams<{ feedId: string }>();
@@ -43,14 +44,14 @@ export default function EditFeed() {
     mutationFn: (request: UpdateFeedRequest) =>
       updateFeed(Number(feedId), request),
     onSuccess: () => {
-      alert("게시글이 수정되었습니다!");
+      toast.success("게시글이 수정되었습니다!");
       // 피드 목록 쿼리들 무효화
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
       queryClient.invalidateQueries({ queryKey: ["feedForEdit", feedId] });
       navigate("/feed");
     },
     onError: () => {
-      alert("게시글 수정에 실패했습니다. 다시 시도해주세요.");
+      toast.error("게시글 수정에 실패했습니다. 다시 시도해주세요.");
     },
   });
 
@@ -66,7 +67,7 @@ export default function EditFeed() {
   const handleSubmit = async () => {
     // 기본 검증
     if (!content.trim()) {
-      alert("내용을 입력해주세요.");
+      toast.error("내용을 입력해주세요.");
       return;
     }
 

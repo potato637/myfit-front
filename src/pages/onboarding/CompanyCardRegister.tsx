@@ -7,6 +7,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { createActivityCard } from "../../apis/onboarding";
 import { ActivityCardRequest } from "../../types/common/activityCard";
 import { useSignup } from "../../contexts/SignupContext";
+import { toast } from "react-toastify";
 
 function CompanyCardRegister() {
   const navigate = useNavigate();
