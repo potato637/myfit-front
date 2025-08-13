@@ -43,7 +43,7 @@ function InputField({
   return (
     <div className="mb-[27px]">
       <div className="flex justify-between items-center mb-[8px]">
-        <label className="pl-[7px] text-body1 text-ct-black-200">{label}</label>
+        <label className="pl-[7px] text-sub2 text-ct-black-200">{label}</label>
         {showCounter && maxLength && (
           <span className="text-body2 text-ct-gray-300">
             {currentLength}/{maxLength}
@@ -60,7 +60,7 @@ function InputField({
           maxLength={maxLength}
           rows={1}
           onInput={(e) => handleAutoResize(e.target as HTMLTextAreaElement)}
-          className="text-sub1 font-sans placeholder:text-ct-gray-300 text-ct-black-200 w-full h-[44px] max-h-[88px] rounded-[10px] px-[26px] pt-[14px] pb-[12px] bg-ct-gray-100 resize-none overflow-y-auto"
+          className="text-sub2 font-sans placeholder:text-ct-gray-300 text-ct-black-200 w-full h-[44px] max-h-[88px] rounded-[10px] px-[26px] pt-[14px] pb-[12px] bg-ct-gray-100 resize-none overflow-y-auto"
         />
       ) : (
         <input
@@ -70,7 +70,7 @@ function InputField({
           onChange={onChange}
           onClick={onClick}
           maxLength={maxLength}
-          className="text-sub1 font-sans placeholder:text-ct-gray-300 text-ct-black-200 w-full min-h-[44px] rounded-[10px] px-[26px] bg-ct-gray-100"
+          className="text-sub2 font-sans placeholder:text-ct-gray-300 text-ct-black-200 w-full min-h-[44px] rounded-[10px] px-[26px] bg-ct-gray-100"
         />
       )}
       {helperText && (
