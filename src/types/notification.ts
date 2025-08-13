@@ -35,6 +35,18 @@ export interface UnreadNotificationResponse {
   unread_count: number;
 }
 
+export interface MarkAllAsReadResponse {
+  updated_count: number;
+  has_unread: boolean;
+}
+
+export interface MarkAllAsReadApiResponse {
+  isSuccess: boolean;
+  code: number;
+  message: string;
+  result: MarkAllAsReadResponse;
+}
+
 export interface UnreadNotificationApiResponse {
   isSuccess: boolean;
   code: number;
