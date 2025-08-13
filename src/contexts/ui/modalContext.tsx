@@ -3,9 +3,10 @@ import {
   createContext,
   useContext,
   useState,
-  useRef,
   useCallback,
+  useMemo,
 } from "react";
+import ModalPortal from "../../components/ui/ModalPortal";
 
 interface ModalContextType {
   openModal: (node: ReactNode) => void;
@@ -16,26 +17,30 @@ const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [content, setContent] = useState<ReactNode | null>(null);
-  const modalRef = useRef<HTMLDivElement>(null);
 
   const openModal = useCallback((node: ReactNode) => {
     setContent(node);
   }, []);
 
   const closeModal = useCallback(() => {
-    setContent(null);
+    // Small delay to allow the close animation to play before removing content
+    setTimeout(() => {
+      setContent(null);
+    }, 300);
   }, []);
-  const handleOutsideClick = (e: React.MouseEvent) => {
-    if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-      closeModal();
-    }
-  };
+
+  const contextValue = useMemo(
+    () => ({
+      openModal,
+      closeModal,
+    }),
+    [openModal, closeModal]
+  );
 
   return (
-    <ModalContext.Provider value={{ openModal, closeModal }}>
+    <ModalContext.Provider value={contextValue}>
       {children}
-
-      {content}
+      {content && <ModalPortal onClose={closeModal}>{content}</ModalPortal>}
     </ModalContext.Provider>
   );
 };
