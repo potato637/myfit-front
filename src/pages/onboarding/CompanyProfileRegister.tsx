@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomCTAButton from "../../components/common/BottomCTAButton";
 import TopBarContainer from "../../components/common/TopBarContainer";
+import InputField from "../../components/onboarding/InputField";
 import PersonalInputField from "../../components/setting/PersonalInputField";
 import Modal from "../../components/ui/Modal";
 import { useModal } from "../../contexts/ui/modalContext";
@@ -136,9 +137,17 @@ function CompanyProfileRegister() {
         link: website,
       };
 
+      console.log(
+        "🏢 [CompanyProfileRegister] 회사 회원가입 요청:",
+        companyRequest
+      );
       const response = await companySignUp(companyRequest);
 
       if (response.isSuccess) {
+        console.log(
+          "✅ [CompanyProfileRegister] 회사 회원가입 성공:",
+          response
+        );
         updateProfileInfo({
           name: companyName,
           oneLineProfile: shortIntro,
@@ -148,7 +157,6 @@ function CompanyProfileRegister() {
           recruitingStatus: employmentStatus,
           serviceId: response.result?.service_id || 0,
         });
-
         nextStep();
         navigate("/onboarding/company-card-register");
       } else {
@@ -175,7 +183,7 @@ function CompanyProfileRegister() {
         </div>
 
         <div ref={companyNameRef}>
-          <PersonalInputField
+          <InputField
             label="회사/팀 이름"
             placeholder="입력해주세요"
             value={companyName}
@@ -184,14 +192,18 @@ function CompanyProfileRegister() {
               if (companyNameError && e.target.value.trim())
                 setCompanyNameError("");
             }}
-            error={companyNameError}
           />
+          {companyNameError && (
+            <span className="text-body2 text-ct-red-100 pl-[13px]">
+              {companyNameError}
+            </span>
+          )}
         </div>
 
-        <div ref={shortIntroRef} className="flex flex-col gap-[8px]">
-          <PersonalInputField
+        <div ref={shortIntroRef}>
+          <InputField
             label="한줄 소개"
-            multiline
+            as="textarea"
             placeholder="50자 이내"
             value={shortIntro}
             onChange={(e) => {
@@ -200,14 +212,21 @@ function CompanyProfileRegister() {
                 setShortIntroError("");
             }}
             maxLength={50}
-            showCounter
-            error={shortIntroError}
+            showCounter={true}
+            helperText={
+              <>
+                한줄로 나에 대해 나타내보세요! <br />
+                <span className="block">
+                  EX. 저는 워라밸보다 연봉에 더 욕심이 있어요.
+                </span>
+              </>
+            }
           />
-          <span className="text-body1 text-ct-gray-200 ml-[10px]">
-            한줄로 나에 대해 나타내보세요!
-            <br />
-            EX. 저는 워라밸보다 연봉에 더 욕심이 있어요.
-          </span>
+          {shortIntroError && (
+            <span className="text-body2 text-ct-red-100 pl-[13px]">
+              {shortIntroError}
+            </span>
+          )}
         </div>
 
         <div ref={regionRef}>
@@ -257,8 +276,8 @@ function CompanyProfileRegister() {
           />
         </div>
 
-        <div ref={industryRef} className="flex flex-col gap-[8px]">
-          <PersonalInputField
+        <div ref={industryRef}>
+          <InputField
             label="업종"
             placeholder="입력"
             value={industry}
@@ -266,20 +285,27 @@ function CompanyProfileRegister() {
               setIndustry(e.target.value);
               if (industryError && e.target.value.trim()) setIndustryError("");
             }}
-            error={industryError}
+            helperText={
+              <>
+                사업자등록증 기준 업종을 기재해주세요. 아직 사업자등록이 되어
+                <br />
+                있지 않다면, 향후 등록 예정인 업종으로 기재해주세요! (변경 가능)
+              </>
+            }
           />
-          <span className="text-body1 text-ct-gray-200 ml-[10px]">
-            사업자등록증 기준 업종을 기재해주세요. 아직 사업자등록이 되어
-            <br />
-            있지 않다면, 향후 등록 예정인 업종으로 기재해주세요! (변경 가능)
-          </span>
+          {industryError && (
+            <span className="text-body2 text-ct-red-100 pl-[13px]">
+              {industryError}
+            </span>
+          )}
         </div>
 
-        <PersonalInputField
+        <InputField
           label="회사 공식 웹사이트 링크(선택)"
           placeholder="선택"
           value={website}
           onChange={(e) => setWebsite(e.target.value)}
+          helperText={<>링크 등록 시, 자동으로 프로필 페이지에 기재 됩니다.</>}
         />
 
         <BottomCTAButton
