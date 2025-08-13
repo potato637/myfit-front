@@ -4,7 +4,7 @@ interface InputFieldProps {
   label: string;
   placeholder?: string;
   helperText?: string | React.ReactNode;
-  as?: "input" | "textarea"; // textarea 지원
+  as?: "input" | "textarea";
   value?: string;
   onChange?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -12,6 +12,13 @@ interface InputFieldProps {
   onClick?: () => void;
   maxLength?: number;
   showCounter?: boolean;
+
+  // 새로 추가
+  error?: string;
+  containerClassName?: string;
+  inputClassName?: string;
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
+  textareaProps?: React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 }
 
 function InputField({
@@ -24,25 +31,40 @@ function InputField({
   onClick,
   maxLength,
   showCounter = false,
+
+  error,
+  containerClassName,
+  inputClassName,
+  inputProps,
+  textareaProps,
 }: InputFieldProps) {
   const currentLength = value?.length || 0;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleAutoResize = (textarea: HTMLTextAreaElement) => {
-    textarea.style.height = "44px"; // 최소 높이로 리셋
-    textarea.style.height = `${Math.min(textarea.scrollHeight, 88)}px`; // 최대 88px로 제한
+    textarea.style.height = "44px";
+    textarea.style.height = `${Math.min(textarea.scrollHeight, 88)}px`;
   };
 
-  // value가 변경될 때마다 높이 조절
   useEffect(() => {
     if (textareaRef.current && as === "textarea") {
       handleAutoResize(textareaRef.current);
     }
   }, [value, as]);
 
+  const baseInput =
+    "text-sub2 font-sans placeholder:text-ct-gray-300 text-ct-black-200 w-full rounded-[10px] bg-ct-gray-100";
+  const sizeInput =
+    as === "textarea"
+      ? "h-[44px] max-h-[88px] px-[26px] pt-[14px] pb-[12px] resize-none overflow-y-auto"
+      : "min-h-[44px] px-[26px]";
+  const errorRing = error
+    ? "border border-ct-red-100"
+    : "border border-transparent";
+
   return (
-    <div className="mb-[27px]">
-      <div className="flex justify-between items-center mb-[8px]">
+    <div className={containerClassName ?? "mb-[16px]"}>
+      <div className="flex justify-between items-center mb-[6px]">
         <label className="pl-[7px] text-sub2 text-ct-black-200">{label}</label>
         {showCounter && maxLength && (
           <span className="text-body2 text-ct-gray-300">
@@ -50,6 +72,7 @@ function InputField({
           </span>
         )}
       </div>
+
       {as === "textarea" ? (
         <textarea
           ref={textareaRef}
@@ -60,7 +83,12 @@ function InputField({
           maxLength={maxLength}
           rows={1}
           onInput={(e) => handleAutoResize(e.target as HTMLTextAreaElement)}
-          className="text-sub2 font-sans placeholder:text-ct-gray-300 text-ct-black-200 w-full h-[44px] max-h-[88px] rounded-[10px] px-[26px] pt-[14px] pb-[12px] bg-ct-gray-100 resize-none overflow-y-auto"
+          aria-invalid={!!error}
+          aria-describedby={error ? `${label}-error` : undefined}
+          className={`${baseInput} ${sizeInput} ${errorRing} ${
+            inputClassName ?? ""
+          }`}
+          {...textareaProps}
         />
       ) : (
         <input
@@ -70,12 +98,25 @@ function InputField({
           onChange={onChange}
           onClick={onClick}
           maxLength={maxLength}
-          className="text-sub2 font-sans placeholder:text-ct-gray-300 text-ct-black-200 w-full min-h-[44px] rounded-[10px] px-[26px] bg-ct-gray-100"
+          aria-invalid={!!error}
+          aria-describedby={error ? `${label}-error` : undefined}
+          className={`${baseInput} ${sizeInput} ${errorRing} ${
+            inputClassName ?? ""
+          }`}
+          {...inputProps}
         />
       )}
-      {helperText && (
-        <p className="mt-[12px] text-body2 text-ct-gray-300">{helperText}</p>
-      )}
+
+      {error ? (
+        <p
+          id={`${label}-error`}
+          className="mt-[6px] text-body2 text-ct-red-100 ml-[13px]"
+        >
+          {error}
+        </p>
+      ) : helperText ? (
+        <p className="mt-[6px] text-body2 text-ct-gray-300">{helperText}</p>
+      ) : null}
     </div>
   );
 }

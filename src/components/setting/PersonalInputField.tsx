@@ -25,6 +25,12 @@ function PersonalInputField({
 }: PersonalInputFieldProps) {
   const currentLength = value?.length || 0;
 
+  const inputBase =
+    "w-full flex text-sub2 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard rounded-[10px] bg-ct-gray-100";
+  const inputError = error
+    ? "border border-ct-red-100"
+    : "border border-transparent";
+
   return (
     <div className="flex flex-col gap-[11px] w-full mb-[10px]">
       <div className="flex justify-between items-center">
@@ -41,7 +47,7 @@ function PersonalInputField({
           readOnly={!!onClick}
           placeholder={placeholder}
           maxLength={maxLength}
-          className="w-full flex text-sub2 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard h-[44px] max-h-[88px] rounded-[10px] px-[26px] py-[12px] bg-ct-gray-100 resize-none overflow-y-auto"
+          className={`${inputBase} ${inputError} h-[44px] max-h-[88px] px-[26px] py-[12px] resize-none overflow-y-auto`}
           onClick={onClick}
           onChange={onChange}
           onInput={(e) => {
@@ -57,7 +63,7 @@ function PersonalInputField({
           readOnly={!!onClick}
           placeholder={placeholder}
           maxLength={maxLength}
-          className="w-full flex text-sub2 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100"
+          className={`${inputBase} ${inputError} min-h-[44px] pl-[26px]`}
           onClick={onClick}
           onChange={onChange}
         />

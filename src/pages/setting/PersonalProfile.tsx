@@ -11,20 +11,28 @@ import SubRegionModal from "../../components/onboarding/SubRegionModal";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGetProfile, usePatchProfile } from "../../hooks/mypageQueries";
 import { useAuth } from "../../contexts/AuthContext";
+import { toast } from "react-toastify";
 
 function PersonalProfile() {
   const { isModalOpen, setIsModalOpen } = useModal();
   const [nickname, setNickname] = useState("");
+  const [nicknameError, setNicknameError] = useState("");
   const [shortIntro, setShortIntro] = useState("");
+  const [shortIntroError, setShortIntroError] = useState("");
   const [region, setRegion] = useState("");
+  const [regionError, setRegionError] = useState("");
   const [subRegion, setSubRegion] = useState("");
   const [subRegionError, setSubRegionError] = useState("");
   const [birthDate, setBirthDate] = useState("");
+  const [birthError, setBirthError] = useState("");
   const [employ, setEmploy] = useState("");
+  const [employError, setEmployError] = useState("");
   const [educationLevel, setEducationLevel] = useState("");
+  const [educationError, setEducationError] = useState("");
   const [highSectorText, setHighSectorText] = useState("");
   const [lowSectorText, setLowSectorText] = useState("");
   const [academic, setAcademic] = useState("");
+  const [academicError, setAcademicError] = useState("");
   const [modalType, setModalType] = useState<
     "region" | "subregion" | "birth" | "academic" | "employment" | null
   >(null);
@@ -42,6 +50,8 @@ function PersonalProfile() {
   const { data: profile } = useGetProfile({
     service_id: user?.id.toString() || "",
   });
+
+  const hasSpecialChars = (s: string) => /[^a-zA-Z0-9가-힣 ]/.test(s || "");
 
   useEffect(() => {
     setNickname(profile?.result.user.name || "");
@@ -94,8 +104,15 @@ function PersonalProfile() {
     }
   }, [location.state]);
 
+  useEffect(() => {
+    if (hasSpecialChars(nickname))
+      setNicknameError("특수문자는 사용이 불가합니다");
+    else setNicknameError("");
+  }, [nickname]);
+
   const isValid =
     nickname &&
+    !nicknameError &&
     shortIntro &&
     region &&
     subRegion &&
@@ -109,7 +126,37 @@ function PersonalProfile() {
   });
 
   const handleSubmit = () => {
+    if (hasSpecialChars(nickname)) {
+      setNicknameError("특수문자는 사용이 불가합니다");
+      toast.error("올바른 입력값을 입력해주세요");
+      return;
+    }
+
+    if (!nickname) setNicknameError("닉네임을 입력해주세요");
+    else setNicknameError("");
+
+    if (!shortIntro) setShortIntroError("한줄 소개를 입력해주세요");
+    else setShortIntroError("");
+
+    if (!region) setRegionError("주 활동 지역을 선택해주세요");
+    else setRegionError("");
+
+    if (!subRegion) setSubRegionError("세부 활동 지역을 선택해주세요");
+
+    if (!birthDate) setBirthError("생년월일을 입력해주세요");
+    else setBirthError("");
+
+    if (!employ) setEmployError("구인/구직 상태를 선택해주세요");
+    else setEmployError("");
+
+    if (!educationLevel) setEducationError("최종 학력을 입력해주세요");
+    else setEducationError("");
+
+    if (!academic) setAcademicError("재학/졸업 상태를 입력해주세요");
+    else setAcademicError("");
+
     if (!isValid) return;
+
     updateProfile({
       name: nickname,
       one_line_profile: shortIntro,
@@ -147,6 +194,9 @@ function PersonalProfile() {
             label="닉네임"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
+            error={nicknameError}
+            maxLength={10}
+            showCounter={true}
           />
           <div className="flex flex-col gap-[8px]">
             <PersonalInputField
@@ -156,6 +206,7 @@ function PersonalProfile() {
               multiline={true}
               maxLength={50}
               showCounter={true}
+              error={shortIntroError}
             />
             <span className="text-body1 text-ct-gray-200 ml-[10px]">
               한줄로 나에 대해 나타내보세요!
@@ -168,12 +219,14 @@ function PersonalProfile() {
             value={birthDate}
             placeholder="생년월일 입력"
             onClick={() => openModal("birth")}
+            error={birthError}
           />
           <PersonalInputField
             label="주 활동 지역"
             value={region}
             placeholder="주 활동지역 입력"
             onClick={() => openModal("region")}
+            error={regionError}
           />
           <PersonalInputField
             label="세부 활동 지역"
@@ -194,6 +247,7 @@ function PersonalProfile() {
             value={employ}
             placeholder="구인/구직 상태 입력"
             onClick={() => openModal("employment")}
+            error={employError}
           />
           <PersonalInputField
             label="희망 직무를 선택해주세요"
@@ -224,12 +278,14 @@ function PersonalProfile() {
             value={educationLevel}
             onChange={(e) => setEducationLevel(e.target.value)}
             placeholder="최종학력 입력"
+            error={educationError}
           />
           <PersonalInputField
             label="재학/졸업 상태를 입력해주세요"
             value={academic}
             placeholder="재학/졸업 상태 입력"
             onClick={() => openModal("academic")}
+            error={academicError}
           />
         </div>
       </div>
