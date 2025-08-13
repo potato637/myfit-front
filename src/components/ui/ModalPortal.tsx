@@ -23,7 +23,7 @@ const ModalPortal = ({ children, onClose }: ModalPortalProps) => {
 
   return createPortal(
     <div
-      className="fixed inset-0 w-full h-full bg-ct-black-100/50 z-[9999] ct-center"
+      className="fixed inset-0 w-screen h-[100dvh] bg-ct-black-100/50 z-[9999] ct-center p-[env(safe-area-inset-top,0px)_env(safe-area-inset-right,0px)_env(safe-area-inset-bottom,0px)_env(safe-area-inset-left,0px)]"
       onClick={handleOutsideClick}
     >
       <div
