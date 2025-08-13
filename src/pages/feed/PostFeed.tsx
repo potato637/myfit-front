@@ -6,6 +6,7 @@ import TopBarContainer from "../../components/common/TopBarContainer";
 import KeywordInput from "../../components/feed/KeywordInput";
 import { createFeed } from "../../apis/feed";
 import { useAuth } from "../../contexts/AuthContext";
+import { toast } from "react-toastify";
 
 function PostFeed() {
   const navigate = useNavigate();
@@ -33,27 +34,26 @@ function PostFeed() {
   const createFeedMutation = useMutation({
     mutationFn: createFeed,
     onSuccess: (data) => {
-      console.log("✅ [PostFeed] 피드 작성 성공:", data);
-      alert("게시글이 작성되었습니다!");
+      toast.success("게시글이 작성되었습니다!");
       // 피드 목록 새로고침
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
       navigate("/feed");
     },
     onError: (error) => {
       console.error("❌ [PostFeed] 피드 작성 실패:", error);
-      alert("게시글 작성에 실패했습니다. 다시 시도해주세요.");
+      toast.error("게시글 작성에 실패했습니다. 다시 시도해주세요.");
     },
   });
 
   const handleSubmit = async () => {
     // 기본 검증
     if (!content.trim()) {
-      alert("내용을 입력해주세요.");
+      toast.error("내용을 입력해주세요.");
       return;
     }
 
     if (!user?.id) {
-      alert("로그인이 필요합니다.");
+      toast.error("로그인이 필요합니다.");
       return;
     }
 

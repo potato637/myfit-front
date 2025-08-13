@@ -3,6 +3,7 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import { awsBucketName, awsIdentityPoolId, awsRegion } from "../../config/aws";
+import { toast } from "react-toastify";
 
 interface ImageUploadBoxProps {
   className?: string;
@@ -38,7 +39,7 @@ function ImageUploadBox({
     if (!file) return;
 
     if (!(file instanceof File)) {
-      alert("파일 형식이 잘못되었습니다.");
+      toast.error("파일 형식이 잘못되었습니다.");
       e.target.value = "";
       return;
     }
@@ -70,11 +71,11 @@ function ImageUploadBox({
 
       await s3.send(command);
       const fileUrl = `https://${awsBucketName}.s3.${awsRegion}.amazonaws.com/${key}`;
-      alert("이미지 업로드에 성공했습니다.");
+      toast.success("이미지 업로드에 성공했습니다.");
       onUploadSuccess?.(fileUrl);
     } catch (err: any) {
       console.error(err);
-      alert(`업로드 중 오류가 발생했습니다: ${err.message}`);
+      toast.error(`업로드 중 오류가 발생했습니다: ${err.message}`);
       setPreview(initialPreview ?? null);
     } finally {
       setIsUploading(false);
