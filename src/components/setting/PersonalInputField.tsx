@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 interface PersonalInputFieldProps {
   label: string;
   placeholder?: string;
@@ -10,7 +12,7 @@ interface PersonalInputFieldProps {
   multiline?: boolean;
   maxLength?: number;
   showCounter?: boolean;
-  disallowSpecialChars?: boolean; // ← 추가
+  disallowSpecialChars?: boolean; // 추가
 }
 
 function PersonalInputField({
@@ -26,12 +28,19 @@ function PersonalInputField({
   disallowSpecialChars = false,
 }: PersonalInputFieldProps) {
   const currentLength = value?.length || 0;
+  const [internalError, setInternalError] = useState("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     if (disallowSpecialChars) {
-      e.target.value = e.target.value.replace(/[^a-zA-Z0-9가-힣]/g, "");
+      const filtered = e.target.value.replace(/[^a-zA-Z0-9가-힣]/g, "");
+      if (filtered !== e.target.value) {
+        setInternalError("특수문자는 사용이 불가합니다");
+      } else {
+        setInternalError("");
+      }
+      e.target.value = filtered;
     }
     onChange?.(e);
   };
@@ -73,8 +82,10 @@ function PersonalInputField({
           onChange={handleChange}
         />
       )}
-      {error && (
-        <span className="text-body2 text-ct-red-100 pl-[13px]">{error}</span>
+      {(error || internalError) && (
+        <span className="text-body2 text-ct-red-100 pl-[13px]">
+          {error || internalError}
+        </span>
       )}
     </div>
   );

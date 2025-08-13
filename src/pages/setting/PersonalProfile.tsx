@@ -149,6 +149,7 @@ function PersonalProfile() {
             onChange={(e) => setNickname(e.target.value)}
             maxLength={10}
             showCounter={true}
+            disallowSpecialChars={true}
           />
           <div className="flex flex-col gap-[8px]">
             <PersonalInputField
