@@ -23,6 +23,12 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+body.modal-open {
+  overflow: hidden;
+  position: fixed; /* iOS 등 일부 모바일 환경에서 스크롤 튕김 현상 방지 */
+  width: 100%;
+}
+
 *,
 *::before,
 *::after {

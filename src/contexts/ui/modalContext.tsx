@@ -20,10 +20,12 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
 
   const openModal = useCallback((node: ReactNode) => {
     setContent(node);
+    document.body.classList.add("modal-open");
   }, []);
 
   const closeModal = useCallback(() => {
     setContent(null);
+    document.body.classList.remove("modal-open");
   }, []);
 
   const contextValue = useMemo(
