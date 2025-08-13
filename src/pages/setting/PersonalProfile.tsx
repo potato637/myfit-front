@@ -80,11 +80,17 @@ function PersonalProfile() {
       setAcademic(data.academic || "");
     }
 
-    if (state?.high_sector !== undefined && state?.high_sector !== null) {
-      setHighSectorText(state.high_sector || "");
+    if (
+      typeof state?.high_sector === "string" &&
+      state.high_sector.trim().length > 0
+    ) {
+      setHighSectorText(state.high_sector);
     }
-    if (state?.low_sector !== undefined && state?.low_sector !== null) {
-      setLowSectorText(state.low_sector || "");
+    if (
+      typeof state?.low_sector === "string" &&
+      state.low_sector.trim().length > 0
+    ) {
+      setLowSectorText(state.low_sector);
     }
   }, [location.state]);
 
