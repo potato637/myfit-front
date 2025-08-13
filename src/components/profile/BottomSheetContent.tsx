@@ -76,7 +76,11 @@ function BottomSheetContent({ type }: { type: "feed" | "card" }) {
       <div
         onClick={() => {
           setIsBottomSheetOpen(false);
-          openModal(<ModalContent type="feed" />);
+          if (type === "feed") {
+            openModal(<ModalContent type="feed" />);
+          } else {
+            openModal(<ModalContent type="card" />);
+          }
         }}
       >
         <span className="text-ct-gray-400 text-sub2 border-b-[1px] border-ct-gray-400">
