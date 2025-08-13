@@ -9,7 +9,8 @@ import BottomSheet from "../../components/ui/BottomSheet";
 import BottomSheetContent from "../../components/profile/BottomSheetContent";
 import Modal from "../../components/ui/Modal";
 import ModalContent from "../../components/profile/ModalContent";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
+import { useEffect, useRef } from "react";
 
 const TopBarContent = () => {
   return (
@@ -33,6 +34,39 @@ function FeedDetail() {
   });
 
   const feedsData = feed?.pages.flatMap((page) => page.result.feeds);
+  const feedRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const { feed_id } = useParams();
+
+  // Handle scrolling to a specific feed from URL hash
+  useEffect(() => {
+    if (!feedsData || feedsData.length === 0) return;
+
+    const targetFeedId = window.location.hash.replace("#", "") || feed_id;
+    if (!targetFeedId) return;
+
+    const timer = setTimeout(() => {
+      const feedElement = feedRefs.current[targetFeedId];
+      if (feedElement) {
+        const headerHeight = 60; // Adjust based on your header height
+        const introductionHeight = 80; // Adjust based on introduction height
+        const offset = headerHeight + introductionHeight;
+        
+        const elementPosition = feedElement.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = Math.max(0, elementPosition - offset);
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+        
+        // Clean up URL without refreshing the page
+        const newUrl = window.location.pathname + window.location.search;
+        window.history.replaceState({}, "", newUrl);
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [feedsData, feed_id]);
 
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
@@ -46,7 +80,14 @@ function FeedDetail() {
           <>
             <DetailIntroduction />
             {feedsData?.map((feed) => (
-              <DetailFeedItem key={feed.feed_id} item={feed} />
+              <div 
+                key={feed.feed_id}
+                ref={(el) => {
+                  feedRefs.current[feed.feed_id] = el;
+                }}
+              >
+                <DetailFeedItem item={feed} />
+              </div>
             ))}
           </>
         )}

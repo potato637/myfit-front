@@ -7,11 +7,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { createActivityCard } from "../../apis/onboarding";
 import { ActivityCardRequest } from "../../types/common/activityCard";
 import { useAuth } from "../../contexts/AuthContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 function CreateCard() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 폼 데이터 상태
@@ -83,13 +85,10 @@ function CreateCard() {
       console.log("🔍 [CompanyCardRegister] SignupData 상태:", user);
 
       const response = await createActivityCard(cardRequest);
-
-      if (response.message) {
-        console.log("✅ [CompanyCardRegister] 카드 등록 성공:", response);
-        navigate("/mypage");
-      } else {
-        throw new Error(response.message || "카드 등록 실패");
-      }
+      console.log("Card created successfully:", response);
+      // Invalidate the cards query to refetch the updated list
+      await queryClient.invalidateQueries({ queryKey: ["cards", user?.id?.toString()] });
+      navigate("/mypage");
     } catch (error: any) {
       console.error("❌ [CompanyCardRegister] 카드 등록 실패:", error);
 
