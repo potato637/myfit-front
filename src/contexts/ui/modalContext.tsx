@@ -23,10 +23,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const closeModal = useCallback(() => {
-    // Small delay to allow the close animation to play before removing content
-    setTimeout(() => {
-      setContent(null);
-    }, 300);
+    setContent(null);
   }, []);
 
   const contextValue = useMemo(

@@ -134,7 +134,7 @@ function Filter() {
                 value={keywordInput}
                 onChange={handleKeywordChange}
                 placeholder="최대 3개 ( ,로 구분됩니다. )"
-                className="w-full flex text-body1 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100"
+                className="w-full flex text-sub2 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100"
               />
               {keywordError && (
                 <span className="text-body2 text-ct-red-100 pl-[13px]">
@@ -149,7 +149,7 @@ function Filter() {
                 value={lowSectorText}
                 readOnly
                 placeholder="직무를 선택해주세요"
-                className="w-full flex text-body1 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100 cursor-pointer"
+                className="w-full flex text-sub2 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100 cursor-pointer"
                 onClick={() => {
                   navigate("/searching/filter/job-select", {
                     state: {
