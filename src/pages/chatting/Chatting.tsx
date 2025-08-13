@@ -18,7 +18,7 @@ function Chatting() {
   const { prependMessages, clearMessages, messages } = useChatting();
   const { setEditMode, setModalType } = useCoffeeChatModal();
   const { resetSelections } = useCoffeeChat();
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
   const { user } = useAuth();
   const nav = useNavigate();
   const { chattingRoomId } = useParams();
@@ -49,9 +49,9 @@ function Chatting() {
   }, [numericRoomId]);
 
   useEffect(() => {
-    setIsModalOpen(false);
+    closeModal();
     setModalType("none");
-  }, [setIsModalOpen, setModalType]);
+  }, [closeModal, setModalType]);
 
   const scrollToBottom = (behavior: ScrollBehavior = "auto") => {
     const el = scrollRef.current;

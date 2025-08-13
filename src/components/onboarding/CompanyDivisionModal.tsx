@@ -8,13 +8,13 @@ function CompanyDivisionModal({
 }: {
   onConfirm: (val: string) => void;
 }) {
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
   const [pickerValue, setPickerValue] = useState({
     division: companyDivision[1], // "창업 팀"을 기본값으로 설정
   });
   const handleConfirm = () => {
     onConfirm(pickerValue.division);
-    setIsModalOpen(false);
+    closeModal();
   };
   return (
     <div className="flex flex-col ct-center w-full h-full relative">

@@ -18,7 +18,7 @@ function EditPendingModal({ data }: Props) {
   const nav = useNavigate();
   const numericRoomId = Number(roomId);
   const [showCancelModal, setShowCancelModal] = useState(false);
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
 
   const formattedDate = FormattedDate(data.scheduled_at);
   const formattedTime = FormattedTime(data.scheduled_at);
@@ -31,7 +31,7 @@ function EditPendingModal({ data }: Props) {
       replace: true,
     });
     setEditMode(true);
-    setIsModalOpen(false);
+    closeModal();
   };
 
   if (showCancelModal) {

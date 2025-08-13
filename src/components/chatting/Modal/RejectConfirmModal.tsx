@@ -12,14 +12,14 @@ interface RejectModalProps {
 function RejectConfirmModal({ data }: RejectModalProps) {
   const { roomId } = useChatting();
   const numericRoomId = Number(roomId);
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
   const { setRequestStatus } = useCoffeeChatModal();
   const { mutate: rejectChat } = useRejectCoffeeChatMutation(numericRoomId);
   const handleReject = () => {
     rejectChat(data.coffeechat_id, {
       onSuccess: () => {
         setRequestStatus("REJECTED");
-        setIsModalOpen(false);
+        closeModal();
       },
       onError: (error) => {
         console.error("커피챗 거절 실패", error);
@@ -42,9 +42,7 @@ function RejectConfirmModal({ data }: RejectModalProps) {
       <div className="flex gap-[12px] mt-[30px]">
         <button
           className="w-[142px] h-[42px] rounded-[100px] bg-ct-gray-200 text-ct-white text-sub2"
-          onClick={() => {
-            setIsModalOpen(false);
-          }}
+          onClick={closeModal}
         >
           안 할래요
         </button>

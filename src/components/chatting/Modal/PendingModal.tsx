@@ -12,7 +12,7 @@ interface Props {
 
 function PendingModal({ data }: Props) {
   const { setEditMode } = useCoffeeChatModal();
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
   const { roomId } = useChatting();
   const nav = useNavigate();
 
@@ -65,7 +65,7 @@ function PendingModal({ data }: Props) {
               coffeechatId: data.coffeechat_id,
             },
           });
-          setIsModalOpen(false);
+          closeModal();
         }}
       >
         변경 하기

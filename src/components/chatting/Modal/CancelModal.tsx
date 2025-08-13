@@ -10,7 +10,7 @@ interface CancelModalProps {
 
 function CancelModal({ onClose, coffeechat_id, roomId }: CancelModalProps) {
   const numericRoomId = Number(roomId);
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
   const { setRequestStatus } = useCoffeeChatModal();
   const { mutate: cancelChat } = useCancelCoffeeChatMutation(numericRoomId);
   const handleCancel = () => {
@@ -18,7 +18,7 @@ function CancelModal({ onClose, coffeechat_id, roomId }: CancelModalProps) {
       onSuccess: () => {
         if (onClose) onClose();
         setRequestStatus("CANCELED");
-        setIsModalOpen(false);
+        closeModal();
       },
       onError: (error) => {
         console.error("커피챗 취소 실패", error);
@@ -42,7 +42,7 @@ function CancelModal({ onClose, coffeechat_id, roomId }: CancelModalProps) {
         <button
           className="w-[142px] h-[42px] rounded-[100px] bg-ct-gray-200 text-ct-white text-sub2"
           onClick={() => {
-            setIsModalOpen(false);
+            closeModal();
           }}
         >
           안 할래요

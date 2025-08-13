@@ -8,13 +8,13 @@ function AcademicStatusModal({
 }: {
   onConfirm: (val: string) => void;
 }) {
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
   const [pickerValue, setPickerValue] = useState({
     Academic: statusOptions[4],
   });
   const handleConfirm = () => {
     onConfirm(pickerValue.Academic);
-    setIsModalOpen(false);
+    closeModal();
   };
 
   return (

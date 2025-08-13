@@ -4,13 +4,13 @@ import { useModal } from "../../contexts/ui/modalContext";
 import { salary } from "../../data/salary";
 
 function SalaryModal({ onConfirm }: { onConfirm: (val: string) => void }) {
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
   const [pickerValue, setPickerValue] = useState({
     Salary: salary[4],
   });
   const handleConfirm = () => {
     onConfirm(pickerValue.Salary);
-    setIsModalOpen(false);
+    closeModal();
   };
 
   return (

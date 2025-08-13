@@ -3,7 +3,7 @@ import { useModal } from "../../contexts/ui/modalContext";
 
 function DeleteAccountModal() {
   const nav = useNavigate();
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
   return (
     <div className="w-full h-full flex flex-col mx-[24px] my-[19px]">
       <img
@@ -28,7 +28,7 @@ function DeleteAccountModal() {
         </button>
         <button
           className="w-[142px] h-[42px] rounded-[100px] bg-ct-main-blue-200 text-ct-white text-sub2"
-          onClick={() => setIsModalOpen(false)}
+          onClick={closeModal}
         >
           안 할래요
         </button>

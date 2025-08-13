@@ -4,7 +4,7 @@ import { useDeleteFeed, useDeleteCard } from "../../hooks/mypageQueries";
 import { useAuth } from "../../contexts/AuthContext";
 
 function ModalContent({ type }: { type: "feed" | "card" }) {
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
   const { itemId } = useItemContext();
   const { user } = useAuth();
 
@@ -14,7 +14,7 @@ function ModalContent({ type }: { type: "feed" | "card" }) {
   const { mutate: deleteCard } = useDeleteCard();
 
   const handleDelete = () => {
-    setIsModalOpen(false);
+    closeModal();
     if (type === "feed") {
       deleteFeed({ feed_id: itemId });
     } else {
@@ -46,7 +46,7 @@ function ModalContent({ type }: { type: "feed" | "card" }) {
       <div className="ct-center gap-[8px]">
         <div
           className="w-[139px] h-[45px] rounded-[10px] ct-center bg-ct-gray-100"
-          onClick={() => setIsModalOpen(false)}
+          onClick={closeModal}
         >
           <span className="text-body1 text-ct-gray-400">취소</span>
         </div>
