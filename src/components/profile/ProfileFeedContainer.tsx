@@ -19,13 +19,7 @@ function ProfileFeedContainer({ serviceId }: { serviceId?: string }) {
   const feedsData = feeds?.pages.flatMap((page) => page.result.feeds);
 
   return (
-    <div
-      className={`${
-        feedsData?.length === 0
-          ? "ct-center h-[calc(100vh-450px)]"
-          : "grid grid-cols-3 gap-1"
-      }`}
-    >
+    <div className="grid grid-cols-3 gap-1">
       {location.pathname.startsWith("/mypage") && <ProfileAddFeed />}
       {feedsData?.map((feed) => (
         <ProfileFeedItem key={feed.feed_id} feed={feed} serviceId={serviceId} />
