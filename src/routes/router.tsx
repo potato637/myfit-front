@@ -71,7 +71,8 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <Splash /> },
           { path: "selectmembers", element: <SelectMembers /> },
-          { path: "register-email", element: <RegisterEmail /> },
+          { path: "register-email", element: <ProfileRegister /> },
+          // { path: "register-email", element: <RegisterEmail /> },
           { path: "profile-register", element: <ProfileRegister /> },
           { path: "profile-card-register", element: <ProfileCardRegister /> },
           { path: "profile-preview", element: <ProfilePreview /> },
