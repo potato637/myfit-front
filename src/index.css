@@ -17,18 +17,6 @@ html::-webkit-scrollbar {
   display: none;
 }
 
-:root {
-  --vh: 1vh;
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: calc(var(--vh, 1vh) * 100);
-}
-
 body {
   overflow-x: hidden;
   overflow-y: auto;
