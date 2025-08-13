@@ -55,10 +55,6 @@ function ResetPasssword() {
 
   const handleVerifyCode = async (code: string) => {
     try {
-      console.log("🔐 인증코드 검증 요청:", {
-        email: fullEmail,
-        authCode: code,
-      });
       const response = await validateAuthCode({
         email: fullEmail,
         authCode: code,
@@ -67,14 +63,11 @@ function ResetPasssword() {
       if (response.isSuccess) {
         setCodeVerified(true);
         setIsAuthInvalid(false);
-        console.log("✅ 인증코드 검증 성공:", response.message);
       } else {
         setCodeVerified(false);
         setIsAuthInvalid(true);
-        console.log("❌ 인증코드 검증 실패:", response.message);
       }
     } catch (error) {
-      console.error("❌ 인증코드 검증 에러:", error);
       setCodeVerified(false);
       setIsAuthInvalid(true);
     }
@@ -84,15 +77,11 @@ function ResetPasssword() {
     if (!isEmailValid) return;
 
     try {
-      console.log("📧 비밀번호 재설정 이메일 발송 요청:", fullEmail);
       await sendVerificationCode({ email: fullEmail });
       setEmailSent(true);
       setCodeVerified(false);
       setIsAuthInvalid(false);
-      console.log("✅ 비밀번호 재설정 이메일 발송 완료");
     } catch (error) {
-      console.error("❌ 이메일 발송 실패:", error);
-      // 에러가 발생해도 일단 진행 (개발 중)
       setEmailSent(true);
       setCodeVerified(false);
       setIsAuthInvalid(false);
@@ -101,13 +90,6 @@ function ResetPasssword() {
 
   const onSubmit = async (data: ResetPasswordFormData) => {
     try {
-      console.log("🔒 비밀번호 재설정 요청:", {
-        email: `${data.email}@${data.domain}`,
-        authCode: data.authCode,
-        newPassword: "***",
-      });
-
-      // 비밀번호 재설정 API 호출
       const response = await resetPassword({
         email: `${data.email}@${data.domain}`,
         authCode: data.authCode,
@@ -115,9 +97,6 @@ function ResetPasssword() {
       });
 
       if (response.isSuccess) {
-        console.log("✅ 비밀번호 재설정 완료:", response.message);
-
-        // 성공 시 로그인 페이지로 이동
         logout();
         navigate("/onboarding", {
           state: {
@@ -129,9 +108,6 @@ function ResetPasssword() {
         throw new Error(response.message || "비밀번호 재설정에 실패했습니다.");
       }
     } catch (error: any) {
-      console.error("❌ 비밀번호 재설정 실패:", error);
-
-      // 구체적인 에러 메시지 표시
       let errorMessage = "비밀번호 재설정에 실패했습니다.";
 
       if (error.response?.status === 400) {
@@ -172,7 +148,7 @@ function ResetPasssword() {
                 {...register("email")}
                 type="text"
                 placeholder="이메일"
-                className="w-full h-[44px] pl-[18px] rounded-[10px] bg-[#F7F7F7] text-sub2 text-ct-gray-200"
+                className="w-full h-[44px] pl-[18px] rounded-[10px] bg-[#F7F7F7] text-sub2 text-ct-black-200"
               />
             </div>
 
@@ -186,7 +162,7 @@ function ResetPasssword() {
                 {...register("domain")}
                 type="text"
                 placeholder="도메인 주소 입력"
-                className="w-full h-[44px] pl-[18px] rounded-[10px] bg-[#F7F7F7] text-sub2 text-ct-gray-200"
+                className="w-full h-[44px] pl-[18px] rounded-[10px] bg-[#F7F7F7] text-sub2 text-ct-black-200"
               />
             </div>
           </div>
@@ -232,7 +208,7 @@ function ResetPasssword() {
                   {...register("authCode")}
                   disabled={!emailSent}
                   type="text"
-                  className={`w-full h-full rounded-[10px] px-3 pr-[36px] bg-[#F7F7F7] text-sub2 text-ct-gray-200 outline-none ring-0 focus:ring-0 focus:outline-none ${
+                  className={`w-full h-full rounded-[10px] px-3 pr-[36px] bg-[#F7F7F7] text-sub2 text-ct-black-200 outline-none ring-0 focus:ring-0 focus:outline-none ${
                     isAuthInvalid
                       ? "border border-red-500"
                       : "border border-transparent"
@@ -280,7 +256,7 @@ function ResetPasssword() {
             type="password"
             {...register("password")}
             placeholder="새로운 비밀번호"
-            className="w-full h-[44px] pl-[18px] bg-[#F7F7F7] rounded-[10px] text-sub2 text-ct-gray-200"
+            className="w-full h-[44px] pl-[18px] bg-[#F7F7F7] rounded-[10px] text-sub2 text-ct-black-200"
           />
           {errors.password && (
             <p className="text-red-500 text-sub2">{errors.password.message}</p>
@@ -289,7 +265,7 @@ function ResetPasssword() {
             type="password"
             {...register("confirmPassword")}
             placeholder="새로운 비밀번호 확인"
-            className="w-full h-[44px] pl-[18px] bg-[#F7F7F7] rounded-[10px] text-sub2 text-ct-gray-200"
+            className="w-full h-[44px] pl-[18px] bg-[#F7F7F7] rounded-[10px] text-sub2 text-ct-black-200"
           />
           {errors.confirmPassword && (
             <p className="text-red-500 text-sub2">
