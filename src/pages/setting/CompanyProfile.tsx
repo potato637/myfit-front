@@ -39,7 +39,7 @@ function CompanyProfile() {
       setRegion(profile.result.service.userArea.high_area);
       setSubRegion(profile.result.service.userArea.low_area);
       setEmploymentStatus(profile.result.service.recruiting_status);
-      setDivision(profile.result.service.low_sector);
+      setDivision(profile.result.user.team_division || "");
       setIndustry(profile.result.user.industry || "");
       setWebsite(profile.result.user.link || "");
     }
