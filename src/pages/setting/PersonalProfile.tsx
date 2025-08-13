@@ -147,6 +147,8 @@ function PersonalProfile() {
             label="닉네임"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
+            maxLength={10}
+            showCounter={true}
           />
           <div className="flex flex-col gap-[8px]">
             <PersonalInputField
