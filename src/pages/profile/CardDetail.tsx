@@ -48,11 +48,24 @@ function CardDetail() {
     const targetCard = cardsData.find((card) => card.id === cardId);
     if (!targetCard) return;
 
-    // Scroll to the card
+    // Scroll to the card with offset for the fixed header and introduction
     const cardElement = cardsRef.current[cardId];
     if (cardElement) {
-      cardElement.scrollIntoView({ behavior: "smooth", block: "start" });
-
+      // Calculate the height of the fixed elements (header + introduction)
+      const headerHeight = 60; // Adjust this value based on your header height
+      const introductionHeight = 80; // Adjust this value based on your introduction height
+      const offset = headerHeight + introductionHeight;
+      
+      // Calculate the scroll position
+      const elementPosition = cardElement.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementPosition - offset;
+      
+      // Smooth scroll to the calculated position
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+      
       // Update the URL to remove the hash after scrolling
       const newUrl = window.location.pathname + window.location.search;
       window.history.replaceState({}, "", newUrl);
