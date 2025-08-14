@@ -10,7 +10,7 @@ import { useBottomSheet } from "../../contexts/ui/bottomSheetContext";
 import { useItemContext } from "../../contexts/ItemContext";
 import { formatTimeAgo } from "../../utils/date";
 import { useLocation } from "react-router-dom";
-import { useAddFeedLike, useDeleteFeedLike } from "../../hooks/relationQueries";
+import { addFeedLike, removeFeedLike } from "../../apis/feed";
 import { useAuth } from "../../contexts/AuthContext";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createComment, deleteComment, getFeedComments } from "../../apis/feed";
@@ -50,17 +50,97 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
     setItemId(item.feed_id);
   };
 
-  const { mutate: addFeedLike } = useAddFeedLike({
-    service_id: user?.id?.toString() || "",
+  // 좋아요 추가 mutation (낙관적 업데이트)
+  const addLikeMutation = useMutation({
+    mutationFn: (feed_id: number) => addFeedLike(feed_id),
+    onMutate: async (feed_id) => {
+      // 현재 쿼리 키 (마이페이지 또는 다른 사용자 프로필)
+      const queryKey = isMine ? ['feeds', user?.id?.toString()] : ['feeds', location.pathname.split('/').pop()];
+      
+      // 낙관적 업데이트를 위해 이전 데이터 취소
+      await queryClient.cancelQueries({ queryKey });
+      
+      // 이전 값 저장
+      const previousData = queryClient.getQueryData(queryKey);
+      
+      // 낙관적 업데이트 적용
+      queryClient.setQueryData(queryKey, (old: any) => {
+        if (!old?.pages) return old;
+        
+        return {
+          ...old,
+          pages: old.pages.map((page: any) => ({
+            ...page,
+            result: {
+              ...page.result,
+              feeds: page.result.feeds.map((feed: any) => 
+                feed.feed_id === feed_id 
+                  ? { ...feed, is_liked: true, heart: feed.heart + 1 }
+                  : feed
+              )
+            }
+          }))
+        };
+      });
+      
+      return { previousData, queryKey };
+    },
+    onError: (_err, _variables, context) => {
+      // 에러 시 이전 데이터로 롤백
+      if (context?.previousData) {
+        queryClient.setQueryData(context.queryKey, context.previousData);
+      }
+    }
   });
-  const { mutate: deleteFeedLike } = useDeleteFeedLike({
-    service_id: user?.id?.toString() || "",
+  
+  // 좋아요 제거 mutation (낙관적 업데이트)
+  const deleteLikeMutation = useMutation({
+    mutationFn: (feed_id: number) => removeFeedLike(feed_id),
+    onMutate: async (feed_id) => {
+      // 현재 쿼리 키 (마이페이지 또는 다른 사용자 프로필)
+      const queryKey = isMine ? ['feeds', user?.id?.toString()] : ['feeds', location.pathname.split('/').pop()];
+      
+      // 낙관적 업데이트를 위해 이전 데이터 취소
+      await queryClient.cancelQueries({ queryKey });
+      
+      // 이전 값 저장
+      const previousData = queryClient.getQueryData(queryKey);
+      
+      // 낙관적 업데이트 적용
+      queryClient.setQueryData(queryKey, (old: any) => {
+        if (!old?.pages) return old;
+        
+        return {
+          ...old,
+          pages: old.pages.map((page: any) => ({
+            ...page,
+            result: {
+              ...page.result,
+              feeds: page.result.feeds.map((feed: any) => 
+                feed.feed_id === feed_id 
+                  ? { ...feed, is_liked: false, heart: Math.max(0, feed.heart - 1) }
+                  : feed
+              )
+            }
+          }))
+        };
+      });
+      
+      return { previousData, queryKey };
+    },
+    onError: (_err, _variables, context) => {
+      // 에러 시 이전 데이터로 롤백
+      if (context?.previousData) {
+        queryClient.setQueryData(context.queryKey, context.previousData);
+      }
+    }
   });
+  
   const handleHeartClick = () => {
     if (item.is_liked) {
-      deleteFeedLike({ feed_id: item.feed_id });
+      deleteLikeMutation.mutate(Number(item.feed_id));
     } else {
-      addFeedLike({ feed_id: item.feed_id });
+      addLikeMutation.mutate(Number(item.feed_id));
     }
   };
 
