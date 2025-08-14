@@ -30,7 +30,7 @@ body.modal-open {
 }
 
 .modal-overlay {
-  box-sizing: content-box;
+  box-sizing: border-box;
   min-height: calc(100vh + env(safe-area-inset-bottom));
 
   padding-top: constant(safe-area-inset-top);
