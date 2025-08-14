@@ -28,7 +28,7 @@ function BottomSheetContent({ type }: { type: "feed" | "card" }) {
 
   return (
     <div className="w-full h-auto bg-ct-white ct-center flex-col gap-[15px]">
-      <div className="w-[265px] flex flex-col items-start gap-[15px]">
+      <div className="w-full flex flex-col items-start gap-[15px]">
         <span className="text-h1 text-ct-black-300">
           {type === "feed" ? "피드 관리" : "카드 관리"}
         </span>
