@@ -4,6 +4,7 @@ import ImageUploadBox from "../../components/common/ImageUploadBox";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import InputField from "../../components/onboarding/InputField";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { ActivityCardRequest } from "../../types/common/activityCard";
 import { useAuth } from "../../contexts/AuthContext";
 import { useGetActivityCard, useUpdateActivityCard } from "../../hooks/mypageQueries";
 import { toast } from "react-toastify";
@@ -89,7 +90,7 @@ function EditCard() {
       }
 
       // 이력/활동 카드 수정 API 호출
-      const cardRequest = {
+      const cardRequest: Omit<ActivityCardRequest, 'service_id'> = {
         card_img: cardImageUrl,
         card_one_line_profile: oneLineIntro.trim(),
         detailed_profile: detailedDescription.trim(),

@@ -71,7 +71,7 @@ export const useFeedMutations = ({
       
       return { previousFeeds, previousSearchKeyword, previousSearchHashtag };
     },
-    onError: (error, _variables, context) => {
+    onError: (_error, _variables, context) => {
       toast.error("좋아요 처리 중 오류가 발생했습니다.");
       
       // 에러 시 이전 데이터로 롤백
@@ -150,7 +150,7 @@ export const useFeedMutations = ({
       
       return { previousFeeds, previousSearchKeyword, previousSearchHashtag };
     },
-    onError: (error, _variables, context) => {
+    onError: (_error, _variables, context) => {
       toast.error("좋아요 처리 중 오류가 발생했습니다.");
       
       // 에러 시 이전 데이터로 롤백
