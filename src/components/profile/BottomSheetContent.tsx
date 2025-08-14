@@ -10,11 +10,20 @@ function BottomSheetContent({ type }: { type: "feed" | "card" }) {
   const { setIsBottomSheetOpen } = useBottomSheet();
   const { openModal } = useModal();
   const { itemId } = useItemContext();
-  const [how, setHow] = useState<"see" | "hide">("see");
+  const [how, setHow] = useState<"edit" | "delete">("edit");
 
-  const handleEdit = () => {
-    setIsBottomSheetOpen(false);
-    navigate(`/feed/edit/${itemId}`);
+  const handleSave = () => {
+    if (how === "edit") {
+      setIsBottomSheetOpen(false);
+      navigate(`/feed/edit/${itemId}`);
+    } else {
+      setIsBottomSheetOpen(false);
+      if (type === "feed") {
+        openModal(<ModalContent type="feed" />);
+      } else {
+        openModal(<ModalContent type="card" />);
+      }
+    }
   };
 
   return (
@@ -30,13 +39,13 @@ function BottomSheetContent({ type }: { type: "feed" | "card" }) {
       </div>
       <div
         className={`flex items-center w-full h-[60px] px-[9px] py-[13px] bg-ct-white rounded-[10px] border-[1px] border-ct-gray-200 ${
-          how === "see" ? "border-ct-main-blue-100" : ""
+          how === "edit" ? "border-ct-main-blue-100" : ""
         }`}
-        onClick={() => setHow("see")}
+        onClick={() => setHow("edit")}
       >
         <img
           src={`${
-            how === "see"
+            how === "edit"
               ? "/assets/profile/seeSelect.svg"
               : "/assets/profile/see.svg"
           }`}
@@ -44,18 +53,18 @@ function BottomSheetContent({ type }: { type: "feed" | "card" }) {
           className="w-[34px] h-[34px]"
         />
         <span className="text-sub2 text-ct-black-200 ml-[14px]">
-          {type === "feed" ? "피드 유지" : "카드 유지"}
+          {type === "feed" ? "피드 수정" : "카드 수정"}
         </span>
       </div>
       <div
         className={`flex items-center w-full h-[60px] px-[9px] py-[13px] bg-ct-white rounded-[10px] border-[1px] border-ct-gray-200 ${
-          how === "hide" ? "border-ct-main-blue-100" : ""
+          how === "delete" ? "border-ct-main-blue-100" : ""
         }`}
-        onClick={() => setHow("hide")}
+        onClick={() => setHow("delete")}
       >
         <img
           src={`${
-            how === "hide"
+            how === "delete"
               ? "/assets/profile/hideSelect.svg"
               : "/assets/profile/hide.svg"
           }`}
@@ -69,24 +78,17 @@ function BottomSheetContent({ type }: { type: "feed" | "card" }) {
       <div className="w-full flex justify-between gap-[15px]">
         <div
           className="bg-ct-light-blue-100 flex-1 h-[46px] rounded-[10px] ct-center cursor-pointer hover:bg-ct-light-blue-200 transition-colors"
-          onClick={handleEdit}
+          onClick={() => setIsBottomSheetOpen(false)}
         >
-          <span className="text-sub2 text-ct-sub-blue-300">수정하기</span>
+          <span className="text-sub2 text-ct-sub-blue-300">취소</span>
         </div>
-        <div className="bg-ct-main-blue-100 flex-1 h-[46px] rounded-[10px] ct-center">
-          <span className="text-sub2 text-ct-white">저장하기</span>
+        <div
+          className="bg-ct-main-blue-100 flex-1 h-[46px] rounded-[10px] ct-center"
+          onClick={handleSave}
+        >
+          <span className="text-sub2 text-ct-white">저장</span>
         </div>
       </div>
-      <div
-        onClick={() => {
-          setIsBottomSheetOpen(false);
-          if (type === "feed") {
-            openModal(<ModalContent type="feed" />);
-          } else {
-            openModal(<ModalContent type="card" />);
-          }
-        }}
-      ></div>
     </div>
   );
 }
