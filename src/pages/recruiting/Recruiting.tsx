@@ -88,7 +88,12 @@ function Recruiting() {
 
   return (
     <div className="flex flex-col bg-white">
-      <div className="w-full h-[calc(42px+env(safe-area-inset-top))] fixed top-0 left-0 right-0 ct-center bg-ct-white z-50 pt-safe">
+      <div
+        className="fixed top-0 left-0 right-0 z-50 w-full
+                bg-ct-white ct-center
+                h-[calc(42px+env(safe-area-inset-top))]
+                pt-safe"
+      >
         <div className="max-w-[401px] mx-auto px-[19px] pt-[12px] pb-[8px]">
           {/* 카테고리 */}
           <div className="flex h-[36px] overflow-x-scroll whitespace-nowrap scrollbar-hide">
@@ -130,8 +135,10 @@ function Recruiting() {
             ))}
           </div>
         </div>
-        <div className="h-[8px]" />
       </div>
+
+      {/* 스페이서: 헤더 높이만큼 밀어줌 */}
+      <div className="h-[calc(42px+env(safe-area-inset-top))]" />
 
       <div className="mb-[21px] flex justify-between items-center w-full max-w-[401px] mx-auto px-[19px]">
         <button
