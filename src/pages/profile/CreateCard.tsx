@@ -23,19 +23,24 @@ function CreateCard() {
   const [link, setLink] = useState("");
   const [keywords, setKeywords] = useState<string[]>([]);
 
-  // KeywordSelector에서 돌아온 데이터 처리
+  // 이전 상태 복원 (KeywordSelector 또는 Preview에서 돌아온 경우)
   useEffect(() => {
-    if (location.state?.selectedKeywords) {
-      setKeywords(location.state.selectedKeywords);
-      // 다른 폼 데이터도 복원
-      if (location.state.oneLineIntro)
+    if (location.state) {
+      if (location.state.selectedKeywords) {
+        setKeywords(location.state.selectedKeywords);
+      }
+      if (location.state.oneLineIntro !== undefined) {
         setOneLineIntro(location.state.oneLineIntro);
-      if (location.state.detailedDescription)
+      }
+      if (location.state.detailedDescription !== undefined) {
         setDetailedDescription(location.state.detailedDescription);
-      if (location.state.link) setLink(location.state.link);
-      // 이미지 정보도 복원
-      if (location.state.cardImageUrl)
+      }
+      if (location.state.link !== undefined) {
+        setLink(location.state.link);
+      }
+      if (location.state.cardImageUrl !== undefined) {
         setCardImageUrl(location.state.cardImageUrl);
+      }
     }
   }, [location.state]);
 
@@ -207,18 +212,24 @@ function CreateCard() {
         <button
           type="button"
           onClick={() => {
-            navigate("/onboarding/company-preview", {
-              state: {
-                cardData: {
-                  cardImageUrl, // S3 이미지 URL 전달
-                  oneLineIntro,
-                  detailedDescription,
-                  link,
-                  keywords,
-                },
-                from: "company-card-register",
+            const state = {
+              cardData: {
+                cardImageUrl,
+                oneLineIntro,
+                detailedDescription,
+                link,
+                keywords,
               },
-            });
+              // 현재 폼 상태도 함께 전달하여 돌아왔을 때 복원할 수 있게 함
+              oneLineIntro,
+              detailedDescription,
+              link,
+              keywords,
+              cardImageUrl,
+              from: "company-card-register",
+            };
+            
+            navigate("/onboarding/company-preview", { state });
           }}
           className="text-center text-sub1 text-ct-main-blue-100 my-[24px] cursor-pointer"
         >
