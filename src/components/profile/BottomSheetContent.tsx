@@ -43,7 +43,9 @@ function BottomSheetContent({ type }: { type: "feed" | "card" }) {
           alt="보이기"
           className="w-[34px] h-[34px]"
         />
-        <span className="text-sub2 text-ct-black-200 ml-[14px]">보이기</span>
+        <span className="text-sub2 text-ct-black-200 ml-[14px]">
+          {type === "feed" ? "피드 유지" : "카드 유지"}
+        </span>
       </div>
       <div
         className={`flex items-center w-full h-[60px] px-[9px] py-[13px] bg-ct-white rounded-[10px] border-[1px] border-ct-gray-200 ${
@@ -60,7 +62,9 @@ function BottomSheetContent({ type }: { type: "feed" | "card" }) {
           alt="숨기기"
           className="w-[34px] h-[34px]"
         />
-        <span className="text-sub2 text-ct-black-200 ml-[14px]">숨기기</span>
+        <span className="text-sub2 text-ct-black-200 ml-[14px]">
+          {type === "feed" ? "피드 삭제" : "카드 삭제"}
+        </span>
       </div>
       <div className="w-full flex justify-between gap-[15px]">
         <div
@@ -82,11 +86,7 @@ function BottomSheetContent({ type }: { type: "feed" | "card" }) {
             openModal(<ModalContent type="card" />);
           }
         }}
-      >
-        <span className="text-ct-gray-400 text-sub2 border-b-[1px] border-ct-gray-400">
-          {type === "feed" ? "피드 삭제" : "카드 삭제"}
-        </span>
-      </div>
+      ></div>
     </div>
   );
 }
