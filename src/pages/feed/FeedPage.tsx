@@ -1,11 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import FeedCard from "../../components/feed/FeedCard";
 import FixedHeader from "../../components/feed/FixedHeader";
 import BottomNavContainer from "../../components/layouts/BottomNavContainer";
 import FeedCardSkeleton from "../../components/skeletons/feed/FeedCardSkeleton";
 import CommentModal from "../../components/feed/CommentModal";
-import { AnimatePresence } from "framer-motion";
 import getTimeAgo from "../../utils/timeAgo";
 import { useAuth } from "../../contexts/AuthContext";
 import { useFeedInfiniteQuery } from "../../hooks/feed/useFeedInfiniteQuery";
@@ -52,6 +51,14 @@ export default function FeedPage() {
     () => data?.pages.flatMap((page: FeedResponse) => page.result.feeds) || [],
     [data?.pages]
   );
+
+  useEffect(() => {
+    if (activePostId) {
+      document.body.classList.add("modal-open");
+    } else {
+      document.body.classList.remove("modal-open");
+    }
+  }, [activePostId]);
 
   return (
     <BottomNavContainer showBottomNav={!activePostId}>
@@ -122,28 +129,26 @@ export default function FeedPage() {
         )}
       </div>
 
-      <AnimatePresence>
-        {activePostId && (
-          <CommentModal
-            postId={activePostId}
-            comments={
-              commentsData?.pages.flatMap((page) => page.result.feeds) || []
-            }
-            onClose={() => setActivePostId(null)}
-            onCommentCreate={handleCommentCreate}
-            onReplyCreate={handleReplyCreate}
-            onCommentDelete={handleCommentDelete}
-            currentUserId={user?.id}
-            postOwnerId={
-              allFeeds.find((feed) => feed.feed_id === Number(activePostId))
-                ?.user?.id
-            }
-            fetchNextPage={fetchCommentsNextPage}
-            hasNextPage={hasCommentsNextPage}
-            isFetchingNextPage={isFetchingCommentsNextPage}
-          />
-        )}
-      </AnimatePresence>
+      {activePostId && (
+        <CommentModal
+          postId={activePostId}
+          comments={
+            commentsData?.pages.flatMap((page) => page.result.feeds) || []
+          }
+          onClose={() => setActivePostId(null)}
+          onCommentCreate={handleCommentCreate}
+          onReplyCreate={handleReplyCreate}
+          onCommentDelete={handleCommentDelete}
+          currentUserId={user?.id}
+          postOwnerId={
+            allFeeds.find((feed) => feed.feed_id === Number(activePostId))?.user
+              ?.id
+          }
+          fetchNextPage={fetchCommentsNextPage}
+          hasNextPage={hasCommentsNextPage}
+          isFetchingNextPage={isFetchingCommentsNextPage}
+        />
+      )}
     </BottomNavContainer>
   );
 }
