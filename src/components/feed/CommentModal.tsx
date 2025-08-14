@@ -131,7 +131,7 @@ export default function CommentModal({
             if (closing) onClose();
           }}
           onClick={(e) => e.stopPropagation()}
-          className="w-full h-[75vh] max-h-[65vh] bg-white rounded-t-[20px] flex flex-col"
+          className="w-full h-[75vh] max-h-[65vh] bg-white rounded-t-[20px] flex flex-col relative"
         >
           {/* 핸들바 */}
           <div className="w-full flex justify-center py-2">
@@ -180,7 +180,8 @@ export default function CommentModal({
               )}
             </div>
           </div>
-          <div className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200">
+          <div className="h-[42px]">ㄹㅇㄴ</div>
+          <div className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 absolute bottom-0 left-0 right-0">
             <CommentInputField
               ref={inputRef}
               onSend={(text) => {
@@ -191,7 +192,6 @@ export default function CommentModal({
                 } else {
                   onCommentCreate(text);
                 }
-                // 전송 후 입력 필드 초기화 (CommentInputField에서 이미 처리되지만 명시적으로)
                 inputRef.current?.setText("");
               }}
             />
