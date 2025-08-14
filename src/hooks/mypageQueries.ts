@@ -16,7 +16,6 @@ import {
   deleteCard,
   deleteUser,
 } from "../apis/mypageAPI";
-import { useNavigate } from "react-router-dom";
 
 export const useGetProfile = ({ service_id }: { service_id: string }) => {
   return useQuery({
