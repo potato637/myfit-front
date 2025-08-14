@@ -96,7 +96,7 @@ function Searching() {
         }
       >
         {/* 검색 결과 - 개선된 카드 간격 적용 */}
-        <div className="w-full ct-center flex-col mt-[30px] space-y-[40px] pb-[80px]">
+        <div className="w-full ct-center flex-col space-y-[40px] pb-[80px]">
           {cardsData?.map((card) => (
             <SearchingSwipeItem key={card.card_id} card={card} />
           ))}
