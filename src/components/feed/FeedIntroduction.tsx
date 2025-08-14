@@ -37,9 +37,7 @@ function FeedIntroduction() {
               {`${profile?.result.service.userArea.high_area} ${profile?.result.service.userArea.low_area}`}
             </span>
             <span className="text-body1 text-ct-sub-blue-300">
-              {profile?.result.user.division === "personal"
-                ? profile?.result.service.low_sector
-                : profile?.result.user.team_division}
+              {profile?.result.service.low_sector}
             </span>
             <span className="text-body1 text-ct-black-100 whitespace-nowrap">
               {profile?.result.user.division === "personal"
