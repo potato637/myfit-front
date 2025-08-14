@@ -195,7 +195,7 @@ export const useFeedMutations = ({
       queryClient.invalidateQueries({ queryKey: ["searchFeedsByHashtag"] });
       queryClient.invalidateQueries({ queryKey: ["analyzeHashtags"] });
     },
-    onError: (error) => {
+    onError: (_error) => {
       toast.error("댓글 작성에 실패했습니다.");
     },
   });
@@ -222,7 +222,7 @@ export const useFeedMutations = ({
       queryClient.invalidateQueries({ queryKey: ["searchFeedsByHashtag"] });
       queryClient.invalidateQueries({ queryKey: ["analyzeHashtags"] });
     },
-    onError: (error) => {
+    onError: (_error) => {
       toast.error("답글 작성에 실패했습니다.");
     },
   });
