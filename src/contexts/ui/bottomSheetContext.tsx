@@ -1,8 +1,16 @@
-import { ReactNode, createContext, useContext, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+  useMemo,
+} from "react";
+import BottomSheetPortal from "../../components/ui/BottomSheetPortal";
 
 interface BottomSheetContextType {
-  isBottomSheetOpen: boolean;
-  setIsBottomSheetOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  openBottomSheet: (node: ReactNode) => void;
+  closeBottomSheet: () => void;
 }
 
 const BottomSheetContext = createContext<BottomSheetContextType | undefined>(
@@ -10,13 +18,34 @@ const BottomSheetContext = createContext<BottomSheetContextType | undefined>(
 );
 
 export const BottomSheetProvider = ({ children }: { children: ReactNode }) => {
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [content, setContent] = useState<ReactNode | null>(null);
+
+  const openBottomSheet = useCallback((node: ReactNode) => {
+    setContent(node);
+    document.body.classList.add("bottom-sheet-open");
+  }, []);
+
+  const closeBottomSheet = useCallback(() => {
+    setContent(null);
+    document.body.classList.remove("bottom-sheet-open");
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({
+      openBottomSheet,
+      closeBottomSheet,
+    }),
+    [openBottomSheet, closeBottomSheet]
+  );
 
   return (
-    <BottomSheetContext.Provider
-      value={{ isBottomSheetOpen, setIsBottomSheetOpen }}
-    >
+    <BottomSheetContext.Provider value={contextValue}>
       {children}
+      {content && (
+        <BottomSheetPortal onClose={closeBottomSheet}>
+          {content}
+        </BottomSheetPortal>
+      )}
     </BottomSheetContext.Provider>
   );
 };

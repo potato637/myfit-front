@@ -7,7 +7,7 @@ import { useGetFeeds } from "../../hooks/mypageQueries";
 import { useAuth } from "../../contexts/AuthContext";
 import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useRef } from "react";
-import BottomSheet from "../../components/ui/BottomSheet";
+import BottomSheet from "../../components/ui/BottomSheetPortal";
 import BottomSheetContent from "../../components/profile/BottomSheetContent";
 
 const TopBarContent = () => {
