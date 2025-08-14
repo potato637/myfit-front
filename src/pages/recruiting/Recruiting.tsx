@@ -88,8 +88,9 @@ function Recruiting() {
 
   return (
     <div className="flex flex-col bg-white">
-      <div className="sticky z-30 bg-ct-white">
-        <div className="w-full h-[calc(42px+env(safe-area-inset-top))] fixed top-0 left-0 right-0 ct-center bg-ct-white z-50 pt-safe pb-[8px]">
+      <div className="w-full h-[calc(42px+env(safe-area-inset-top))] fixed top-0 left-0 right-0 ct-center bg-ct-white z-50 pt-safe">
+        <div className="max-w-[401px] mx-auto px-[19px] pt-[12px] pb-[8px]">
+          {/* 카테고리 */}
           <div className="flex h-[36px] overflow-x-scroll whitespace-nowrap scrollbar-hide">
             {jobs.map((item) => (
               <button
@@ -112,6 +113,7 @@ function Recruiting() {
             ))}
           </div>
 
+          {/* 스킬 */}
           <div className="mt-[8px] flex w-full overflow-x-scroll whitespace-nowrap scrollbar-hide">
             {currentCategory?.skills.map((skill) => (
               <button
@@ -206,6 +208,7 @@ function Recruiting() {
           </>
         )}
       </div>
+
       <BottomNav />
     </div>
   );
