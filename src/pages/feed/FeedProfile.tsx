@@ -23,9 +23,9 @@ function ProfileItem() {
   });
 
   useEffect(() => {
-    const tabParam = searchParams.get('tab');
-    if (tabParam === 'feed') {
-      setSelectedTab('feed');
+    const tabParam = searchParams.get("tab");
+    if (tabParam === "feed") {
+      setSelectedTab("feed");
     }
   }, [searchParams]);
 
@@ -49,9 +49,11 @@ function ProfileItem() {
             {profile?.result.user.one_line_profile}
           </span>
         </div>
-        {profile?.result.user.link && (
-          <CompanyLink link={profile?.result.user.link} />
-        )}
+        <div className="w-[335px]">
+          {profile?.result.user.link && (
+            <CompanyLink link={profile?.result.user.link} />
+          )}
+        </div>
         <NetworkingBar />
         <div className="w-full h-[40px] bg-ct-gray-100 flex sticky top-0 mt-[17px] mb-[17px]">
           <div

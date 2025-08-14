@@ -51,9 +51,11 @@ function ProfileItem({
             {profile?.result.user.one_line_profile}
           </span>
         </div>
-        {profile?.result.user.link && (
-          <CompanyLink link={profile?.result.user.link} />
-        )}
+        <div className="w-[335px]">
+          {profile?.result.user.link && (
+            <CompanyLink link={profile?.result.user.link} />
+          )}
+        </div>
         <div className="w-full h-[40px] bg-ct-gray-100 flex sticky top-0 mt-[17px] mb-[17px]">
           <div
             className="flex-1 ct-center relative"
