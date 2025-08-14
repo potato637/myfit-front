@@ -24,15 +24,22 @@ const ModalPortal = ({ children, onClose }: ModalPortalProps) => {
   );
 
   return createPortal(
-    // 이 div가 오버레이 역할을 함
     <div
-      className="fixed inset-0 z-[9999] ct-center"
+      className="fixed z-[9999] ct-center"
+      style={{
+        top: 0,
+        left: 0,
+        width: "100vw", // 화면 너비 전체
+        height: "100vh", // 화면 높이 전체
+        overflow: "hidden", // 스크롤바 숨김
+        touchAction: "none", // 배경 스크롤을 막는 핵심 속성
+      }}
       onClick={handleOutsideClick}
     >
       <div
         ref={modalRef}
-        className="w-[333px] bg-ct-white rounded-[30px]"
-        onClick={(e) => e.stopPropagation()} // 모달 내부 클릭 시 이벤트 버블링 방지
+        className="w-[333px] my-8 bg-ct-white rounded-[30px]"
+        onClick={(e) => e.stopPropagation()}
       >
         {children}
       </div>
