@@ -26,7 +26,7 @@ export const ChattingProvider = ({
   roomId,
   children,
 }: {
-  roomId: number;
+  roomId: number | null;
   children: ReactNode;
 }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -37,7 +37,7 @@ export const ChattingProvider = ({
   const upsert = (prev: ChatMessage[], msg: ChatMessage) => {
     const map = new Map(prev.map((m) => [m.id, m]));
     const old = map.get(msg.id);
-    const created_at = old?.isTemp ? old.created_at : msg.created_at; // temp가 있던 시간 우선
+    const created_at = old?.isTemp ? old.created_at : msg.created_at;
     map.set(msg.id, { ...msg, created_at, isTemp: false });
     return Array.from(map.values()).sort(sortByTime);
   };
