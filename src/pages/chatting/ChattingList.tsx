@@ -42,7 +42,7 @@ function ChattingList() {
         }
       >
         {isLoading ? (
-          <div className="flex flex-col -mt-[3px] pl-[20px]">
+          <div className="flex flex-col -mt-[13px] pl-[20px]">
             {[...Array(5)].map((_, idx) => (
               <ChatUserCardSkeleton key={idx} />
             ))}
@@ -61,7 +61,7 @@ function ChattingList() {
             </span>
           </div>
         ) : (
-          <div className="flex-1 flex-col w-full -mt-[3px] px-[20px]">
+          <div className="flex-1 flex-col w-full -mt-[13px] px-[20px]">
             {data?.pages.map((page) =>
               page.result.chatting_rooms.map((room) => (
                 <ChatUserCard key={room.chatting_room_id} data={room} />
