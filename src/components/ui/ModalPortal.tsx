@@ -31,7 +31,7 @@ const ModalPortal = ({ children, onClose }: ModalPortalProps) => {
     >
       <div
         ref={modalRef}
-        className="w-[333px] my-8 bg-ct-white rounded-[30px]"
+        className="w-[333px] bg-ct-white rounded-[30px]"
         onClick={(e) => e.stopPropagation()} // 모달 내부 클릭 시 이벤트 버블링 방지
       >
         {children}
