@@ -134,7 +134,7 @@ export default function EditFeed() {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               maxLength={2200}
-              className="w-full min-h-[48px] text-body1 text-ct-black-200 resize-none outline-none bg-[#F7F7F7] rounded-[8px] p-[12px] mb-[16px]"
+              className="w-full min-h-[48px] text-sub2 text-ct-black-200 resize-none outline-none bg-[#F7F7F7] rounded-[8px] p-[12px] mb-[16px]"
             />
             <div className="ml-3">
               <KeywordInput keywords={keywords} setKeywords={setKeywords} />

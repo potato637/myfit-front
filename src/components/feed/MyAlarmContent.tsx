@@ -1,15 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useNotifications, useMarkAllAsReadMutation } from "../../hooks/useNotifications";
+import { useNotificationsInfinite, useMarkAllAsReadMutation } from "../../hooks/useNotifications";
+import { useInfiniteScroll } from "../../hooks/common/useInfiniteScroll";
 import type { Notification } from "../../types/notification";
 import getTimeAgo from "../../utils/timeAgo";
 
 function MyAlarmContent() {
   const navigate = useNavigate();
-  const { data: notificationsData, isLoading } = useNotifications();
+  const { 
+    data: notificationsData, 
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useNotificationsInfinite();
   const markAllAsReadMutation = useMarkAllAsReadMutation();
 
-  const notifications = notificationsData?.result?.notifications || [];
+  const notifications = useMemo(
+    () => notificationsData?.pages.flatMap(page => page.result.notifications) || [],
+    [notificationsData?.pages]
+  );
+
+  const { loadMoreRef } = useInfiniteScroll({
+    hasNextPage: !!hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  });
 
   useEffect(() => {
     // 언마운트 시 모든 읽지 않은 알림을 읽음 처리
@@ -29,15 +45,13 @@ function MyAlarmContent() {
         navigate(`/feed/profile/${notification.sender.service_id}`);
         break;
       case "FEED":
-        // 피드 관련 알림 (좋아요, 댓글 등) - 해당 피드로 이동
+        // 피드 관련 알림 (좋아요, 댓글 등) - 내 피드 페이지의 해당 피드로 이동
         if (notification.feed_id) {
-          navigate(`/feed?feedId=${notification.feed_id}`);
+          navigate(`/mypage/feed#${notification.feed_id}`);
         }
         break;
     }
   };
-
-  const unreadNotifications = notifications.filter(notification => !notification.is_read);
 
   if (isLoading) {
     return (
@@ -47,14 +61,14 @@ function MyAlarmContent() {
     );
   }
 
-  return unreadNotifications.length === 0 ? (
+  return notifications.length === 0 ? (
     <div className="flex flex-col items-center justify-center h-[calc(100vh-66px-89px)]">
       <img
         src="/assets/feed/alarm.svg"
         alt="빈 알림 이모지"
         className="mb-4"
       />
-      <p className="text-sub2 text-ct-gray-200">새로운 알림이 없습니다.</p>
+      <p className="text-sub2 text-ct-gray-200">알림이 없습니다.</p>
     </div>
   ) : (
     <ul className="mt-[10px] space-y-[4px]">
@@ -81,6 +95,18 @@ function MyAlarmContent() {
           </span>
         </li>
       ))}
+      
+      {/* 무한스크롤 트리거 */}
+      <div
+        ref={loadMoreRef}
+        className="h-10 flex items-center justify-center"
+      >
+        {isFetchingNextPage && (
+          <div className="text-ct-gray-300 text-body2">
+            더 많은 알림을 불러오는 중...
+          </div>
+        )}
+      </div>
     </ul>
   );
 }
