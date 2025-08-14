@@ -45,12 +45,17 @@ function FeedDetail() {
     const timer = setTimeout(() => {
       const feedElement = feedRefs.current[targetFeedId];
       if (feedElement) {
-        const headerHeight = 60; // Adjust based on your header height
-        const introductionHeight = 80; // Adjust based on introduction height
-        const offset = headerHeight + introductionHeight;
+        // Get the height of the fixed elements
+        const header = document.querySelector('header');
+        const introduction = document.querySelector('.introduction-section');
+        
+        const headerHeight = header?.getBoundingClientRect().height || 0;
+        const introductionHeight = introduction?.getBoundingClientRect().height || 0;
+        const safeAreaTop = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sat') || '0');
+        
+        const offset = headerHeight + introductionHeight + safeAreaTop;
 
-        const elementPosition =
-          feedElement.getBoundingClientRect().top + window.pageYOffset;
+        const elementPosition = feedElement.getBoundingClientRect().top + window.scrollY;
         const offsetPosition = Math.max(0, elementPosition - offset);
 
         window.scrollTo({

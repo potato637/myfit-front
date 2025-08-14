@@ -32,7 +32,7 @@ function DetailIntroduction() {
           {profile?.result.service.low_sector}
         </span>
       </div>
-      <div className="w-full h-[40px]" />
+      <div className="w-full h-[30px]" />
     </>
   );
 }
