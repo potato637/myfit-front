@@ -23,14 +23,10 @@ const ModalPortal = ({ children, onClose }: ModalPortalProps) => {
 
   return createPortal(
     <div
-      className="fixed inset-0 bg-ct-black-100/50 z-[9999] ct-center modal-overlay"
+      className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999]"
       onClick={handleOutsideClick}
     >
-      <div
-        ref={modalRef}
-        className="w-[333px] my-8 bg-ct-white rounded-[30px]"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="w-[333px] my-8 bg-ct-white rounded-[30px]" ref={modalRef}>
         {children}
       </div>
     </div>,
