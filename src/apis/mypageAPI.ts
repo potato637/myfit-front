@@ -1,4 +1,9 @@
 import apiClient from "./apiClient";
+import {
+  ActivityCardRequest,
+  ActivityCardSuccessResponse,
+  ActivityCardDetailResponse,
+} from "../types/common/activityCard";
 
 interface BaseResponse {
   isSuccess: boolean;
@@ -281,6 +286,31 @@ export const deleteUser = async (): Promise<DeleteUserResponse> => {
     return data;
   } catch (error) {
     console.error("deleteUser error:", error);
+    throw error;
+  }
+};
+
+// 이력/활동 카드 상세 조회
+export const getActivityCard = async (cardId: number): Promise<ActivityCardDetailResponse> => {
+  try {
+    const { data } = await apiClient.get<ActivityCardDetailResponse>(`/api/cards/${cardId}`);
+    return data;
+  } catch (error) {
+    console.error("getActivityCard error:", error);
+    throw error;
+  }
+};
+
+// 이력/활동 카드 수정
+export const updateActivityCard = async (
+  cardId: number,
+  request: Omit<ActivityCardRequest, 'service_id'>
+): Promise<ActivityCardSuccessResponse> => {
+  try {
+    const { data } = await apiClient.patch<ActivityCardSuccessResponse>(`/api/cards/${cardId}`, request);
+    return data;
+  } catch (error) {
+    console.error("updateActivityCard error:", error);
     throw error;
   }
 };

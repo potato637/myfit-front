@@ -7,6 +7,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { createActivityCard } from "../../apis/onboarding";
 import { ActivityCardRequest } from "../../types/common/activityCard";
 import { useSignup } from "../../contexts/SignupContext";
+import { toast } from "react-toastify";
 
 function CompanyCardRegister() {
   const navigate = useNavigate();
@@ -80,31 +81,26 @@ function CompanyCardRegister() {
         keyword_text: keywords,
       };
 
-      console.log("🎯 [CompanyCardRegister] 카드 등록 요청:", cardRequest);
-      console.log("🔍 [CompanyCardRegister] SignupData 상태:", signupData);
-
       const response = await createActivityCard(cardRequest);
 
       if (response.isSuccess) {
-        console.log("✅ [CompanyCardRegister] 카드 등록 성공:", response);
         navigate("/onboarding/company-verification");
       } else {
         throw new Error(response.message || "카드 등록 실패");
       }
     } catch (error: any) {
-      console.error("❌ [CompanyCardRegister] 카드 등록 실패:", error);
 
       // 구체적인 에러 메시지 표시
       if (error.response?.status === 400) {
-        alert("입력 정보를 다시 확인해주세요.");
+        toast.error("입력 정보를 다시 확인해주세요.");
       } else if (error.response?.status === 401) {
-        alert("로그인이 필요합니다. 다시 로그인해주세요.");
+        toast.error("로그인이 필요합니다. 다시 로그인해주세요.");
         navigate("/onboarding/splash");
         return;
       } else if (error.response?.status === 500) {
-        alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        toast.error("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
       } else {
-        alert("카드 등록에 실패했습니다. 다시 시도해주세요.");
+        toast.error("카드 등록에 실패했습니다. 다시 시도해주세요.");
       }
     } finally {
       setIsSubmitting(false);

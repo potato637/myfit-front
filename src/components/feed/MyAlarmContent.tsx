@@ -71,7 +71,7 @@ function MyAlarmContent() {
       <p className="text-sub2 text-ct-gray-200">알림이 없습니다.</p>
     </div>
   ) : (
-    <ul className="mt-[10px] space-y-[4px]">
+    <ul className="mt-[10px] space-y-[4px] pb-[89px]">
       {notifications.map((notification) => (
         <li
           key={notification.notification_id}

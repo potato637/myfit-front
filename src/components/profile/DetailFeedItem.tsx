@@ -10,11 +10,11 @@ import { useBottomSheet } from "../../contexts/ui/bottomSheetContext";
 import { useItemContext } from "../../contexts/ItemContext";
 import { formatTimeAgo } from "../../utils/date";
 import { useLocation } from "react-router-dom";
-import { useAddFeedLike, useDeleteFeedLike } from "../../hooks/relationQueries";
 import { useAuth } from "../../contexts/AuthContext";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createComment, deleteComment, getFeedComments } from "../../apis/feed";
 import { useQueryClient } from "@tanstack/react-query";
+import { useFeedMutations } from "../../hooks/feed/useFeedMutations";
 import { AnimatePresence, motion } from "framer-motion";
 import CommentModal from "../feed/CommentModal";
 import BottomSheetContent from "./BottomSheetContent";
@@ -44,24 +44,26 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [activePostId, setActivePostId] = useState<string | null>(null);
+  
+  // useFeedMutations 훅 사용 (다른 컴포넌트들과 동일한 방식)
+  const {
+    handleLikeToggle,
+  } = useFeedMutations({});
 
   const handleClick = () => {
     openBottomSheet(<BottomSheetContent type="feed" />);
     setItemId(item.feed_id);
   };
 
-  const { mutate: addFeedLike } = useAddFeedLike({
-    service_id: user?.id?.toString() || "",
-  });
-  const { mutate: deleteFeedLike } = useDeleteFeedLike({
-    service_id: user?.id?.toString() || "",
-  });
+  
   const handleHeartClick = () => {
-    if (item.is_liked) {
-      deleteFeedLike({ feed_id: item.feed_id });
-    } else {
-      addFeedLike({ feed_id: item.feed_id });
-    }
+    console.log('💖 좋아요 클릭 - useFeedMutations 사용', {
+      feed_id: item.feed_id,
+      is_liked: item.is_liked,
+      pathname: location.pathname
+    });
+    
+    handleLikeToggle(Number(item.feed_id), item.is_liked);
   };
 
   // 댓글 작성 mutation

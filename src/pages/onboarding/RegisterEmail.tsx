@@ -59,10 +59,6 @@ function RegisterEmail() {
 
   const handleVerifyCode = async (code: string) => {
     try {
-      console.log("🔐 인증코드 자동 검증 요청:", {
-        email: fullEmail,
-        authCode: code,
-      });
       const response = await validateAuthCode({
         email: fullEmail,
         authCode: code,
@@ -71,14 +67,11 @@ function RegisterEmail() {
       if (response.isSuccess) {
         setCodeVerified(true);
         setIsAuthInvalid(false);
-        console.log("✅ 인증코드 자동 검증 성공:", response.message);
       } else {
         setCodeVerified(false);
         setIsAuthInvalid(true);
-        console.log("❌ 인증코드 자동 검증 실패:", response.message);
       }
     } catch (error) {
-      console.error("❌ 인증코드 자동 검증 에러:", error);
       setCodeVerified(false);
       setIsAuthInvalid(true);
     }
@@ -93,9 +86,7 @@ function RegisterEmail() {
       setEmailSent(true);
       setCodeVerified(false);
       setIsAuthInvalid(false);
-      console.log("✅ 이메일 인증 발송 완료");
     } catch (error) {
-      console.error("❌ 이메일 인증 발송 실패:", error);
       // 에러가 발생해도 일단 진행 (개발 중)
       setEmailSent(true);
       setCodeVerified(false);
@@ -114,7 +105,6 @@ function RegisterEmail() {
       const fullEmailAddress = `${data.email}@${data.domain}`;
       
       // 사용자 검증 API 호출
-      console.log("🔐 사용자 검증 API 호출:", { email: fullEmailAddress, password: data.password, authCode: data.authCode });
       const response = await verifyUser({
         email: fullEmailAddress,
         password: data.password,
@@ -137,7 +127,6 @@ function RegisterEmail() {
         toast.error(response.message);
       }
     } catch (error: any) {
-      console.error("❌ 사용자 검증 실패:", error);
       
       // 서버 에러 응답 처리
       if (error.response?.status === 400) {

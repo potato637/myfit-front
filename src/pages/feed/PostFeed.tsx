@@ -39,8 +39,7 @@ function PostFeed() {
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
       navigate("/feed");
     },
-    onError: (error) => {
-      console.error("❌ [PostFeed] 피드 작성 실패:", error);
+    onError: () => {
       toast.error("게시글 작성에 실패했습니다. 다시 시도해주세요.");
     },
   });
@@ -65,7 +64,6 @@ function PostFeed() {
       service_id: user.id,
     };
 
-    console.log("🎯 [PostFeed] 게시글 작성 요청:", requestData);
     createFeedMutation.mutate(requestData);
   };
 

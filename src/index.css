@@ -33,6 +33,11 @@ body.bottom-sheet-open {
   width: 100%;
 }
 
+body.bottom-sheet-open {
+  overflow: hidden;
+  width: 100%;
+}
+
 .modal-overlay {
   min-height: calc(100vh + env(safe-area-inset-bottom));
 

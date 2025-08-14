@@ -40,6 +40,14 @@ function CardKeyword() {
           cardImageUrl: location.state.cardImageUrl, // 이미지 정보도 함께 전달
         },
       });
+    } else if (location.state?.from === "edit-card") {
+      navigate(`/mypage/edit-card/${location.state.cardId}`, {
+        state: {
+          ...location.state.currentData,
+          selectedKeywords: finalKeywords,
+          cardImageUrl: location.state.cardImageUrl, // 이미지 정보도 함께 전달
+        },
+      });
     } else {
       // 다른 경로에서 온 경우 기본 처리
       navigate(-1);

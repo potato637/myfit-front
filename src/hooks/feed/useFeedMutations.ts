@@ -5,6 +5,7 @@ import {
   createComment,
   deleteComment,
 } from "../../apis/feed";
+import { toast } from "react-toastify";
 
 interface UseFeedMutationsProps {
   activePostId?: string | null;
@@ -18,29 +19,159 @@ export const useFeedMutations = ({
 
   const addLikeMutation = useMutation({
     mutationFn: addFeedLike,
-    onSuccess: () => {
-      // 모든 피드 관련 쿼리를 무효화하여 좋아요 상태 동기화
+    onMutate: async (feedId) => {
+      // 낙관적 업데이트를 위해 관련 쿼리들 취소
+      await queryClient.cancelQueries({ queryKey: ["feeds"] });
+      await queryClient.cancelQueries({ queryKey: ["searchFeedsByKeyword"] });
+      await queryClient.cancelQueries({ queryKey: ["searchFeedsByHashtag"] });
+      
+      // 이전 데이터들 저장
+      const previousFeeds = queryClient.getQueryData(["feeds"]);
+      const previousSearchKeyword = queryClient.getQueriesData({ queryKey: ["searchFeedsByKeyword"] });
+      const previousSearchHashtag = queryClient.getQueriesData({ queryKey: ["searchFeedsByHashtag"] });
+      
+      // 낙관적 업데이트 적용 함수
+      const updateFeedData = (data: any) => {
+        if (!data?.pages) return data;
+        return {
+          ...data,
+          pages: data.pages.map((page: any) => ({
+            ...page,
+            result: {
+              ...page.result,
+              feeds: page.result.feeds.map((feed: any) => 
+                feed.feed_id === feedId 
+                  ? { ...feed, is_liked: true, heart: feed.heart + 1 }
+                  : feed
+              )
+            }
+          }))
+        };
+      };
+      
+      // 각 쿼리에 낙관적 업데이트 적용
+      queryClient.setQueryData(["feeds"], updateFeedData);
+      
+      // 프로필별 피드 쿼리들도 업데이트 (DetailFeedItem용)
+      const feedQueries = queryClient.getQueriesData({ queryKey: ["feeds"] });
+      feedQueries.forEach(([queryKey, data]) => {
+        if (Array.isArray(queryKey) && queryKey[0] === "feeds" && queryKey.length > 1) {
+          queryClient.setQueryData(queryKey, updateFeedData(data));
+        }
+      });
+      
+      // 검색 쿼리들에도 적용
+      previousSearchKeyword.forEach(([queryKey, data]) => {
+        queryClient.setQueryData(queryKey, updateFeedData(data));
+      });
+      
+      previousSearchHashtag.forEach(([queryKey, data]) => {
+        queryClient.setQueryData(queryKey, updateFeedData(data));
+      });
+      
+      return { previousFeeds, previousSearchKeyword, previousSearchHashtag };
+    },
+    onError: (_error, _variables, context) => {
+      toast.error("좋아요 처리 중 오류가 발생했습니다.");
+      
+      // 에러 시 이전 데이터로 롤백
+      if (context) {
+        if (context.previousFeeds) {
+          queryClient.setQueryData(["feeds"], context.previousFeeds);
+        }
+        context.previousSearchKeyword.forEach(([queryKey, data]) => {
+          queryClient.setQueryData(queryKey, data);
+        });
+        context.previousSearchHashtag.forEach(([queryKey, data]) => {
+          queryClient.setQueryData(queryKey, data);
+        });
+      }
+    },
+    onSettled: () => {
+      // 성공/실패와 관계없이 최종적으로 서버 데이터와 동기화
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
       queryClient.invalidateQueries({ queryKey: ["searchFeedsByKeyword"] });
       queryClient.invalidateQueries({ queryKey: ["searchFeedsByHashtag"] });
       queryClient.invalidateQueries({ queryKey: ["analyzeHashtags"] });
-    },
-    onError: (error) => {
-      console.error("좋아요 추가 실패:", error);
     },
   });
 
   const removeLikeMutation = useMutation({
     mutationFn: removeFeedLike,
-    onSuccess: () => {
-      // 모든 피드 관련 쿼리를 무효화하여 좋아요 상태 동기화
+    onMutate: async (feedId) => {
+      // 낙관적 업데이트를 위해 관련 쿼리들 취소
+      await queryClient.cancelQueries({ queryKey: ["feeds"] });
+      await queryClient.cancelQueries({ queryKey: ["searchFeedsByKeyword"] });
+      await queryClient.cancelQueries({ queryKey: ["searchFeedsByHashtag"] });
+      
+      // 이전 데이터들 저장
+      const previousFeeds = queryClient.getQueryData(["feeds"]);
+      const previousSearchKeyword = queryClient.getQueriesData({ queryKey: ["searchFeedsByKeyword"] });
+      const previousSearchHashtag = queryClient.getQueriesData({ queryKey: ["searchFeedsByHashtag"] });
+      
+      // 낙관적 업데이트 적용 함수
+      const updateFeedData = (data: any) => {
+        if (!data?.pages) return data;
+        return {
+          ...data,
+          pages: data.pages.map((page: any) => ({
+            ...page,
+            result: {
+              ...page.result,
+              feeds: page.result.feeds.map((feed: any) => 
+                feed.feed_id === feedId 
+                  ? { ...feed, is_liked: false, heart: Math.max(0, feed.heart - 1) }
+                  : feed
+              )
+            }
+          }))
+        };
+      };
+      
+      // 각 쿼리에 낙관적 업데이트 적용
+      queryClient.setQueryData(["feeds"], updateFeedData);
+      
+      // 프로필별 피드 쿼리들도 업데이트 (DetailFeedItem용)
+      const feedQueries = queryClient.getQueriesData({ queryKey: ["feeds"] });
+      feedQueries.forEach(([queryKey, data]) => {
+        if (Array.isArray(queryKey) && queryKey[0] === "feeds" && queryKey.length > 1) {
+          queryClient.setQueryData(queryKey, updateFeedData(data));
+        }
+      });
+      
+      // 검색 쿼리들에도 적용
+      previousSearchKeyword.forEach(([queryKey, data]) => {
+        queryClient.setQueryData(queryKey, updateFeedData(data));
+      });
+      
+      previousSearchHashtag.forEach(([queryKey, data]) => {
+        queryClient.setQueryData(queryKey, updateFeedData(data));
+      });
+      
+      return { previousFeeds, previousSearchKeyword, previousSearchHashtag };
+    },
+    onError: (_error, _variables, context) => {
+      toast.error("좋아요 처리 중 오류가 발생했습니다.");
+      
+      // 에러 시 이전 데이터로 롤백
+      if (context) {
+        if (context.previousFeeds) {
+          queryClient.setQueryData(["feeds"], context.previousFeeds);
+        }
+        context.previousSearchKeyword.forEach(([queryKey, data]) => {
+          queryClient.setQueryData(queryKey, data);
+        });
+        context.previousSearchHashtag.forEach(([queryKey, data]) => {
+          queryClient.setQueryData(queryKey, data);
+        });
+      }
+    },
+    onSettled: () => {
+      // 성공/실패와 관계없이 최종적으로 서버 데이터와 동기화
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
       queryClient.invalidateQueries({ queryKey: ["searchFeedsByKeyword"] });
       queryClient.invalidateQueries({ queryKey: ["searchFeedsByHashtag"] });
       queryClient.invalidateQueries({ queryKey: ["analyzeHashtags"] });
-    },
-    onError: (error) => {
-      console.error("좋아요 취소 실패:", error);
     },
   });
 
@@ -64,8 +195,8 @@ export const useFeedMutations = ({
       queryClient.invalidateQueries({ queryKey: ["searchFeedsByHashtag"] });
       queryClient.invalidateQueries({ queryKey: ["analyzeHashtags"] });
     },
-    onError: (error) => {
-      console.error("댓글 작성 실패:", error);
+    onError: (_error) => {
+      toast.error("댓글 작성에 실패했습니다.");
     },
   });
 
@@ -91,8 +222,8 @@ export const useFeedMutations = ({
       queryClient.invalidateQueries({ queryKey: ["searchFeedsByHashtag"] });
       queryClient.invalidateQueries({ queryKey: ["analyzeHashtags"] });
     },
-    onError: (error) => {
-      console.error("대댓글 작성 실패:", error);
+    onError: (_error) => {
+      toast.error("답글 작성에 실패했습니다.");
     },
   });
 
@@ -107,8 +238,8 @@ export const useFeedMutations = ({
       queryClient.invalidateQueries({ queryKey: ["searchFeedsByHashtag"] });
       queryClient.invalidateQueries({ queryKey: ["analyzeHashtags"] });
     },
-    onError: (error) => {
-      console.error("댓글 삭제 실패:", error);
+    onError: () => {
+      toast.error("댓글 삭제에 실패했습니다.");
     },
   });
 

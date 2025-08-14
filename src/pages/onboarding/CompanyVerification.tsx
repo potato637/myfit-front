@@ -29,7 +29,6 @@ function CompanyVerification() {
 
   const handleSkip = () => {
     // 건너뛰기 후 피드 페이지로 이동 (이미지 없이)
-    console.log("🏢 회사인증 건너뛰기");
     navigate("/feed");
   };
 
