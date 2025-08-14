@@ -47,7 +47,7 @@ function FeedDetail() {
       if (feedElement) {
         const headerHeight = 60; // TopBar height
         const introductionHeight = 80; // DetailIntroduction height
-        const additionalPadding = 10; // Add some extra space for better visibility
+        const additionalPadding = 20; // Add some extra space for better visibility
         const offset = headerHeight + introductionHeight + additionalPadding;
 
         const elementPosition =
