@@ -37,8 +37,6 @@ function MyAlarmContent() {
     }
   };
 
-  const unreadNotifications = notifications.filter(notification => !notification.is_read);
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[calc(100vh-66px-89px)]">
@@ -47,14 +45,14 @@ function MyAlarmContent() {
     );
   }
 
-  return unreadNotifications.length === 0 ? (
+  return notifications.length === 0 ? (
     <div className="flex flex-col items-center justify-center h-[calc(100vh-66px-89px)]">
       <img
         src="/assets/feed/alarm.svg"
         alt="빈 알림 이모지"
         className="mb-4"
       />
-      <p className="text-sub2 text-ct-gray-200">새로운 알림이 없습니다.</p>
+      <p className="text-sub2 text-ct-gray-200">알림이 없습니다.</p>
     </div>
   ) : (
     <ul className="mt-[10px] space-y-[4px]">
