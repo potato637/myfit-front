@@ -28,7 +28,7 @@ function CoffeeChatList() {
 
   return (
     <div className="flex flex-col">
-      <div className="flex w-full h-[39px] fixed bg-ct-white z-10">
+      <div className="flex w-full h-[39px]">
         <button
           className="flex-1 border-b-[3px] border-[#D9D9D9] text-ct-gray-200 text-[18px] font-[600]"
           onClick={() => nav("/chatting")}
