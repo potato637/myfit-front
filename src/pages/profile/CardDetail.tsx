@@ -62,11 +62,10 @@ function CardDetail() {
           const introductionHeight = 80; // Adjust this value based on your introduction height
           const offset = headerHeight + introductionHeight;
 
-          // Calculate the scroll position, accounting for safe area insets
-          const safeAreaTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sat') || '0');
+          // Calculate the scroll position
           const elementPosition =
             cardElement.getBoundingClientRect().top + window.pageYOffset;
-          const offsetPosition = Math.max(0, elementPosition - offset - safeAreaTop);
+          const offsetPosition = Math.max(0, elementPosition - offset);
 
           // Smooth scroll to the calculated position
           window.scrollTo({
