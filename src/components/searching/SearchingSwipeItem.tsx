@@ -27,8 +27,8 @@ function SearchingSwipeItem({ card }: { card: SectorBaseSearchingItem }) {
 
   return (
     <div 
-      className={`w-[300px] h-[570px] flex flex-col items-center rounded-[16px] py-[16px] px-[10px] shadow-find-card cursor-pointer transition-opacity relative ${
-        isLoading ? 'opacity-50' : 'hover:opacity-95'
+      className={`w-[340px] min-h-[570px] flex flex-col items-center rounded-[16px] py-[16px] px-[10px] shadow-xl border border-gray-100 cursor-pointer transition-all duration-300 ease-in-out relative ${
+        isLoading ? 'opacity-50' : 'hover:shadow-2xl hover:scale-[1.03] hover:-translate-y-2 hover:border-blue-200'
       }`}
       onClick={handleCardClick}
     >
