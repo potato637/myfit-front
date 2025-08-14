@@ -4,8 +4,8 @@ import RecruitCard from "../../components/recruiting/RecruitCard";
 import { jobs } from "../../data/jobs";
 import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { RecruitmentItem } from "../../apis/recruiting/recruiting";
-import RecruitCardSkeleton from "../../components/skeletons/recruiting/RecruitCardSkeleton";
 import { useGetRecruitmentsQuery } from "../../hooks/recruiting/recruiting";
+import RecruitCardSkeleton from "../../components/skeletons/recruiting/RecruitCardSkeleton";
 
 function Recruiting() {
   const [selectedCategory, setSelectedCategory] = useState("기획/PM");
@@ -20,6 +20,7 @@ function Recruiting() {
   const location = useLocation();
   const [consumedQuery, setConsumedQuery] = useState(false);
 
+  // 쿼리 → 상태 반영 + 깔끔한 URL 치환
   useEffect(() => {
     const hs = searchParams.get("highSector");
     const ls = searchParams.get("lowSector");
@@ -37,6 +38,7 @@ function Recruiting() {
     }
   }, [searchParams, consumedQuery, nav]);
 
+  // 깔끔한 URL 상태에서 location.state로 복구
   useEffect(() => {
     if (!searchParams.toString() && location.state) {
       const {
@@ -86,18 +88,15 @@ function Recruiting() {
 
   return (
     <div className="flex flex-col bg-white">
-      {/* 1) TopBar와 동일한 고정 안전 영역 (고스트 바) */}
-      <div
-        className="fixed top-0 left-0 right-0 bg-ct-white z-40 pointer-events-none"
-        style={{ height: "calc(42px + env(safe-area-inset-top))" }}
-      />
+      {/* 상단 안전영역: 고정바 대신 흐름 내 스페이서로 안전영역만 확보 */}
+      <div style={{ height: "env(safe-area-inset-top)" }} />
 
-      {/* 2) 카테고리/스킬 헤더: TopBar 바로 아래에 붙임 + 좌우 19px 패딩 + 폭 정렬 */}
+      {/* 헤더: safe-area 바로 아래에 sticky, 좌우 19px + 최대폭 401px 정렬 */}
       <div
         className="sticky z-30 bg-ct-white"
-        style={{ top: "calc(42px + env(safe-area-inset-top))" }}
+        style={{ top: "env(safe-area-inset-top)" }}
       >
-        <div className="h-[118px] py-[16.5px] max-w-[401px] mx-auto px-[19px]">
+        <div className="max-w-[401px] mx-auto px-[19px] pt-[12px] pb-[8px]">
           <div className="flex h-[36px] overflow-x-scroll whitespace-nowrap scrollbar-hide">
             {jobs.map((item) => (
               <button
@@ -120,7 +119,7 @@ function Recruiting() {
             ))}
           </div>
 
-          <div className="mt-[11px] flex w-full overflow-x-scroll whitespace-nowrap scrollbar-hide">
+          <div className="mt-[8px] flex w-full overflow-x-scroll whitespace-nowrap scrollbar-hide">
             {currentCategory?.skills.map((skill) => (
               <button
                 key={skill}
@@ -136,10 +135,12 @@ function Recruiting() {
             ))}
           </div>
         </div>
+        {/* 헤더와 본문이 겹치지 않도록 확실한 하단 여백 */}
+        <div className="h-[8px]" />
       </div>
 
-      {/* 3) 본문: 헤더 바로 아래 자연스럽게 붙도록 여백 미세 조정 */}
-      <div className="mt-[8px] mb-[21px] flex justify-between items-center w-full max-w-[401px] mx-auto px-[19px]">
+      {/* 본문: 헤더와 동일한 좌우 패딩/최대폭 적용 */}
+      <div className="mb-[21px] flex justify-between items-center w-full max-w-[401px] mx-auto px-[19px]">
         <button
           className="w-[70px] h-[24px] text-body1 font-Pretendard font-[500] text-ct-white bg-ct-main-blue-200 rounded-[5px]"
           onClick={() => nav("/recruiting/register")}
