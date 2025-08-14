@@ -7,6 +7,7 @@ import {
 } from "react";
 import socket from "../libs/socket";
 import { ChatMessage } from "../apis/chatting/chatting";
+import { useParams } from "react-router-dom";
 
 interface ChattingContextType {
   roomId: number | null;
@@ -26,7 +27,7 @@ export const ChattingProvider = ({
   roomId,
   children,
 }: {
-  roomId: number;
+  roomId: number | null;
   children: ReactNode;
 }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -37,7 +38,7 @@ export const ChattingProvider = ({
   const upsert = (prev: ChatMessage[], msg: ChatMessage) => {
     const map = new Map(prev.map((m) => [m.id, m]));
     const old = map.get(msg.id);
-    const created_at = old?.isTemp ? old.created_at : msg.created_at; // temp가 있던 시간 우선
+    const created_at = old?.isTemp ? old.created_at : msg.created_at;
     map.set(msg.id, { ...msg, created_at, isTemp: false });
     return Array.from(map.values()).sort(sortByTime);
   };
@@ -122,5 +123,14 @@ export const useChatting = () => {
   const context = useContext(ChattingContext);
   if (!context)
     throw new Error("useChatting must be used within ChattingProvider");
-  return context;
+  const { chattingRoomId } = useParams();
+  const paramId =
+    chattingRoomId && chattingRoomId !== "null" ? Number(chattingRoomId) : NaN;
+  const effectiveRoomId = Number.isFinite(paramId)
+    ? paramId
+    : Number.isFinite(Number(context.roomId))
+    ? Number(context.roomId)
+    : null;
+
+  return { ...context, roomId: effectiveRoomId };
 };

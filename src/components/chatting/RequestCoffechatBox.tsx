@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useChatting } from "../../contexts/ChattingContext";
 import { useModal } from "../../contexts/ui/modalContext";
 import { useGetCoffeeChatDetailQuery } from "../../hooks/chatting/coffeechat";
@@ -8,6 +7,7 @@ import PendingModal from "./Modal/PendingModal";
 import { useAuth } from "../../contexts/AuthContext";
 import { useCoffeeChatModal } from "../../contexts/CoffeeChatModalContext";
 import { Status } from "../../apis/chatting/coffeechat";
+import { JSX } from "react";
 
 interface RequestCoffeeChatProps {
   text: string;
@@ -27,40 +27,40 @@ function RequestCoffeeChatBox({
   const { openModal } = useModal();
   const { roomId } = useChatting();
   const { user } = useAuth();
+  const { setRequestStatus } = useCoffeeChatModal();
+
   const { refetch } = useGetCoffeeChatDetailQuery(roomId!, coffeechat_id, {
     enabled: false,
   });
-  const { setRequestStatus } = useCoffeeChatModal();
-  const [modalComponent, setModalComponent] = useState<React.ReactNode>(null);
 
   const handleClick = async () => {
+    if (!roomId) return;
     const response = await refetch();
-    console.log("📦 refetch 응답:", response);
-    const ChatDetail = response.data?.result;
-    if (!ChatDetail) return;
-    const isMeSender = ChatDetail.sender.id === user?.id;
+    const chatDetail = response.data?.result;
+    if (!chatDetail) return;
 
-    if (ChatDetail.status === "PENDING") {
-      setRequestStatus("PENDING");
-      if (isMeSender) {
-        setModalComponent(<PendingModal data={ChatDetail} />);
-      } else {
-        setModalComponent(<AcceptModal data={ChatDetail} />);
-      }
-    } else if (ChatDetail.status === "ACCEPTED") {
-      setRequestStatus("ACCEPTED");
-      setModalComponent(<EditPendingModal data={ChatDetail} />);
+    setRequestStatus(chatDetail.status);
+
+    const isMeSender = chatDetail.sender.id === user?.id;
+
+    let modal: JSX.Element | null = null;
+    if (chatDetail.status === "PENDING") {
+      modal = isMeSender ? (
+        <PendingModal data={chatDetail} />
+      ) : (
+        <AcceptModal data={chatDetail} />
+      );
+    } else if (chatDetail.status === "ACCEPTED") {
+      modal = <EditPendingModal data={chatDetail} />;
     }
 
-    openModal(modalComponent);
+    if (modal) openModal(modal);
   };
 
   return (
     <div className="w-full h-[41px] rounded-[15px] text-[15px] font-[400] text-[#121212] border border-ct-main-blue-200 px-[20px] relative flex items-center ">
       <span className=" text-ct-main-blue-200">{name}</span>
       {text}
-
-      {/* 🔹 화살표 표시 조건 변경 */}
       {isLast && status !== "REJECTED" && status !== "CANCELED" && (
         <img
           src="/assets/chatting/bluearrow.svg"

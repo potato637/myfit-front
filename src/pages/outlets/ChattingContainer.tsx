@@ -1,4 +1,3 @@
-// ChattingContainer.tsx (최종 형태)
 import { Outlet, useMatches } from "react-router-dom";
 import { ChattingProvider } from "../../contexts/ChattingContext";
 
@@ -8,13 +7,11 @@ function ChattingContainer() {
     ?.chattingRoomId;
   const roomId = param ? Number(param) : null;
 
-  if (roomId && !Number.isNaN(roomId)) {
-    return (
-      <ChattingProvider key={roomId} roomId={roomId}>
-        <Outlet />
-      </ChattingProvider>
-    );
-  }
-  return <Outlet />;
+  return (
+    <ChattingProvider key={roomId ?? "no-room"} roomId={roomId}>
+      <Outlet />
+    </ChattingProvider>
+  );
 }
+
 export default ChattingContainer;
