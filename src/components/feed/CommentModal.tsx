@@ -92,14 +92,6 @@ export default function CommentModal({
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  // Prevent body scroll when modal is open
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, []);
-
   return createPortal(
     <AnimatePresence>
       <motion.div
@@ -131,7 +123,7 @@ export default function CommentModal({
             if (closing) onClose();
           }}
           onClick={(e) => e.stopPropagation()}
-          className="w-full h-[75vh] max-h-[65vh] bg-white rounded-t-[20px] flex flex-col relative overscroll-behavior-contain"
+          className="w-full h-[75vh] max-h-[65vh] bg-white rounded-t-[20px] flex flex-col relative"
         >
           {/* 핸들바 */}
           <div className="w-full flex justify-center py-2">
@@ -151,6 +143,7 @@ export default function CommentModal({
           <div
             ref={modalRef}
             className="flex-1 overflow-y-auto px-4 pt-6 pb-24 scrollbar-hide"
+            onScroll={(e) => e.stopPropagation()}
           >
             <CommentList
               comments={comments}
