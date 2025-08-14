@@ -16,7 +16,7 @@ function LandingModal() {
           "웹사이트를 앱처럼 사용해보세요!\n빠른 실행, 오프라인 지원, 알림 기능 제공 등 \n더 편리한 경험이 될거에요!"
         }
       </span>
-      <hr className="w-full" />
+      <hr className="w-full my-4" />
       <div className="ct-center flex-col">
         <span className="text-h2 mb-2">{"[ 안드로이드 버전 ]"}</span>
         <span>Chrome 우측 상단 세 점 아이콘 클릭</span>
