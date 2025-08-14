@@ -8,18 +8,27 @@ function SearchingListItem({ card }: { card: SectorBaseSearchingItem }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCardClick = async () => {
+    console.log("🎯 카드 클릭됨!", { card_id: card.card_id, author_name: card.author_name });
+    
     if (isLoading) return;
     
     try {
       setIsLoading(true);
+      console.log("📡 API 호출 시작:", card.card_id);
+      
       // 카드 상세 정보 조회해서 작성자 ID 획득
       const cardDetail = await getActivityCard(card.card_id);
+      console.log("✅ API 응답 성공:", cardDetail);
+      
       const authorId = cardDetail.result.card.writer.id;
+      const targetUrl = `/feed/profile/${authorId}?tab=card#${card.card_id}`;
+      
+      console.log("🚀 네비게이션:", targetUrl);
       
       // 해당 유저의 프로필 페이지 카드 탭으로 이동, 해시로 특정 카드 지정
-      navigate(`/feed/profile/${authorId}?tab=card#${card.card_id}`);
+      navigate(targetUrl);
     } catch (error) {
-      console.error("카드 상세 정보 조회 실패:", error);
+      console.error("❌ 카드 상세 정보 조회 실패:", error);
     } finally {
       setIsLoading(false);
     }
