@@ -47,7 +47,7 @@ function CoffeeChatList() {
         <div className="pt-[10px] px-[18px] flex flex-col pb-[90px]">
           <div className="flex flex-col gap-[9px] text-[17px] font-[600] text-ct-black-100">
             지난 커피챗은 이곳에서 보관해요!
-            <div className="flex justify-center">
+            <div className="flex justify-center w-full">
               <CoffeeChatStorageBox />
             </div>
           </div>

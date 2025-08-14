@@ -104,6 +104,6 @@ body.bottom-sheet-open {
 
 @supports (-webkit-touch-callout: none) {
   .chat-tabs-spacer {
-    height: calc(15px + env(safe-area-inset-top));
+    height: calc(12px + env(safe-area-inset-top));
   }
 }
