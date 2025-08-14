@@ -7,6 +7,7 @@ import {
 } from "react";
 import socket from "../libs/socket";
 import { ChatMessage } from "../apis/chatting/chatting";
+import { useParams } from "react-router-dom";
 
 interface ChattingContextType {
   roomId: number | null;
@@ -122,5 +123,14 @@ export const useChatting = () => {
   const context = useContext(ChattingContext);
   if (!context)
     throw new Error("useChatting must be used within ChattingProvider");
-  return context;
+  const { chattingRoomId } = useParams();
+  const paramId =
+    chattingRoomId && chattingRoomId !== "null" ? Number(chattingRoomId) : NaN;
+  const effectiveRoomId = Number.isFinite(paramId)
+    ? paramId
+    : Number.isFinite(Number(context.roomId))
+    ? Number(context.roomId)
+    : null;
+
+  return { ...context, roomId: effectiveRoomId };
 };
