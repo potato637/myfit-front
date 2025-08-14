@@ -11,7 +11,7 @@ function ChatTabsTopBarContainer({ TopBarContent, children }: Props) {
   return (
     <>
       <ChatTabsTopBar>{TopBarContent}</ChatTabsTopBar>
-      <div className="h-[calc(39px+env(safe-area-inset-top))]" />
+      <div className="chat-tabs-spacer" />
       {children}
     </>
   );
