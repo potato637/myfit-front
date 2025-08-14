@@ -38,7 +38,7 @@ const ModalPortal = ({ children, onClose }: ModalPortalProps) => {
     >
       <div
         ref={modalRef}
-        className="w-[333px] my-8 bg-ct-white rounded-[20px]"
+        className="w-[333px] my-8 bg-ct-white rounded-[40px]"
         onClick={(e) => e.stopPropagation()}
       >
         {children}
