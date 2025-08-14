@@ -21,7 +21,7 @@ function SearchingListItem({ card }: { card: SectorBaseSearchingItem }) {
       console.log("✅ API 응답 성공:", cardDetail);
       
       const authorId = cardDetail.result.card.writer.id;
-      const targetUrl = `/feed/profile/${authorId}?tab=card#${card.card_id}`;
+      const targetUrl = `/feed/profile/${authorId}/card#${card.card_id}`;
       
       console.log("🚀 네비게이션:", targetUrl);
       

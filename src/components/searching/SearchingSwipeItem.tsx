@@ -17,7 +17,7 @@ function SearchingSwipeItem({ card }: { card: SectorBaseSearchingItem }) {
       const authorId = cardDetail.result.card.writer.id;
       
       // 해당 유저의 프로필 페이지 카드 탭으로 이동, 해시로 특정 카드 지정
-      navigate(`/feed/profile/${authorId}?tab=card#${card.card_id}`);
+      navigate(`/feed/profile/${authorId}/card#${card.card_id}`);
     } catch (error) {
       console.error("카드 상세 정보 조회 실패:", error);
     } finally {
