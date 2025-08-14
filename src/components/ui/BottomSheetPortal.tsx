@@ -22,7 +22,15 @@ const BottomSheetPortal = ({ children, onClose }: BottomSheetPortalProps) => {
   return createPortal(
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 bg-ct-black-100/50 z-[9999]"
+        className="fixed z-[9999] ct-center bg-ct-black-100/50"
+        style={{
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          overflow: "hidden",
+          touchAction: "none",
+        }}
         onClick={handleOutsideClick}
       >
         <motion.div
