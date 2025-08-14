@@ -4,7 +4,12 @@ function SearchingSwipeItem({ card }: { card: SectorBaseSearchingItem }) {
   return (
     <div className="w-[300px] h-[570px] flex flex-col items-center rounded-[16px] py-[16px] px-[10px] shadow-find-card">
       <div className="w-full flex flex-col gap-[8px]">
-        <span className="text-h2 text-ct-black-100">{`${card.author_name} | ${card.recruiting_status}`}</span>
+        <div className="flex justify-start items-end">
+          <span className="text-h1 text-ct-black-100">{card.author_name}</span>
+          <span className="text-sub1 font-bold text-ct-black-100 ml-[5px]">
+            {`(${card.recruiting_status})`}
+          </span>
+        </div>
         <div className="w-full flex gap-[4px] justify-start items-center flex-wrap">
           {card.keywords.map((keyword, index) => (
             <div
