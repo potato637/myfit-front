@@ -59,6 +59,22 @@ export default function CommentModal({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  useEffect(() => {
+    const handleTouchMove = (e: TouchEvent) => {
+      // 모달 내부의 스크롤 가능한 요소가 아닌 곳에서 발생하는 터치 이벤트를 막음
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener("touchmove", handleTouchMove, { passive: false });
+
+    return () => {
+      document.body.style.overflow = "";
+      document.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, []);
+
   // 무한스크롤 Intersection Observer
   useEffect(() => {
     const observer = new IntersectionObserver(
