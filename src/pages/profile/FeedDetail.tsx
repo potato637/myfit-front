@@ -45,9 +45,10 @@ function FeedDetail() {
     const timer = setTimeout(() => {
       const feedElement = feedRefs.current[targetFeedId];
       if (feedElement) {
-        const headerHeight = 60; // Adjust based on your header height
-        const introductionHeight = 80; // Adjust based on introduction height
-        const offset = headerHeight + introductionHeight;
+        const headerHeight = 60; // TopBar height
+        const introductionHeight = 80; // DetailIntroduction height
+        const additionalPadding = 15; // Add some extra space for better visibility
+        const offset = headerHeight + introductionHeight + additionalPadding;
 
         const elementPosition =
           feedElement.getBoundingClientRect().top + window.pageYOffset;
@@ -69,7 +70,7 @@ function FeedDetail() {
 
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
-      <div className="w-full h-full bg-ct-gray-100 flex flex-col gap-[7px] relative">
+      <div className="w-full h-full bg-ct-gray-100 flex flex-col gap-[7px]">
         {isLoading ? (
           <>
             <DetailIntroductionSkeleton />
