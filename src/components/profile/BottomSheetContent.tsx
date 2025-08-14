@@ -15,7 +15,11 @@ function BottomSheetContent({ type }: { type: "feed" | "card" }) {
   const handleSave = () => {
     if (how === "edit") {
       closeBottomSheet();
-      navigate(`/feed/edit/${itemId}`);
+      if (type === "feed") {
+        navigate(`/feed/edit/${itemId}`);
+      } else {
+        navigate(`/mypage/edit-card/${itemId}`);
+      }
     } else {
       closeBottomSheet();
       if (type === "feed") {

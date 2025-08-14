@@ -307,7 +307,7 @@ export const updateActivityCard = async (
   request: ActivityCardRequest
 ): Promise<ActivityCardSuccessResponse> => {
   try {
-    const { data } = await apiClient.put<ActivityCardSuccessResponse>(`/api/cards/${cardId}`, request);
+    const { data } = await apiClient.patch<ActivityCardSuccessResponse>(`/api/cards/${cardId}`, request);
     return data;
   } catch (error) {
     console.error("updateActivityCard error:", error);

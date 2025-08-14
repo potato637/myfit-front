@@ -47,6 +47,7 @@ import FeedContainer from "../pages/outlets/FeedContainer";
 import ChattingContainer from "../pages/outlets/ChattingContainer";
 import RecruitingContainer from "../pages/outlets/RecruitingContainer";
 import CreateCard from "../pages/profile/CreateCard";
+import EditCard from "../pages/profile/EditCard";
 import CardKeyword from "../pages/profile/CardKeyword";
 import NotFound from "../pages/error/NotFound";
 import SearchingContainer from "../pages/outlets/SearchingContainer";
@@ -143,6 +144,7 @@ const router = createBrowserRouter([
                 element: <VerifiedSettingPage />,
               },
               { path: "create-card", element: <CreateCard /> },
+              { path: "edit-card/:cardId", element: <EditCard /> },
               { path: "keyword-selector", element: <CardKeyword /> },
             ],
           },
