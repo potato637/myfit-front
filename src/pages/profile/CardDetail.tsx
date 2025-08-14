@@ -60,7 +60,7 @@ function CardDetail() {
           // Calculate the height of the fixed elements (header + introduction + some padding)
           const headerHeight = 60; // TopBar height
           const introductionHeight = 80; // DetailIntroduction height
-          const additionalPadding = 20; // Add some extra space for better visibility
+          const additionalPadding = 15; // Add some extra space for better visibility
           const offset = headerHeight + introductionHeight + additionalPadding;
 
           // Calculate the scroll position

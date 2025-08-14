@@ -180,7 +180,7 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
   }, [item.images]); // item.images가 변경될 때마다 다시 설정
 
   return (
-    <div className="w-full bg-ct-white rounded-[10px] p-[16px] flex flex-col gap-[10px] items-center">
+    <div className="w-full h-auto bg-ct-white rounded-[10px] p-[16px] flex flex-col gap-[10px] items-center">
       <div className="w-full h-[30px] px-[5px] py-[14px] flex items-center justify-between">
         <span className="text-ct-main-blue-100 text-body1">활동 피드</span>
         {isMine && (
