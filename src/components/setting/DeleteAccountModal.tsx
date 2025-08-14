@@ -1,11 +1,14 @@
 import { useModal } from "../../contexts/ui/modalContext";
+import { useDeleteUser } from "../../hooks/mypageQueries";
 
 interface DeleteAccountModalProps {
-  onDelete: () => void;
+  onDeleteSuccess: () => void;
 }
 
-function DeleteAccountModal({ onDelete }: DeleteAccountModalProps) {
+function DeleteAccountModal({ onDeleteSuccess }: DeleteAccountModalProps) {
   const { closeModal } = useModal();
+  const { mutate: deleteUser } = useDeleteUser();
+
   return (
     <div className="w-full h-full flex flex-col mx-[24px] my-[19px]">
       <img
@@ -25,8 +28,12 @@ function DeleteAccountModal({ onDelete }: DeleteAccountModalProps) {
         <button
           className="w-[142px] h-[42px] rounded-[100px] bg-ct-gray-200 text-ct-white text-sub2"
           onClick={() => {
-            closeModal();
-            onDelete();
+            deleteUser(undefined, {
+              onSuccess: () => {
+                closeModal();
+                onDeleteSuccess();
+              }
+            });
           }}
         >
           탈퇴 할래요

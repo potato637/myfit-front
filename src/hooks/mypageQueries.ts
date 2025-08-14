@@ -14,6 +14,7 @@ import {
   patchProfile,
   PatchProfileProps,
   deleteCard,
+  deleteUser,
 } from "../apis/mypageAPI";
 
 export const useGetProfile = ({ service_id }: { service_id: string }) => {
@@ -126,6 +127,20 @@ export const useDeleteCard = () => {
     },
     onError: (error) => {
       console.error("Failed to delete card:", error);
+    },
+  });
+};
+
+export const useDeleteUser = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => deleteUser(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+    },
+    onError: (error) => {
+      console.error("Failed to delete user:", error);
     },
   });
 };
