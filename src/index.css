@@ -97,3 +97,13 @@ body.bottom-sheet-open {
   background-color: #368bff !important;
   margin: 0 1px !important;
 }
+
+.chat-tabs-spacer {
+  height: calc(39px + env(safe-area-inset-top));
+}
+
+@supports (-webkit-touch-callout: none) {
+  .chat-tabs-spacer {
+    height: calc(15px + env(safe-area-inset-top));
+  }
+}
