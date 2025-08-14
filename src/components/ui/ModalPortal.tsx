@@ -25,7 +25,7 @@ const ModalPortal = ({ children, onClose }: ModalPortalProps) => {
 
   return createPortal(
     <div
-      className="fixed z-[9999] ct-center"
+      className="fixed z-[9999] ct-center bg-ct-black-100/50"
       style={{
         top: 0,
         left: 0,
