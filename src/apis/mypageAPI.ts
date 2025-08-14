@@ -304,7 +304,7 @@ export const getActivityCard = async (cardId: number): Promise<ActivityCardDetai
 // 이력/활동 카드 수정
 export const updateActivityCard = async (
   cardId: number,
-  request: ActivityCardRequest
+  request: Omit<ActivityCardRequest, 'service_id'>
 ): Promise<ActivityCardSuccessResponse> => {
   try {
     const { data } = await apiClient.patch<ActivityCardSuccessResponse>(`/api/cards/${cardId}`, request);

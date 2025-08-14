@@ -163,8 +163,8 @@ export const useUpdateActivityCard = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ cardId, request }: { cardId: number; request: ActivityCardRequest }) =>
-      updateActivityCard(cardId, request),
+    mutationFn: ({ cardId, request }: { cardId: number; request: Omit<ActivityCardRequest, 'service_id'> }) =>
+      updateActivityCard(cardId, request as any),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cards"] });
       queryClient.invalidateQueries({ queryKey: ["activityCard"] });
