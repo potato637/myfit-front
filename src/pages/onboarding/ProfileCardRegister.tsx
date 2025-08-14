@@ -83,8 +83,6 @@ function ProfileCardRegister() {
         keyword_text: keywords,
       };
 
-      console.log("🎯 [ProfileCardRegister] 카드 등록 요청:", cardRequest);
-      console.log("🔍 [ProfileCardRegister] SignupData 상태:", signupData);
 
       const response = await createActivityCard(cardRequest);
 
@@ -94,7 +92,6 @@ function ProfileCardRegister() {
         throw new Error("카드 등록 실패");
       }
     } catch (error: any) {
-      console.error("❌ [ProfileCardRegister] 카드 등록 실패:", error);
 
       // 구체적인 에러 메시지 표시
       if (error.response?.status === 400) {

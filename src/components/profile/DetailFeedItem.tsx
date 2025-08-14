@@ -55,7 +55,9 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
     mutationFn: (feed_id: number) => addFeedLike(feed_id),
     onMutate: async (feed_id) => {
       // 현재 쿼리 키 (마이페이지 또는 다른 사용자 프로필)
-      const queryKey = isMine ? ['feeds', user?.id?.toString()] : ['feeds', location.pathname.split('/').pop()];
+      // feed/profile/{service_id}/feed 경로에서 service_id 추출
+      const serviceId = isMine ? user?.id?.toString() : location.pathname.split('/')[3];
+      const queryKey = ['feeds', serviceId];
       
       // 낙관적 업데이트를 위해 이전 데이터 취소
       await queryClient.cancelQueries({ queryKey });
@@ -98,7 +100,9 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
     mutationFn: (feed_id: number) => removeFeedLike(feed_id),
     onMutate: async (feed_id) => {
       // 현재 쿼리 키 (마이페이지 또는 다른 사용자 프로필)
-      const queryKey = isMine ? ['feeds', user?.id?.toString()] : ['feeds', location.pathname.split('/').pop()];
+      // feed/profile/{service_id}/feed 경로에서 service_id 추출
+      const serviceId = isMine ? user?.id?.toString() : location.pathname.split('/')[3];
+      const queryKey = ['feeds', serviceId];
       
       // 낙관적 업데이트를 위해 이전 데이터 취소
       await queryClient.cancelQueries({ queryKey });

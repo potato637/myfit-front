@@ -5,6 +5,7 @@ import {
   createComment,
   deleteComment,
 } from "../../apis/feed";
+import { toast } from "react-toastify";
 
 interface UseFeedMutationsProps {
   activePostId?: string | null;
@@ -63,7 +64,7 @@ export const useFeedMutations = ({
       return { previousFeeds, previousSearchKeyword, previousSearchHashtag };
     },
     onError: (error, _variables, context) => {
-      console.error("좋아요 추가 실패:", error);
+      toast.error("좋아요 처리 중 오류가 발생했습니다.");
       
       // 에러 시 이전 데이터로 롤백
       if (context) {
@@ -134,7 +135,7 @@ export const useFeedMutations = ({
       return { previousFeeds, previousSearchKeyword, previousSearchHashtag };
     },
     onError: (error, _variables, context) => {
-      console.error("좋아요 취소 실패:", error);
+      toast.error("좋아요 처리 중 오류가 발생했습니다.");
       
       // 에러 시 이전 데이터로 롤백
       if (context) {
@@ -179,7 +180,7 @@ export const useFeedMutations = ({
       queryClient.invalidateQueries({ queryKey: ["analyzeHashtags"] });
     },
     onError: (error) => {
-      console.error("댓글 작성 실패:", error);
+      toast.error("댓글 작성에 실패했습니다.");
     },
   });
 
@@ -206,7 +207,7 @@ export const useFeedMutations = ({
       queryClient.invalidateQueries({ queryKey: ["analyzeHashtags"] });
     },
     onError: (error) => {
-      console.error("대댓글 작성 실패:", error);
+      toast.error("답글 작성에 실패했습니다.");
     },
   });
 
@@ -221,8 +222,8 @@ export const useFeedMutations = ({
       queryClient.invalidateQueries({ queryKey: ["searchFeedsByHashtag"] });
       queryClient.invalidateQueries({ queryKey: ["analyzeHashtags"] });
     },
-    onError: (error) => {
-      console.error("댓글 삭제 실패:", error);
+    onError: () => {
+      toast.error("댓글 삭제에 실패했습니다.");
     },
   });
 
