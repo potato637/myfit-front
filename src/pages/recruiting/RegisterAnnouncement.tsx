@@ -52,9 +52,7 @@ function RegisterAnnouncement() {
   const selectedSkillLabel = lowSector.join(", ");
 
   useEffect(() => {
-    if (!state) {
-      setSelectedDate(null);
-    }
+    if (!state) setSelectedDate(null);
   }, [state, setSelectedDate]);
 
   const handleSubmit = () => {
@@ -78,26 +76,22 @@ function RegisterAnnouncement() {
         onSuccess: () => {
           const hs = highSector?.[0] ?? "";
           const ls = lowSector?.[0];
-
-          const params = new URLSearchParams();
-          if (hs) params.set("highSector", hs);
-          if (ls) params.set("lowSector", ls);
-          params.set("page", "1");
-
-          navigate(`/recruiting?${params.toString()}`, { replace: true });
+          const p = new URLSearchParams();
+          if (hs) p.set("highSector", hs);
+          if (ls) p.set("lowSector", ls);
+          p.set("page", "1");
+          navigate(`/recruiting?${p.toString()}`, { replace: true });
         },
       }
     );
   };
 
   const handleOpenModal = (type: "salary" | "calendar" | "worktype") => {
-    if (type === "salary") {
-      openModal(<SalaryModal onConfirm={(val) => setSalary(val)} />);
-    } else if (type === "worktype") {
-      openModal(<WorkTypeModal onConfirm={(val) => setWorkType(val)} />);
-    } else if (type === "calendar") {
-      openModal(<CalendarModal />);
-    }
+    if (type === "salary")
+      openModal(<SalaryModal onConfirm={(v) => setSalary(v)} />);
+    else if (type === "worktype")
+      openModal(<WorkTypeModal onConfirm={(v) => setWorkType(v)} />);
+    else openModal(<CalendarModal />);
   };
 
   const TopBarContent = () => (

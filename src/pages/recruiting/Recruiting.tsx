@@ -2,20 +2,32 @@ import { useEffect, useState } from "react";
 import BottomNav from "../../components/layouts/BottomNav";
 import RecruitCard from "../../components/recruiting/RecruitCard";
 import { jobs } from "../../data/jobs";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom"; // ★ 추가
 import { RecruitmentItem } from "../../apis/recruiting/recruiting";
 import RecruitCardSkeleton from "../../components/skeletons/recruiting/RecruitCardSkeleton";
 import { useGetRecruitmentsQuery } from "../../hooks/recruiting/recruiting";
 
 function Recruiting() {
   const [selectedCategory, setSelectedCategory] = useState("기획/PM");
-
   const [selectedSkill, setSelectedSkill] = useState<string>("서비스 기획자");
   const [recruitList, setRecruitList] = useState<RecruitmentItem[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const [delayedLoading, setDelayedLoading] = useState(true);
   const nav = useNavigate();
+
+  const [searchParams] = useSearchParams(); // ★ 추가
+
+  // ★ URL 쿼리(highSector, lowSector, page) → 내부 상태로 반영
+  useEffect(() => {
+    const hs = searchParams.get("highSector");
+    const ls = searchParams.get("lowSector");
+    const p = Number(searchParams.get("page") ?? "1");
+
+    if (hs) setSelectedCategory(hs);
+    if (ls) setSelectedSkill(ls);
+    if (!Number.isNaN(p) && p > 0) setPage(p);
+  }, [searchParams]);
 
   const { data, isLoading, isError } = useGetRecruitmentsQuery(
     selectedCategory,
@@ -71,6 +83,7 @@ function Recruiting() {
                 if (firstSkill) {
                   setSelectedSkill(firstSkill);
                 }
+                // ※ URL은 굳이 바꾸지 않음(최소 변경). 필요하면 여기에 navigate로 쿼리 업데이트.
               }}
             >
               {item.category}
