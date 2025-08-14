@@ -271,3 +271,16 @@ export const deleteCard = async ({
     throw error;
   }
 };
+
+export interface DeleteUserResponse extends BaseResponse {
+  result: null;
+}
+export const deleteUser = async (): Promise<DeleteUserResponse> => {
+  try {
+    const { data } = await apiClient.delete<DeleteUserResponse>(`/api/users`);
+    return data;
+  } catch (error) {
+    console.error("deleteUser error:", error);
+    throw error;
+  }
+};
