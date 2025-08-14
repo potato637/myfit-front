@@ -55,6 +55,7 @@ import EditFeed from "../pages/feed/EditFeed";
 import Filter from "../pages/searching/Filter";
 import FilterResult from "../pages/searching/FilterResult";
 import HomeRouter from "../pages/HomeRouter";
+import RegisterEmail from "../pages/onboarding/RegisterEmail";
 
 const router = createBrowserRouter([
   {
@@ -71,8 +72,7 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <Splash /> },
           { path: "selectmembers", element: <SelectMembers /> },
-          // { path: "register-email", element: <RegisterEmail /> },
-          { path: "register-email", element: <ProfileRegister /> },
+          { path: "register-email", element: <RegisterEmail /> },
           { path: "profile-register", element: <ProfileRegister /> },
           { path: "profile-card-register", element: <ProfileCardRegister /> },
           { path: "profile-preview", element: <ProfilePreview /> },

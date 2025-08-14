@@ -29,10 +29,10 @@ const ModalPortal = ({ children, onClose }: ModalPortalProps) => {
       style={{
         top: 0,
         left: 0,
-        width: "100vw", // 화면 너비 전체
-        height: "100vh", // 화면 높이 전체
-        overflow: "hidden", // 스크롤바 숨김
-        touchAction: "none", // 배경 스크롤을 막는 핵심 속성
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden",
+        touchAction: "none",
       }}
       onClick={handleOutsideClick}
     >
