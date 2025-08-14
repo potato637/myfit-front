@@ -56,7 +56,7 @@ function InputField({
     "text-sub2 font-sans placeholder:text-ct-gray-300 text-ct-black-200 w-full rounded-[10px] bg-ct-gray-100";
   const sizeInput =
     as === "textarea"
-      ? "h-[44px] max-h-[88px] px-[26px] pt-[14px] pb-[12px] resize-none overflow-y-auto"
+      ? "h-[44px] max-h-[88px] px-[26px] pt-[14px] pb-[12px] resize-none !overflow-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
       : "min-h-[44px] px-[26px]";
   const errorRing = error
     ? "border border-ct-red-100"
