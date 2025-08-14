@@ -41,21 +41,30 @@ function PersonalInputField({
           </span>
         )}
       </div>
+
       {multiline ? (
-        <textarea
-          value={value || ""}
-          readOnly={!!onClick}
-          placeholder={placeholder}
-          maxLength={maxLength}
-          className={`${inputBase} ${inputError} h-[44px] max-h-[88px] px-[26px] py-[12px] !overflow-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden`}
-          onClick={onClick}
-          onChange={onChange}
-          onInput={(e) => {
-            const target = e.target as HTMLTextAreaElement;
-            target.style.height = "44px";
-            target.style.height = `${Math.min(target.scrollHeight, 88)}px`;
-          }}
-        />
+        // 변경 ①: 래퍼 추가 (WebKit 스크롤바 숨김)
+        <div className="[&>textarea::-webkit-scrollbar]:hidden">
+          <textarea
+            value={value || ""}
+            readOnly={!!onClick}
+            placeholder={placeholder}
+            maxLength={maxLength}
+            // 기존 클래스 유지 + overflow 강제 숨김
+            className={`${inputBase} ${inputError} h-[44px] max-h-[88px] px-[26px] py-[12px] !overflow-hidden`}
+            // 변경 ②: rows=1 명시
+            rows={1}
+            // 변경 ③: Firefox/IE 계열 스크롤바 숨김
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            onClick={onClick}
+            onChange={onChange}
+            onInput={(e) => {
+              const target = e.target as HTMLTextAreaElement;
+              target.style.height = "44px";
+              target.style.height = `${Math.min(target.scrollHeight, 88)}px`;
+            }}
+          />
+        </div>
       ) : (
         <input
           type="text"
@@ -68,6 +77,7 @@ function PersonalInputField({
           onChange={onChange}
         />
       )}
+
       {error && (
         <span className="text-body2 text-ct-red-100 pl-[13px]">{error}</span>
       )}
