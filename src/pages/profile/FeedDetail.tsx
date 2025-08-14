@@ -45,9 +45,10 @@ function FeedDetail() {
     const timer = setTimeout(() => {
       const feedElement = feedRefs.current[targetFeedId];
       if (feedElement) {
-        const headerHeight = 60; // Adjust based on your header height
-        const introductionHeight = 80; // Adjust based on introduction height
-        const offset = headerHeight + introductionHeight;
+        const headerHeight = 60; // TopBar height
+        const introductionHeight = 80; // DetailIntroduction height
+        const additionalPadding = 10; // Add some extra space for better visibility
+        const offset = headerHeight + introductionHeight + additionalPadding;
 
         const elementPosition =
           feedElement.getBoundingClientRect().top + window.pageYOffset;
