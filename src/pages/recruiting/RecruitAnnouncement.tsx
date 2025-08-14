@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useMemo } from "react";
 import ImageDisplay from "../../components/common/ImageDisplay";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import BottomNav from "../../components/layouts/BottomNav";
@@ -9,39 +9,72 @@ import {
   useUnSubscribeRecruitmentMutation,
 } from "../../hooks/recruiting/recruiting";
 import { useNavigate, useParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 function RecruitAnnouncement() {
   const { recruitment_id } = useParams();
   const recruitmentId = String(recruitment_id);
 
-  const { data } = usegetRecruitmentDetailQuery(recruitmentId);
-  const { mutate: subscribe } = useSubscribeRecruitmentMutation(recruitmentId);
-  const { mutate: unsubscribe } =
-    useUnSubscribeRecruitmentMutation(recruitmentId);
-  const { mutate: createChattingRoom } = useCreateChattingRoomMutation();
+  const queryClient = useQueryClient();
+  const detailKey = useMemo(
+    () => ["recruitmentDetail", recruitmentId],
+    [recruitmentId]
+  );
 
-  const [_, setIsSubscribed] = useState<boolean | null>(null);
+  const { data } = usegetRecruitmentDetailQuery(recruitmentId);
+  const { mutate: subscribe, isPending: isSubscribing } =
+    useSubscribeRecruitmentMutation(recruitmentId);
+  const { mutate: unsubscribe, isPending: isUnsubscribing } =
+    useUnSubscribeRecruitmentMutation(recruitmentId);
+  const { mutate: createChattingRoom, isPending: isCreatingRoom } =
+    useCreateChattingRoomMutation();
+
   const nav = useNavigate();
 
-  const handleSubscribe = () => {
-    subscribe(undefined, {
-      onSuccess: (res: any) => {
-        setIsSubscribed(res?.is_subscribed ?? true);
-      },
-    });
-  };
-
-  const handleUnSubscribe = () => {
-    unsubscribe(undefined, {
-      onSuccess: (res: any) => {
-        setIsSubscribed(res?.is_subscribed ?? false);
-      },
-    });
-  };
-
   const targetServiceId = data?.result.recruitment.writer.id;
-  const handleClick = () => {
-    if (!targetServiceId) return;
+  const isSubscribed = data?.result.recruitment.is_subscribed ?? false;
+
+  const applyOptimisticFlip = useCallback(() => {
+    const prev = queryClient.getQueryData<any>(detailKey);
+    if (!prev) return prev;
+    const next = {
+      ...prev,
+      result: {
+        ...prev.result,
+        recruitment: {
+          ...prev.result.recruitment,
+          is_subscribed: !prev.result.recruitment.is_subscribed,
+        },
+      },
+    };
+    queryClient.setQueryData(detailKey, next);
+    return prev;
+  }, [detailKey, queryClient]);
+
+  const handleToggleSubscribe = useCallback(() => {
+    const prevSnapshot = applyOptimisticFlip();
+    const onError = () => {
+      if (prevSnapshot) queryClient.setQueryData(detailKey, prevSnapshot);
+    };
+    const onSettled = () => {
+      queryClient.invalidateQueries({ queryKey: detailKey });
+    };
+    if (isSubscribed) {
+      unsubscribe(undefined, { onError, onSettled });
+    } else {
+      subscribe(undefined, { onError, onSettled });
+    }
+  }, [
+    applyOptimisticFlip,
+    detailKey,
+    isSubscribed,
+    queryClient,
+    subscribe,
+    unsubscribe,
+  ]);
+
+  const handleClick = useCallback(() => {
+    if (!targetServiceId || isCreatingRoom) return;
     createChattingRoom(targetServiceId, {
       onSuccess: (res) => {
         nav(`/chatting/${res.result.chatting_room_id}`, {
@@ -49,7 +82,7 @@ function RecruitAnnouncement() {
         });
       },
     });
-  };
+  }, [createChattingRoom, isCreatingRoom, nav, targetServiceId]);
 
   const TopBarContent = () => {
     return (
@@ -64,6 +97,8 @@ function RecruitAnnouncement() {
       </div>
     );
   };
+
+  const disableToggle = isSubscribing || isUnsubscribing;
 
   return (
     <TopBarContainer TopBarContent={<TopBarContent />}>
@@ -131,25 +166,28 @@ function RecruitAnnouncement() {
         )}
 
         <div className="mt-[26px] flex justify-between">
-          {data?.result.recruitment.is_subscribed ? (
+          <button
+            onClick={disableToggle ? undefined : handleToggleSubscribe}
+            disabled={disableToggle}
+            className="ml-[10px] h-[25px] w-[25px] disabled:opacity-50"
+          >
             <img
-              src="/assets/recruit/bookmark(on).svg"
+              src={
+                isSubscribed
+                  ? "/assets/recruit/bookmark(on).svg"
+                  : "/assets/recruit/bookmark(off).svg"
+              }
               alt="bookmark"
-              onClick={handleUnSubscribe}
-              className="ml-[11px] h-[24px] w-[24px]"
+              className={
+                isSubscribed ? "h-[24px] w-[24px]" : "h-[25px] w-[25px]"
+              }
             />
-          ) : (
-            <img
-              src="/assets/recruit/bookmark(off).svg"
-              alt="bookmark"
-              onClick={handleSubscribe}
-              className="ml-[10px] h-[25px] w-[25px]"
-            />
-          )}
+          </button>
 
           <button
-            className="w-[132px] h-[34px] rounded-[16px] bg-ct-main-blue-100 text-sub2 font-Pretendard text-ct-white"
+            className="w-[132px] h-[34px] rounded-[16px] bg-ct-main-blue-100 text-sub2 font-Pretendard text-ct-white disabled:opacity-50"
             onClick={handleClick}
+            disabled={isCreatingRoom}
           >
             채팅으로 문의
           </button>
