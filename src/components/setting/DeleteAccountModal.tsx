@@ -1,12 +1,13 @@
 import { useModal } from "../../contexts/ui/modalContext";
 import { useDeleteUser } from "../../hooks/mypageQueries";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
-function DeleteAccountModal() {
+interface DeleteAccountModalProps {
+  onDeleteSuccess: () => void;
+}
+
+function DeleteAccountModal({ onDeleteSuccess }: DeleteAccountModalProps) {
   const { closeModal } = useModal();
   const { mutate: deleteUser } = useDeleteUser();
-  const navigate = useNavigate();
 
   return (
     <div className="w-full h-full flex flex-col mx-[24px] my-[19px]">
@@ -27,14 +28,12 @@ function DeleteAccountModal() {
         <button
           className="w-[142px] h-[42px] rounded-[100px] bg-ct-gray-200 text-ct-white text-sub2"
           onClick={() => {
-            try {
-              deleteUser();
-            } catch (error) {
-              toast.error("회원 탈퇴 실패");
-            } finally {
-              closeModal();
-              navigate("/onboarding");
-            }
+            deleteUser(undefined, {
+              onSuccess: () => {
+                closeModal();
+                onDeleteSuccess();
+              }
+            });
           }}
         >
           탈퇴 할래요
