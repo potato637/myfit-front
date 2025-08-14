@@ -104,7 +104,7 @@ function FeedCard({
       </div>
       <div className="w-full flex flex-col items-center">
         <style>{bulletStyles}</style>
-        <div className="w-full relative pb-8">
+        <div className={`w-full relative ${post.images.length > 1 ? 'pb-8' : ''}`}>
           {" "}
           <Swiper
             ref={swiperRef}
@@ -124,10 +124,12 @@ function FeedCard({
               </SwiperSlide>
             ))}
           </Swiper>
-          <div
-            ref={paginationRef}
-            className="swiper-pagination absolute bottom-2 left-0 right-0"
-          ></div>
+          {post.images.length > 1 && (
+            <div
+              ref={paginationRef}
+              className="swiper-pagination absolute bottom-2 left-0 right-0"
+            ></div>
+          )}
         </div>
       </div>
       {/* 좋아요 / 댓글 */}
