@@ -13,6 +13,22 @@ function Splash() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [test, setTest] = useState<string>("");
+
+  useEffect(() => {
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
+    const isPWA = window.matchMedia("(display-mode: standalone)").matches;
+    if (!isMobile) {
+      setTest("not mobile");
+    } else if (isPWA) {
+      setTest("PWA");
+    } else {
+      setTest("mobile");
+    }
+  }, []);
 
   // 카드 등록 완료 후 전달된 메시지 표시
   useEffect(() => {
@@ -135,6 +151,8 @@ function Splash() {
         >
           {isLoading ? "로그인 중..." : "로그인"}
         </button>
+
+        <h1>{test}</h1>
 
         {/* 하단 링크 */}
         <div className="ct-center gap-[32px] text-ct-white text-sub2 mb-[57px]">
