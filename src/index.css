@@ -29,6 +29,19 @@ body.modal-open {
   width: 100%;
 }
 
+body,
+html {
+  width: 100vw;
+  height: 100vh;
+  /* 뷰포트 전체를 차지하도록 설정 */
+}
+
+/* 추가적으로 padding을 적용하여 safe-area 내부에 콘텐츠가 오도록 함 */
+body {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
 .modal-overlay {
   min-height: calc(100vh + env(safe-area-inset-bottom));
 
