@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { login } from "../../apis/auth";
 import { useAuth } from "../../contexts/AuthContext";
+import { useModal } from "../../contexts/ui/modalContext";
+import LandingModal from "../../components/onboarding/LandingModal";
 
 function Splash() {
   const navigate = useNavigate();
@@ -14,6 +16,7 @@ function Splash() {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [desktop, setDesktop] = useState<string>("");
+  const { openModal } = useModal();
 
   useEffect(() => {
     const isMobile =
@@ -25,10 +28,8 @@ function Splash() {
       setDesktop(
         "마핏(MyFit) 서비스는 모바일 환경에 최적화 \n되어있습니다. 보다 부드러운 사용자 경험을 위해 \n스마트폰으로 접속해주세요!"
       );
-    } else if (isPWA) {
-      setDesktop("PWA");
-    } else {
-      setDesktop("mobile");
+    } else if (!isPWA) {
+      openModal(<LandingModal />);
     }
   }, []);
 
@@ -165,7 +166,7 @@ function Splash() {
           </button>
         </div>
         {desktop && (
-          <h1 className="text-ct-white text-center text-red-500 whitespace-pre-line">
+          <h1 className="text-center text-red-500 whitespace-pre-line">
             {desktop}
           </h1>
         )}
