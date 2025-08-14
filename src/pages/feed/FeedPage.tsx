@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import FeedCard from "../../components/feed/FeedCard";
 import FixedHeader from "../../components/feed/FixedHeader";
 import BottomNavContainer from "../../components/layouts/BottomNavContainer";
@@ -16,7 +16,6 @@ import { FeedResponse } from "../../types/feed/feed";
 
 export default function FeedPage() {
   const [activePostId, setActivePostId] = useState<string | null>(null);
-  const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -54,23 +53,6 @@ export default function FeedPage() {
     [data?.pages]
   );
 
-  // 알림에서 특정 피드로 이동한 경우 해당 피드로 스크롤
-  const targetFeedId = searchParams.get('feedId');
-  
-  useEffect(() => {
-    if (targetFeedId && allFeeds.length > 0) {
-      const targetFeedElement = document.getElementById(`feed-${targetFeedId}`);
-      if (targetFeedElement) {
-        targetFeedElement.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'center' 
-        });
-        // URL에서 feedId 파라미터 제거
-        window.history.replaceState({}, document.title, '/feed');
-      }
-    }
-  }, [targetFeedId, allFeeds]);
-
   return (
     <BottomNavContainer showBottomNav={!activePostId}>
       <FixedHeader />
@@ -80,12 +62,8 @@ export default function FeedPage() {
               .fill(0)
               .map((_, idx) => <FeedCardSkeleton key={idx} />)
           : allFeeds.map((feed) => (
-              <div 
+              <FeedCard
                 key={feed.feed_id}
-                id={`feed-${feed.feed_id}`}
-                className={targetFeedId === feed.feed_id.toString() ? "ring-2 ring-ct-main-blue-100 rounded-lg" : ""}
-              >
-                <FeedCard
                 user={{
                   name: feed.user?.name || "알 수 없음",
                   job: feed.user?.sector || "알 수 없음",
@@ -123,7 +101,6 @@ export default function FeedPage() {
                   }
                 }}
               />
-              </div>
             ))}
 
         {/* 무한스크롤 트리거 */}
