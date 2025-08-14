@@ -206,7 +206,7 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
             {item.images.map((img) => (
               <SwiperSlide key={img} className="!h-auto">
                 <img
-                  className="w-[343px] h-[359px] rounded-[5px] object-cover"
+                  className="w-[353px] h-[359px] rounded-[5px] object-cover"
                   src={img}
                   alt="활동 카드 이미지"
                 />
