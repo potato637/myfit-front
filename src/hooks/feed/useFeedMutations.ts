@@ -62,7 +62,7 @@ export const useFeedMutations = ({
       
       return { previousFeeds, previousSearchKeyword, previousSearchHashtag };
     },
-    onError: (error, variables, context) => {
+    onError: (error, _variables, context) => {
       console.error("좋아요 추가 실패:", error);
       
       // 에러 시 이전 데이터로 롤백
@@ -133,7 +133,7 @@ export const useFeedMutations = ({
       
       return { previousFeeds, previousSearchKeyword, previousSearchHashtag };
     },
-    onError: (error, variables, context) => {
+    onError: (error, _variables, context) => {
       console.error("좋아요 취소 실패:", error);
       
       // 에러 시 이전 데이터로 롤백
