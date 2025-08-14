@@ -4,13 +4,13 @@ import { useModal } from "../../contexts/ui/modalContext";
 import { worktype } from "../../data/worktype";
 
 function WorkTypeModal({ onConfirm }: { onConfirm: (val: string) => void }) {
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
   const [pickerValue, setPickerValue] = useState({
     worktype: worktype[3],
   });
   const handleConfirm = () => {
     onConfirm(pickerValue.worktype);
-    setIsModalOpen(false);
+    closeModal();
   };
 
   return (

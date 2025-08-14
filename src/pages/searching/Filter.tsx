@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { z } from "zod";
 import { useModal } from "../../contexts/ui/modalContext";
 import { useCountCard } from "../../hooks/searchingQueries";
-import Modal from "../../components/ui/Modal";
+
 import RegionModal from "../../components/onboarding/RegionModal";
 import EmploymentStatusModal from "../../components/onboarding/EmploymentStatusModal";
 
@@ -90,15 +90,7 @@ function Filter() {
     }
   };
 
-  const { isModalOpen, setIsModalOpen } = useModal();
-  const [modalType, setModalType] = useState<"region" | "employment" | null>(
-    null
-  );
-
-  const openModal = (type: "region" | "employment") => {
-    setModalType(type);
-    setIsModalOpen(true);
-  };
+  const { openModal, closeModal } = useModal();
 
   return (
     <BottomNavContainer>
@@ -109,13 +101,31 @@ function Filter() {
               label="주 활동 지역"
               value={region}
               placeholder="'시/도' 를 선택해주세요!"
-              onClick={() => openModal("region")}
+              onClick={() =>
+                openModal(
+                  <RegionModal
+                    onConfirm={(val) => {
+                      setRegion(val);
+                      closeModal();
+                    }}
+                  />
+                )
+              }
             />
             <PersonalInputField
               label="구인/구직"
               value={employmentStatus}
               placeholder="구인/구직 상태를 선택해주세요!"
-              onClick={() => openModal("employment")}
+              onClick={() =>
+                openModal(
+                  <EmploymentStatusModal
+                    onConfirm={(val) => {
+                      setEmploymentStatus(val);
+                      closeModal();
+                    }}
+                  />
+                )
+              }
             />
             <div className="flex flex-col gap-[11px] w-full mb-[10px]">
               <label className="ml-1 text-sub1 text-ct-black-200">키워드</label>
@@ -124,7 +134,7 @@ function Filter() {
                 value={keywordInput}
                 onChange={handleKeywordChange}
                 placeholder="최대 3개 ( ,로 구분됩니다. )"
-                className="w-full flex text-body1 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100"
+                className="w-full flex text-sub2 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100"
               />
               {keywordError && (
                 <span className="text-body2 text-ct-red-100 pl-[13px]">
@@ -139,7 +149,7 @@ function Filter() {
                 value={lowSectorText}
                 readOnly
                 placeholder="직무를 선택해주세요"
-                className="w-full flex text-body1 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100 cursor-pointer"
+                className="w-full flex text-sub2 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100 cursor-pointer"
                 onClick={() => {
                   navigate("/searching/filter/job-select", {
                     state: {
@@ -177,16 +187,6 @@ function Filter() {
             </span>
           </div>
         </div>
-        <Modal>
-          {isModalOpen && modalType === "region" && (
-            <RegionModal onConfirm={(val) => setRegion(val)} />
-          )}
-          {isModalOpen && modalType === "employment" && (
-            <EmploymentStatusModal
-              onConfirm={(val) => setEmploymentStatus(val)}
-            />
-          )}
-        </Modal>
       </TopBarContainer>
     </BottomNavContainer>
   );

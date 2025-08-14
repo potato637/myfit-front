@@ -17,11 +17,11 @@ function CalendarModal() {
     setSelectedMonth((prev) => (prev === 2 ? 0 : prev + 1));
   };
   const { selectedDate, setSelectedDate } = useCoffeeChat();
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
   const handleSelectDate = () => {
     if (selectedDate) {
       setSelectedDate(selectedDate);
-      setIsModalOpen(false);
+      closeModal();
     }
   };
 

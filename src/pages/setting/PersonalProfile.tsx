@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import AcademicStatusModal from "../../components/onboarding/AcademicStatusModal";
 import PersonalInputField from "../../components/setting/PersonalInputField";
-import Modal from "../../components/ui/Modal";
 import { useModal } from "../../contexts/ui/modalContext";
 import EmploymentStatusModal from "../../components/onboarding/EmploymentStatusModal";
 import BirthModal from "../../components/onboarding/BirthModal";
@@ -14,7 +13,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "react-toastify";
 
 function PersonalProfile() {
-  const { isModalOpen, setIsModalOpen } = useModal();
+  const { openModal } = useModal();
   const [nickname, setNickname] = useState("");
   const [nicknameError, setNicknameError] = useState("");
   const [shortIntro, setShortIntro] = useState("");
@@ -33,15 +32,27 @@ function PersonalProfile() {
   const [lowSectorText, setLowSectorText] = useState("");
   const [academic, setAcademic] = useState("");
   const [academicError, setAcademicError] = useState("");
-  const [modalType, setModalType] = useState<
-    "region" | "subregion" | "birth" | "academic" | "employment" | null
-  >(null);
-
-  const openModal = (
+  const handleOpenModal = (
     type: "region" | "subregion" | "birth" | "academic" | "employment"
   ) => {
-    setModalType(type);
-    setIsModalOpen(true);
+    if (type === "region") {
+      openModal(<RegionModal onConfirm={(val) => setRegion(val)} />);
+    } else if (type === "subregion") {
+      if (!region) {
+        setSubRegionError("먼저 주 활동 지역을 선택해주세요.");
+        return;
+      }
+      setSubRegionError("");
+      openModal(
+        <SubRegionModal value={region} onConfirm={(val) => setSubRegion(val)} />
+      );
+    } else if (type === "birth") {
+      openModal(<BirthModal onConfirm={(val) => setBirthDate(val)} />);
+    } else if (type === "academic") {
+      openModal(<AcademicStatusModal onConfirm={(val) => setAcademic(val)} />);
+    } else if (type === "employment") {
+      openModal(<EmploymentStatusModal onConfirm={(val) => setEmploy(val)} />);
+    }
   };
 
   const nav = useNavigate();
@@ -218,14 +229,14 @@ function PersonalProfile() {
             label="나이"
             value={birthDate}
             placeholder="생년월일 입력"
-            onClick={() => openModal("birth")}
+            onClick={() => handleOpenModal("birth")}
             error={birthError}
           />
           <PersonalInputField
             label="주 활동 지역"
             value={region}
             placeholder="주 활동지역 입력"
-            onClick={() => openModal("region")}
+            onClick={() => handleOpenModal("region")}
             error={regionError}
           />
           <PersonalInputField
@@ -237,7 +248,7 @@ function PersonalProfile() {
                 setSubRegionError("먼저 주 활동 지역을 선택해주세요.");
               } else {
                 setSubRegionError("");
-                openModal("subregion");
+                handleOpenModal("subregion");
               }
             }}
             error={subRegionError}
@@ -246,7 +257,7 @@ function PersonalProfile() {
             label="현재 구인/구직 상태를 알려주세요!"
             value={employ}
             placeholder="구인/구직 상태 입력"
-            onClick={() => openModal("employment")}
+            onClick={() => handleOpenModal("employment")}
             error={employError}
           />
           <PersonalInputField
@@ -284,31 +295,11 @@ function PersonalProfile() {
             label="재학/졸업 상태를 입력해주세요"
             value={academic}
             placeholder="재학/졸업 상태 입력"
-            onClick={() => openModal("academic")}
+            onClick={() => handleOpenModal("academic")}
             error={academicError}
           />
         </div>
       </div>
-      <Modal>
-        {isModalOpen && modalType === "region" && (
-          <RegionModal onConfirm={(val) => setRegion(val)} />
-        )}
-        {isModalOpen && modalType === "subregion" && (
-          <SubRegionModal
-            value={region}
-            onConfirm={(val) => setSubRegion(val)}
-          />
-        )}
-        {isModalOpen && modalType === "birth" && (
-          <BirthModal onConfirm={(val) => setBirthDate(val)} />
-        )}
-        {isModalOpen && modalType === "academic" && (
-          <AcademicStatusModal onConfirm={(val) => setAcademic(val)} />
-        )}
-        {isModalOpen && modalType === "employment" && (
-          <EmploymentStatusModal onConfirm={(val) => setEmploy(val)} />
-        )}
-      </Modal>
     </TopBarContainer>
   );
 }

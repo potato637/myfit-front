@@ -1,9 +1,11 @@
-import { useNavigate } from "react-router-dom";
 import { useModal } from "../../contexts/ui/modalContext";
 
-function DeleteAccountModal() {
-  const nav = useNavigate();
-  const { setIsModalOpen } = useModal();
+interface DeleteAccountModalProps {
+  onDelete: () => void;
+}
+
+function DeleteAccountModal({ onDelete }: DeleteAccountModalProps) {
+  const { closeModal } = useModal();
   return (
     <div className="w-full h-full flex flex-col mx-[24px] my-[19px]">
       <img
@@ -22,13 +24,16 @@ function DeleteAccountModal() {
       <div className="flex gap-[12px] mt-[33px]">
         <button
           className="w-[142px] h-[42px] rounded-[100px] bg-ct-gray-200 text-ct-white text-sub2"
-          onClick={() => nav("/onboarding")}
+          onClick={() => {
+            closeModal();
+            onDelete();
+          }}
         >
           탈퇴 할래요
         </button>
         <button
           className="w-[142px] h-[42px] rounded-[100px] bg-ct-main-blue-200 text-ct-white text-sub2"
-          onClick={() => setIsModalOpen(false)}
+          onClick={closeModal}
         >
           안 할래요
         </button>

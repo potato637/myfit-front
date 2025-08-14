@@ -2,14 +2,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import BottomNav from "../../components/layouts/BottomNav";
 import { useModal } from "../../contexts/ui/modalContext";
-import Modal from "../../components/ui/Modal";
 import DeleteAccountModal from "../../components/setting/DeleteAccountModal";
 import { usePostLogout } from "../../hooks/settingQueries";
 import { useAuth } from "../../contexts/AuthContext";
 
 function Account() {
   const nav = useNavigate();
-  const { setIsModalOpen } = useModal();
+  const { openModal } = useModal();
   const location = useLocation();
   const { user } = useAuth();
 
@@ -39,7 +38,11 @@ function Account() {
           </button>
           <button
             className="w-full h-[47.97px] text-left pl-[32px] text-sub1 font-Pretendard text-ct-black-100 border-b border-ct-gray-100"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => openModal(
+              <DeleteAccountModal 
+                onDelete={() => nav("/onboarding")} 
+              />
+            )}
           >
             회원 탈퇴
           </button>
@@ -52,9 +55,6 @@ function Account() {
         </div>
         <BottomNav />
       </div>
-      <Modal>
-        <DeleteAccountModal />
-      </Modal>
     </TopBarContainer>
   );
 }

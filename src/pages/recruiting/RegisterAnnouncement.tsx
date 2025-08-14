@@ -4,7 +4,6 @@ import ImageUploadBox from "../../components/common/ImageUploadBox";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import InputField from "../../components/recruiting/InputField";
 import { useModal } from "../../contexts/ui/modalContext";
-import Modal from "../../components/ui/Modal";
 import SalaryModal from "../../components/recruiting/SalaryModal";
 import CalendarModal from "../../components/recruiting/CalandarModal";
 import { useCoffeeChat } from "../../contexts/coffeeChatContext";
@@ -16,7 +15,7 @@ function RegisterAnnouncement() {
   const { state } = useLocation();
   const { setSelectedDate } = useCoffeeChat();
   const navigate = useNavigate();
-  const { isModalOpen, setIsModalOpen } = useModal();
+  const { openModal } = useModal();
   const { selectedDate } = useCoffeeChat();
 
   const [title, setTitle] = useState("");
@@ -28,10 +27,6 @@ function RegisterAnnouncement() {
 
   const [highSector, setHighSector] = useState<string[]>([]);
   const [lowSector, setLowSector] = useState<string[]>([]);
-
-  const [modalType, setModalType] = useState<
-    "" | "salary" | "calendar" | "worktype"
-  >("");
 
   const { mutate: registerPost, isPending } = useRegisterRecruitPost();
 
@@ -80,9 +75,14 @@ function RegisterAnnouncement() {
     });
   };
 
-  const openModal = (type: "salary" | "calendar" | "worktype") => {
-    setModalType(type);
-    setIsModalOpen(true);
+  const handleOpenModal = (type: "salary" | "calendar" | "worktype") => {
+    if (type === "salary") {
+      openModal(<SalaryModal onConfirm={(val) => setSalary(val)} />);
+    } else if (type === "worktype") {
+      openModal(<WorkTypeModal onConfirm={(val) => setWorkType(val)} />);
+    } else if (type === "calendar") {
+      openModal(<CalendarModal />);
+    }
   };
 
   const TopBarContent = () => (
@@ -137,19 +137,19 @@ function RegisterAnnouncement() {
           label="급여"
           placeholder="선택"
           value={salary}
-          onClick={() => openModal("salary")}
+          onClick={() => handleOpenModal("salary")}
         />
         <InputField
           label="근무 형태"
           placeholder="입력해주세요"
           value={workType}
-          onClick={() => openModal("worktype")}
+          onClick={() => handleOpenModal("worktype")}
         />
         <InputField
           label="마감 일자"
           placeholder="선택"
           value={formattedDate}
-          onClick={() => openModal("calendar")}
+          onClick={() => handleOpenModal("calendar")}
         />
         <div className="flex flex-col gap-[13.15px] mt-[25px]">
           <span className="pl-[7px] text-sub1 text-ct-black-200">
@@ -174,15 +174,6 @@ function RegisterAnnouncement() {
           />
         </div>
       </div>
-      <Modal>
-        {isModalOpen && modalType === "salary" && (
-          <SalaryModal onConfirm={(val) => setSalary(val)} />
-        )}
-        {isModalOpen && modalType === "worktype" && (
-          <WorkTypeModal onConfirm={(val) => setWorkType(val)} />
-        )}
-        {isModalOpen && modalType === "calendar" && <CalendarModal />}
-      </Modal>
     </TopBarContainer>
   );
 }

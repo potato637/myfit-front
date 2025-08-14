@@ -4,13 +4,13 @@ import { useState } from "react";
 import { useModal } from "../../contexts/ui/modalContext";
 
 function RegionModal({ onConfirm }: { onConfirm: (val: string) => void }) {
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
   const [pickerValue, setPickerValue] = useState({
     region: "대구광역시",
   });
   const handleConfirm = () => {
     onConfirm(pickerValue.region);
-    setIsModalOpen(false);
+    closeModal();
   };
 
   return (

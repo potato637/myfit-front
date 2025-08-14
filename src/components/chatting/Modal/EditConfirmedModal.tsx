@@ -16,7 +16,7 @@ interface EditConfirmedModalProps {
 
 function EditConfirmedModal({ roomId, coffeechatId }: EditConfirmedModalProps) {
   const nav = useNavigate();
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
   const { selectedTitle, selectedDate, selectedTime, selectedPlace } =
     useCoffeeChat();
   const { requestStatus } = useCoffeeChatModal();
@@ -112,7 +112,7 @@ function EditConfirmedModal({ roomId, coffeechatId }: EditConfirmedModalProps) {
             {
               onSuccess: () => {
                 nav(`/chatting/${roomId}`, { replace: true });
-                setIsModalOpen(false);
+                closeModal();
               },
               onError: (err) => {
                 console.error("커피챗 수정 실패", err);
@@ -126,7 +126,7 @@ function EditConfirmedModal({ roomId, coffeechatId }: EditConfirmedModalProps) {
 
       <button
         className="mt-[20px] w-[70px] h-[23px] border-b border-ct-gray-300 text-sub1 text-ct-gray-300"
-        onClick={() => setIsModalOpen(false)}
+        onClick={() => closeModal()}
       >
         다시 수정
       </button>

@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useBottomSheet } from "../../contexts/ui/bottomSheetContext";
 import { useModal } from "../../contexts/ui/modalContext";
 import { useItemContext } from "../../contexts/ItemContext";
+import ModalContent from "./ModalContent";
 
 function BottomSheetContent({ type }: { type: "feed" | "card" }) {
   const navigate = useNavigate();
   const { setIsBottomSheetOpen } = useBottomSheet();
-  const { setIsModalOpen } = useModal();
+  const { openModal } = useModal();
   const { itemId } = useItemContext();
   const [how, setHow] = useState<"see" | "hide">("see");
 
@@ -75,7 +76,11 @@ function BottomSheetContent({ type }: { type: "feed" | "card" }) {
       <div
         onClick={() => {
           setIsBottomSheetOpen(false);
-          setIsModalOpen(true);
+          if (type === "feed") {
+            openModal(<ModalContent type="feed" />);
+          } else {
+            openModal(<ModalContent type="card" />);
+          }
         }}
       >
         <span className="text-ct-gray-400 text-sub2 border-b-[1px] border-ct-gray-400">

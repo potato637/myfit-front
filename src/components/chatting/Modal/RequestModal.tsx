@@ -10,7 +10,7 @@ import {
 
 function RequestModal({ roomId }: { roomId: number }) {
   const nav = useNavigate();
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
   const { selectedTitle, selectedDate, selectedTime, selectedPlace } =
     useCoffeeChat();
 
@@ -36,7 +36,7 @@ function RequestModal({ roomId }: { roomId: number }) {
         scheduled_at: scheduledAt,
         place: selectedPlace,
       });
-      setIsModalOpen(false);
+      closeModal();
       nav(`/chatting/${roomId}`);
     } catch (err) {
       console.error("커피챗 요청 실패", err);
@@ -90,7 +90,7 @@ function RequestModal({ roomId }: { roomId: number }) {
 
       <button
         className="mt-[20px] w-[70px] h-[23px] border-b border-ct-gray-300 text-sub1 text-ct-gray-300"
-        onClick={() => setIsModalOpen(false)}
+        onClick={closeModal}
       >
         수정하기
       </button>

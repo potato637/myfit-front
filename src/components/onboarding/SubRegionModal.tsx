@@ -9,13 +9,13 @@ interface subRegiontype {
 }
 
 function SubRegionModal({ value, onConfirm }: subRegiontype) {
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
   const [pickerValue, setPickerValue] = useState({
     subRegion: regions[value][4],
   });
   const handleConfirm = () => {
     onConfirm(pickerValue.subRegion);
-    setIsModalOpen(false);
+    closeModal();
   };
 
   return (

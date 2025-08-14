@@ -11,7 +11,7 @@ import SavedAnnouncement from "../pages/recruiting/SavedAnnouncement";
 import RegisterAnnouncement from "../pages/recruiting/RegisterAnnouncement";
 import CompanySetting from "../pages/setting/CompanySetting";
 import AlarmSetting from "../pages/setting/AlarmSetting";
-import RegisterEmail from "../pages/onboarding/RegisterEmail";
+// import RegisterEmail from "../pages/onboarding/RegisterEmail";
 import VerifiedSettingPage from "../pages/setting/VerifiedSettingPage";
 import Account from "../pages/setting/Account";
 import ResetPasssword from "../pages/setting/ResetPassword";
@@ -55,6 +55,7 @@ import EditFeed from "../pages/feed/EditFeed";
 import Filter from "../pages/searching/Filter";
 import FilterResult from "../pages/searching/FilterResult";
 import HomeRouter from "../pages/HomeRouter";
+import RegisterEmail from "../pages/onboarding/RegisterEmail";
 
 const router = createBrowserRouter([
   {

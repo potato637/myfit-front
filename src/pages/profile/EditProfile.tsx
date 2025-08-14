@@ -129,14 +129,14 @@ function EditProfile({
           />
           <div
             className="ct-center gap-[10px] w-[135px] h-[38px] bg-ct-main-blue-100 rounded-[50px] cursor-pointer"
-            onClick={handleCompleteClick}
+            onClick={handleImageClick}
           >
             <img
               src="/assets/profile/profileImgChange.svg"
               alt="프로필 이미지 수정"
             />
             <span className="text-sub1 text-ct-white">
-              {isUploading ? "저장 중..." : "수정"}
+              {isUploading ? "저장 중..." : "변경"}
             </span>
           </div>
         </div>

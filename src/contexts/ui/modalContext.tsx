@@ -1,18 +1,45 @@
-import { ReactNode, createContext, useContext, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
+import ModalPortal from "../../components/ui/ModalPortal";
 
 interface ModalContextType {
-  isModalOpen: boolean;
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  openModal: (node: ReactNode) => void;
+  closeModal: () => void;
 }
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [content, setContent] = useState<ReactNode | null>(null);
+
+  const openModal = useCallback((node: ReactNode) => {
+    setContent(node);
+    document.body.classList.add("modal-open");
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setContent(null);
+    document.body.classList.remove("modal-open");
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({
+      openModal,
+      closeModal,
+    }),
+    [openModal, closeModal]
+  );
 
   return (
-    <ModalContext.Provider value={{ isModalOpen, setIsModalOpen }}>
+    <ModalContext.Provider value={contextValue}>
       {children}
+      {content && <ModalPortal onClose={closeModal}>{content}</ModalPortal>}
     </ModalContext.Provider>
   );
 };

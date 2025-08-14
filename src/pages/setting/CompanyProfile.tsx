@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import InputField from "../../components/onboarding/InputField";
 import PersonalInputField from "../../components/setting/PersonalInputField";
-import Modal from "../../components/ui/Modal";
 import { useModal } from "../../contexts/ui/modalContext";
 import CompanyDivisionModal from "../../components/onboarding/CompanyDivisionModal";
 import EmploymentStatusModal from "../../components/onboarding/EmploymentStatusModal";
@@ -15,7 +14,7 @@ import { usePatchBusinessProfile } from "../../hooks/settingQueries";
 
 function CompanyProfile() {
   const navigate = useNavigate();
-  const { isModalOpen, setIsModalOpen } = useModal();
+  const { openModal } = useModal();
   const { user } = useAuth();
   const { data: profile } = useGetProfile({
     service_id: user?.id?.toString() || "",
@@ -50,15 +49,27 @@ function CompanyProfile() {
     }
   }, [profile]);
 
-  const [modalType, setModalType] = useState<
-    "region" | "subregion" | "employment" | "division" | null
-  >(null);
-
-  const openModal = (
+  const handleOpenModal = (
     type: "region" | "subregion" | "employment" | "division"
   ) => {
-    setModalType(type);
-    setIsModalOpen(true);
+    if (type === "region") {
+      openModal(<RegionModal onConfirm={(val) => setRegion(val)} />);
+    } else if (type === "subregion") {
+      if (!region) {
+        setSubRegionError("먼저 주 활동 지역을 선택해주세요.");
+        return;
+      }
+      setSubRegionError("");
+      openModal(
+        <SubRegionModal value={region} onConfirm={(val) => setSubRegion(val)} />
+      );
+    } else if (type === "employment") {
+      openModal(
+        <EmploymentStatusModal onConfirm={(val) => setEmploymentStatus(val)} />
+      );
+    } else if (type === "division") {
+      openModal(<CompanyDivisionModal onConfirm={(val) => setDivision(val)} />);
+    }
   };
 
   const { mutate: updateProfile } = usePatchBusinessProfile({
@@ -159,7 +170,7 @@ function CompanyProfile() {
           label="주 활동 지역"
           value={region}
           placeholder="'시/도' 를 선택해주세요!"
-          onClick={() => openModal("region")}
+          onClick={() => handleOpenModal("region")}
           error={regionError}
         />
         <PersonalInputField
@@ -171,7 +182,7 @@ function CompanyProfile() {
               setSubRegionError("먼저 주 활동 지역을 선택해주세요.");
             } else {
               setSubRegionError("");
-              openModal("subregion");
+              handleOpenModal("subregion");
             }
           }}
           error={subRegionError}
@@ -180,14 +191,14 @@ function CompanyProfile() {
           label="현재 구인/구직 상태"
           value={employmentStatus}
           placeholder="현재 구직중!"
-          onClick={() => openModal("employment")}
+          onClick={() => handleOpenModal("employment")}
           error={employmentStatusError}
         />
         <PersonalInputField
           label="구분"
           value={division}
           placeholder="선택"
-          onClick={() => openModal("division")}
+          onClick={() => handleOpenModal("division")}
           error={divisionError}
         />
         <InputField
@@ -212,26 +223,6 @@ function CompanyProfile() {
           helperText={<>링크 등록 시, 자동으로 프로필 페이지에 기재 됩니다.</>}
         />
       </div>
-
-      <Modal>
-        {isModalOpen && modalType === "region" && (
-          <RegionModal onConfirm={(val) => setRegion(val)} />
-        )}
-        {isModalOpen && modalType === "subregion" && (
-          <SubRegionModal
-            value={region}
-            onConfirm={(val) => setSubRegion(val)}
-          />
-        )}
-        {isModalOpen && modalType === "employment" && (
-          <EmploymentStatusModal
-            onConfirm={(val) => setEmploymentStatus(val)}
-          />
-        )}
-        {isModalOpen && modalType === "division" && (
-          <CompanyDivisionModal onConfirm={(val) => setDivision(val)} />
-        )}
-      </Modal>
     </TopBarContainer>
   );
 }

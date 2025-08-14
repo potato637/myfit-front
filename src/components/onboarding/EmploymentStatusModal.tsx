@@ -8,13 +8,13 @@ function EmploymentStatusModal({
 }: {
   onConfirm: (val: string) => void;
 }) {
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
   const [pickerValue, setPickerValue] = useState({
     employment: employmentStatus[3],
   });
   const handleConfirm = () => {
     onConfirm(pickerValue.employment);
-    setIsModalOpen(false);
+    closeModal();
   };
   return (
     <div className="flex flex-col ct-center w-full h-full relative">

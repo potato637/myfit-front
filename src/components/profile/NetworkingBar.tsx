@@ -44,6 +44,7 @@ function NetworkingBar() {
   const { mutate: acceptNetwork } = usePatchAcceptNetwork();
   const { mutate: rejectNetwork } = usePatchRejectNetwork();
   const handleAcceptNetwork = () => {
+    postNetwork({ service_id });
     acceptNetwork({
       network_id: networkStatusData?.result.network_id as string,
     });

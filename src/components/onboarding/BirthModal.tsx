@@ -3,7 +3,7 @@ import Picker from "react-mobile-picker";
 import { useModal } from "../../contexts/ui/modalContext";
 
 function BirthModal({ onConfirm }: { onConfirm: (val: string) => void }) {
-  const { setIsModalOpen } = useModal();
+  const { closeModal } = useModal();
   const [pickerValue, setPickerValue] = useState({
     year: `${2000}`,
     month: `${10}`,
@@ -24,7 +24,7 @@ function BirthModal({ onConfirm }: { onConfirm: (val: string) => void }) {
       "0"
     )}-${pickerValue.day.padStart(2, "0")}`;
     onConfirm(formattedDate);
-    setIsModalOpen(false);
+    closeModal();
   };
 
   return (
@@ -92,7 +92,7 @@ function BirthModal({ onConfirm }: { onConfirm: (val: string) => void }) {
       <div className="flex">
         <button
           className="w-[166.5px] h-[60px] bg-[#D9D9D9] rounded-bl-[30px] text-h2 text-ct-gray-400"
-          onClick={() => setIsModalOpen(false)}
+          onClick={closeModal}
         >
           취소
         </button>

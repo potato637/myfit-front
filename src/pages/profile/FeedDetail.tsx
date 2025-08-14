@@ -5,12 +5,10 @@ import DetailIntroductionSkeleton from "../../components/skeletons/mypage/Detail
 import DetailFeedItemSkeleton from "../../components/skeletons/mypage/DetailFeedItemSkeleton";
 import { useGetFeeds } from "../../hooks/mypageQueries";
 import { useAuth } from "../../contexts/AuthContext";
-import BottomSheet from "../../components/ui/BottomSheet";
-import BottomSheetContent from "../../components/profile/BottomSheetContent";
-import Modal from "../../components/ui/Modal";
-import ModalContent from "../../components/profile/ModalContent";
 import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useRef } from "react";
+import BottomSheet from "../../components/ui/BottomSheet";
+import BottomSheetContent from "../../components/profile/BottomSheetContent";
 
 const TopBarContent = () => {
   return (
@@ -50,15 +48,16 @@ function FeedDetail() {
         const headerHeight = 60; // Adjust based on your header height
         const introductionHeight = 80; // Adjust based on introduction height
         const offset = headerHeight + introductionHeight;
-        
-        const elementPosition = feedElement.getBoundingClientRect().top + window.pageYOffset;
+
+        const elementPosition =
+          feedElement.getBoundingClientRect().top + window.pageYOffset;
         const offsetPosition = Math.max(0, elementPosition - offset);
-        
+
         window.scrollTo({
           top: offsetPosition,
-          behavior: 'smooth'
+          behavior: "smooth",
         });
-        
+
         // Clean up URL without refreshing the page
         const newUrl = window.location.pathname + window.location.search;
         window.history.replaceState({}, "", newUrl);
@@ -80,7 +79,7 @@ function FeedDetail() {
           <>
             <DetailIntroduction />
             {feedsData?.map((feed) => (
-              <div 
+              <div
                 key={feed.feed_id}
                 ref={(el) => {
                   feedRefs.current[feed.feed_id] = el;
@@ -95,9 +94,6 @@ function FeedDetail() {
       <BottomSheet>
         <BottomSheetContent type="feed" />
       </BottomSheet>
-      <Modal>
-        <ModalContent type="feed" />
-      </Modal>
     </TopBarContainer>
   );
 }
