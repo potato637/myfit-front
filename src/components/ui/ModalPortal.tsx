@@ -26,11 +26,7 @@ const ModalPortal = ({ children, onClose }: ModalPortalProps) => {
   return createPortal(
     // 이 div가 오버레이 역할을 함
     <div
-      className="fixed z-[9999] ct-center"
-      style={{
-        width: "100%",
-        height: "100%",
-      }}
+      className="fixed inset-0 z-[9999] ct-center"
       onClick={handleOutsideClick}
     >
       <div
