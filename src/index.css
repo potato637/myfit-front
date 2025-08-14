@@ -30,7 +30,7 @@ body.modal-open {
 }
 
 .modal-overlay {
-  background-color: red;
+  box-sizing: content-box;
 
   padding-top: constant(safe-area-inset-top);
   padding-right: constant(safe-area-inset-right);
