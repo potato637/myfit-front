@@ -4,15 +4,16 @@ import { useBottomSheet } from "../../contexts/ui/bottomSheetContext";
 import { CardItem } from "../../apis/mypageAPI";
 import { useItemContext } from "../../contexts/ItemContext";
 import { useLocation } from "react-router-dom";
+import BottomSheetContent from "./BottomSheetContent";
 
 function DetailCardItem({ item }: { item: CardItem }) {
-  const { setIsBottomSheetOpen } = useBottomSheet();
+  const { openBottomSheet } = useBottomSheet();
   const { setItemId } = useItemContext();
   const location = useLocation();
   const isMine = location.pathname.startsWith("/mypage");
 
   const handleClick = () => {
-    setIsBottomSheetOpen(true);
+    openBottomSheet(<BottomSheetContent type="card" />);
     setItemId(item.id);
   };
 

@@ -7,17 +7,17 @@ import ModalContent from "./ModalContent";
 
 function BottomSheetContent({ type }: { type: "feed" | "card" }) {
   const navigate = useNavigate();
-  const { setIsBottomSheetOpen } = useBottomSheet();
+  const { closeBottomSheet } = useBottomSheet();
   const { openModal } = useModal();
   const { itemId } = useItemContext();
   const [how, setHow] = useState<"edit" | "delete">("edit");
 
   const handleSave = () => {
     if (how === "edit") {
-      setIsBottomSheetOpen(false);
+      closeBottomSheet();
       navigate(`/feed/edit/${itemId}`);
     } else {
-      setIsBottomSheetOpen(false);
+      closeBottomSheet();
       if (type === "feed") {
         openModal(<ModalContent type="feed" />);
       } else {
@@ -79,7 +79,7 @@ function BottomSheetContent({ type }: { type: "feed" | "card" }) {
       <div className="w-full flex justify-between gap-[15px]">
         <div
           className="bg-ct-light-blue-100 flex-1 h-[46px] rounded-[10px] ct-center cursor-pointer hover:bg-ct-light-blue-200 transition-colors"
-          onClick={() => setIsBottomSheetOpen(false)}
+          onClick={() => closeBottomSheet()}
         >
           <span className="text-sub2 text-ct-sub-blue-300">취소</span>
         </div>

@@ -17,6 +17,7 @@ import { createComment, deleteComment, getFeedComments } from "../../apis/feed";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import CommentModal from "../feed/CommentModal";
+import BottomSheetContent from "./BottomSheetContent";
 
 const bulletStyles = `
   .swiper-pagination-bullet {
@@ -36,7 +37,7 @@ const bulletStyles = `
 
 function DetailFeedItem({ item }: { item: FeedItem }) {
   const swiperRef = useRef<any>(null);
-  const { setIsBottomSheetOpen } = useBottomSheet();
+  const { openBottomSheet } = useBottomSheet();
   const { setItemId } = useItemContext();
   const location = useLocation();
   const isMine = location.pathname.startsWith("/mypage");
@@ -45,7 +46,7 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
   const [activePostId, setActivePostId] = useState<string | null>(null);
 
   const handleClick = () => {
-    setIsBottomSheetOpen(true);
+    openBottomSheet(<BottomSheetContent type="feed" />);
     setItemId(item.feed_id);
   };
 
