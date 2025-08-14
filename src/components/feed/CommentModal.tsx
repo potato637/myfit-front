@@ -60,6 +60,8 @@ export default function CommentModal({
   }, []);
 
   useEffect(() => {
+    document.body.style.overflow = "hidden";
+
     const handleTouchMove = (e: TouchEvent) => {
       // 모달 내부의 스크롤 가능한 요소가 아닌 곳에서 발생하는 터치 이벤트를 막음
       if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
@@ -159,6 +161,7 @@ export default function CommentModal({
           <div
             ref={modalRef}
             className="flex-1 overflow-y-auto px-4 pt-6 pb-24 scrollbar-hide"
+            onClick={(e) => e.stopPropagation()}
             onScroll={(e) => e.stopPropagation()}
           >
             <CommentList
