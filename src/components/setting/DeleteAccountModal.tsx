@@ -32,7 +32,7 @@ function DeleteAccountModal({ onDeleteSuccess }: DeleteAccountModalProps) {
               onSuccess: () => {
                 closeModal();
                 onDeleteSuccess();
-              }
+              },
             });
           }}
         >
