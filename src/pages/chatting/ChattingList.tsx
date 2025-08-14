@@ -29,11 +29,11 @@ function ChattingList() {
       <ChatTabsTopBarContainer
         TopBarContent={
           <div className="flex w-full h-[39px]">
-            <button className="flex-1 border-b-[3px] border-ct-main-blue-200 text-ct-black-300 text-[18px] font-[600]">
+            <button className="flex-1 border-b-[3px] border-ct-main-blue-200 text-ct-black-300 text-[18px] font-[600] bg-white">
               대화
             </button>
             <button
-              className="flex-1 border-b-[3px] border-[#D9D9D9] text-ct-gray-200 text-[18px] font-[600]"
+              className="flex-1 border-b-[3px] border-[#D9D9D9] text-ct-gray-200 text-[18px] font-[600] bg-white"
               onClick={() => nav("/chatting/coffeechatlist")}
             >
               커피챗
