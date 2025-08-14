@@ -56,11 +56,16 @@ import Filter from "../pages/searching/Filter";
 import FilterResult from "../pages/searching/FilterResult";
 import HomeRouter from "../pages/HomeRouter";
 import RegisterEmail from "../pages/onboarding/RegisterEmail";
+import { AppProvider } from "../contexts/appContext";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: (
+      <AppProvider>
+        <App />
+      </AppProvider>
+    ),
     children: [
       {
         index: true,
