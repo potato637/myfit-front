@@ -101,7 +101,15 @@ export default function CommentModal({
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
         onClick={handleRequestClose}
-        className="fixed inset-0 z-50 flex items-end justify-center bg-black/30"
+        className="fixed z-[9999] flex items-end justify-center bg-black/50"
+        style={{
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          overflow: "hidden",
+          touchAction: "none",
+        }}
       >
         <motion.div
           key="comment-modal"
