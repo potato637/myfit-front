@@ -5,7 +5,7 @@ interface CompanyLinkProps {
 function CompanyLink({ link }: CompanyLinkProps) {
   return (
     <div
-      className={`w-[335px] h-[24px] flex justify-start items-center gap-2 px-2 bg-ct-gray-100 rounded-[3px]`}
+      className={`w-full h-[24px] flex justify-start items-center gap-2 px-2 bg-ct-gray-100 rounded-[3px]`}
     >
       <img
         src="/assets/profile/link.svg"
