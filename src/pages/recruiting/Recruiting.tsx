@@ -85,7 +85,7 @@ function Recruiting() {
   };
 
   return (
-    <div className="flex flex-col px-4 py-2 bg-white pt-safe">
+    <div className="flex flex-col px-4 py-2 bg-white">
       {/* 상단 카테고리/스킬 헤더: safe-area 바로 아래 sticky */}
       <div
         className="sticky z-10 bg-ct-white"
@@ -132,7 +132,7 @@ function Recruiting() {
         </div>
       </div>
 
-      {/* 본문: 기존 90px 보정은 fixed 기준이라 제거, 살짝 여백만 */}
+      {/* 본문 */}
       <div className="mt-[12px] mb-[21px] flex justify-between items-center w-full max-w-[401px]">
         <button
           className="w-[70px] h-[24px] text-body1 font-Pretendard font-[500] text-ct-white bg-ct-main-blue-200 rounded-[5px]"
