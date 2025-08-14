@@ -85,14 +85,20 @@ function Recruiting() {
   };
 
   return (
-    <div className="flex flex-col px-4 py-2 bg-white">
-      {/* 상단 카테고리/스킬 헤더: safe-area 바로 아래 sticky */}
+    <div className="flex flex-col bg-white">
+      {/* 1) TopBar와 동일한 고정 안전 영역 (고스트 바) */}
       <div
-        className="sticky z-10 bg-ct-white"
-        style={{ top: "env(safe-area-inset-top)" }}
+        className="fixed top-0 left-0 right-0 bg-ct-white z-40 pointer-events-none"
+        style={{ height: "calc(42px + env(safe-area-inset-top))" }}
+      />
+
+      {/* 2) 카테고리/스킬 헤더: TopBar 바로 아래에 붙임 + 좌우 19px 패딩 + 폭 정렬 */}
+      <div
+        className="sticky z-30 bg-ct-white"
+        style={{ top: "calc(42px + env(safe-area-inset-top))" }}
       >
-        <div className="h-[118px] py-[16.5px]">
-          <div className="flex h-[36px] px-[15px] overflow-x-scroll whitespace-nowrap scrollbar-hide">
+        <div className="h-[118px] py-[16.5px] max-w-[401px] mx-auto px-[19px]">
+          <div className="flex h-[36px] overflow-x-scroll whitespace-nowrap scrollbar-hide">
             {jobs.map((item) => (
               <button
                 key={item.category}
@@ -114,7 +120,7 @@ function Recruiting() {
             ))}
           </div>
 
-          <div className="mt-[11px] flex w-full max-w-[401px] px-[15px] overflow-x-scroll whitespace-nowrap scrollbar-hide">
+          <div className="mt-[11px] flex w-full overflow-x-scroll whitespace-nowrap scrollbar-hide">
             {currentCategory?.skills.map((skill) => (
               <button
                 key={skill}
@@ -132,8 +138,8 @@ function Recruiting() {
         </div>
       </div>
 
-      {/* 본문 */}
-      <div className="mt-[12px] mb-[21px] flex justify-between items-center w-full max-w-[401px]">
+      {/* 3) 본문: 헤더 바로 아래 자연스럽게 붙도록 여백 미세 조정 */}
+      <div className="mt-[8px] mb-[21px] flex justify-between items-center w-full max-w-[401px] mx-auto px-[19px]">
         <button
           className="w-[70px] h-[24px] text-body1 font-Pretendard font-[500] text-ct-white bg-ct-main-blue-200 rounded-[5px]"
           onClick={() => nav("/recruiting/register")}
@@ -153,7 +159,7 @@ function Recruiting() {
         </div>
       </div>
 
-      <div className="flex flex-col mt-[6px] gap-[11px] items-center mb-[89px]">
+      <div className="flex flex-col mt-[6px] gap-[11px] items-center mb-[89px] px-[19px]">
         {delayedLoading ? (
           Array.from({ length: 3 }).map((_, idx) => (
             <RecruitCardSkeleton key={idx} />
@@ -164,13 +170,16 @@ function Recruiting() {
           </div>
         ) : (
           <>
-            {recruitList.map((item) => (
-              <RecruitCard
-                key={item.recruitment_id}
-                data={item}
-                onClick={() => handleCardClick(item.recruitment_id)}
-              />
-            ))}
+            <div className="w-full max-w-[401px] mx-auto">
+              {recruitList.map((item) => (
+                <RecruitCard
+                  key={item.recruitment_id}
+                  data={item}
+                  onClick={() => handleCardClick(item.recruitment_id)}
+                />
+              ))}
+            </div>
+
             {totalPages >= 1 && (
               <div className="flex justify-center gap-2 mt-4">
                 <button
