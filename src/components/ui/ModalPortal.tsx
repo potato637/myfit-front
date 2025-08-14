@@ -11,8 +11,10 @@ const ModalPortal = ({ children, onClose }: ModalPortalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const { closeModal } = useModal();
 
+  // 오버레이 역할을 하는 div의 클릭 이벤트를 처리
   const handleOutsideClick = useCallback(
     (e: MouseEvent) => {
+      // 모달 내용(modalRef)을 클릭하지 않았을 때만 모달 닫기
       if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
         onClose();
         closeModal();
@@ -23,7 +25,15 @@ const ModalPortal = ({ children, onClose }: ModalPortalProps) => {
 
   return createPortal(
     <div
-      className="fixed inset-0 bg-ct-black-100/50 z-[9999] ct-center modal-overlay"
+      className="fixed z-[9999] ct-center bg-ct-black-100/50"
+      style={{
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden",
+        touchAction: "none",
+      }}
       onClick={handleOutsideClick}
     >
       <div
