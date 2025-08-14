@@ -19,7 +19,7 @@ function DetailIntroduction() {
 
   return (
     <>
-      <div className="w-full h-[61px] flex items-center px-[17px] gap-[7px] bg-ct-white fixed z-10 left-0 top-[calc(pb-safe+42px)]">
+      <div className="w-full h-[61px] flex items-center px-[17px] gap-[7px] bg-ct-white fixed z-10 left-0 top-0 pt-[env(safe-area-inset-top)]">
         <img
           src={profile?.result.service.profile_img}
           alt="프로필 이미지"
