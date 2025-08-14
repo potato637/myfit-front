@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import BottomNav from "../../components/layouts/BottomNav";
 import RecruitCard from "../../components/recruiting/RecruitCard";
 import { jobs } from "../../data/jobs";
-import { useNavigate, useSearchParams } from "react-router-dom"; // ★ 추가
+import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { RecruitmentItem } from "../../apis/recruiting/recruiting";
 import RecruitCardSkeleton from "../../components/skeletons/recruiting/RecruitCardSkeleton";
 import { useGetRecruitmentsQuery } from "../../hooks/recruiting/recruiting";
@@ -16,18 +16,43 @@ function Recruiting() {
   const [delayedLoading, setDelayedLoading] = useState(true);
   const nav = useNavigate();
 
-  const [searchParams] = useSearchParams(); // ★ 추가
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const [consumedQuery, setConsumedQuery] = useState(false);
 
-  // ★ URL 쿼리(highSector, lowSector, page) → 내부 상태로 반영
   useEffect(() => {
     const hs = searchParams.get("highSector");
     const ls = searchParams.get("lowSector");
     const p = Number(searchParams.get("page") ?? "1");
 
-    if (hs) setSelectedCategory(hs);
-    if (ls) setSelectedSkill(ls);
-    if (!Number.isNaN(p) && p > 0) setPage(p);
-  }, [searchParams]);
+    if (hs || ls || searchParams.get("page")) {
+      if (hs) setSelectedCategory(hs);
+      if (ls) setSelectedSkill(ls);
+      if (!Number.isNaN(p) && p > 0) setPage(p);
+
+      if (!consumedQuery) {
+        setConsumedQuery(true);
+        nav("/recruiting", { replace: true, state: { hs, ls, page: p } });
+      }
+    }
+  }, [searchParams, consumedQuery, nav]);
+
+  useEffect(() => {
+    if (!searchParams.toString() && location.state) {
+      const {
+        hs,
+        ls,
+        page: p,
+      } = location.state as {
+        hs?: string;
+        ls?: string;
+        page?: number;
+      };
+      if (hs) setSelectedCategory(hs);
+      if (ls) setSelectedSkill(ls);
+      if (p) setPage(p);
+    }
+  }, [location.state, searchParams]);
 
   const { data, isLoading, isError } = useGetRecruitmentsQuery(
     selectedCategory,
@@ -44,15 +69,11 @@ function Recruiting() {
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
-
     if (isLoading) {
       setDelayedLoading(true);
     } else {
-      timeout = setTimeout(() => {
-        setDelayedLoading(false);
-      }, 300);
+      timeout = setTimeout(() => setDelayedLoading(false), 300);
     }
-
     return () => clearTimeout(timeout);
   }, [isLoading]);
 
@@ -64,50 +85,55 @@ function Recruiting() {
   };
 
   return (
-    <div className="flex flex-col px-4 py-2 bg-white">
-      <div className="fixed h-[118px] top-0 left-0 right-0 py-[16.5px] z-10 bg-ct-white">
-        <div className="flex h-[36px] px-[15px] overflow-x-scroll whitespace-nowrap scrollbar-hide">
-          {jobs.map((item) => (
-            <button
-              key={item.category}
-              className={`h-[32px] text-h2 tracking-[-0.408px] px-[21px] pb-[10px] ${
-                selectedCategory === item.category
-                  ? "border-b-[4px] border-ct-gray-300 text-ct-black-300"
-                  : "text-ct-gray-200"
-              }`}
-              onClick={() => {
-                setSelectedCategory(item.category);
-                const firstSkill = jobs.find(
-                  (j) => j.category === item.category
-                )?.skills[0];
-                if (firstSkill) {
-                  setSelectedSkill(firstSkill);
-                }
-                // ※ URL은 굳이 바꾸지 않음(최소 변경). 필요하면 여기에 navigate로 쿼리 업데이트.
-              }}
-            >
-              {item.category}
-            </button>
-          ))}
-        </div>
-        <div className="mt-[11px] flex w-full max-w-[401px] px-[15px] overflow-x-scroll whitespace-nowrap scrollbar-hide">
-          {currentCategory?.skills.map((skill) => (
-            <button
-              key={skill}
-              className={`flex-1 text-h2 px-[13px] tracking-[-0.32px] ${
-                selectedSkill === skill
-                  ? "text-ct-black-300"
-                  : "text-ct-gray-200"
-              }`}
-              onClick={() => setSelectedSkill(skill)}
-            >
-              {skill}
-            </button>
-          ))}
+    <div className="flex flex-col px-4 py-2 bg-white pt-safe">
+      {/* 상단 카테고리/스킬 헤더: safe-area 바로 아래 sticky */}
+      <div
+        className="sticky z-10 bg-ct-white"
+        style={{ top: "env(safe-area-inset-top)" }}
+      >
+        <div className="h-[118px] py-[16.5px]">
+          <div className="flex h-[36px] px-[15px] overflow-x-scroll whitespace-nowrap scrollbar-hide">
+            {jobs.map((item) => (
+              <button
+                key={item.category}
+                className={`h-[32px] text-h2 tracking-[-0.408px] px-[21px] pb-[10px] ${
+                  selectedCategory === item.category
+                    ? "border-b-[4px] border-ct-gray-300 text-ct-black-300"
+                    : "text-ct-gray-200"
+                }`}
+                onClick={() => {
+                  setSelectedCategory(item.category);
+                  const firstSkill = jobs.find(
+                    (j) => j.category === item.category
+                  )?.skills[0];
+                  if (firstSkill) setSelectedSkill(firstSkill);
+                }}
+              >
+                {item.category}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-[11px] flex w-full max-w-[401px] px-[15px] overflow-x-scroll whitespace-nowrap scrollbar-hide">
+            {currentCategory?.skills.map((skill) => (
+              <button
+                key={skill}
+                className={`flex-1 text-h2 px-[13px] tracking-[-0.32px] ${
+                  selectedSkill === skill
+                    ? "text-ct-black-300"
+                    : "text-ct-gray-200"
+                }`}
+                onClick={() => setSelectedSkill(skill)}
+              >
+                {skill}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="mt-[90px] mb-[21px] flex justify-between items-center w-full max-w-[401px]">
+      {/* 본문: 기존 90px 보정은 fixed 기준이라 제거, 살짝 여백만 */}
+      <div className="mt-[12px] mb-[21px] flex justify-between items-center w-full max-w-[401px]">
         <button
           className="w-[70px] h-[24px] text-body1 font-Pretendard font-[500] text-ct-white bg-ct-main-blue-200 rounded-[5px]"
           onClick={() => nav("/recruiting/register")}
