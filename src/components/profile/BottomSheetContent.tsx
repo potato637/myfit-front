@@ -32,9 +32,10 @@ function BottomSheetContent({ type }: { type: "feed" | "card" }) {
         <span className="text-h1 text-ct-black-300">
           {type === "feed" ? "피드 관리" : "카드 관리"}
         </span>
-        <p className="text-sub2 text-ct-gray-300">
-          프로필에 표시할 {type === "feed" ? "피드" : "카드"}를 자유롭게
-          숨기거나 보여줄 수 있어요.
+        <p className="text-sub2 text-ct-gray-300 whitespace-pre-line">
+          {`프로필에 표시할 ${
+            type === "feed" ? "피드" : "카드"
+          }를 \n자유롭게 숨기거나 보여줄 수 있어요.`}
         </p>
       </div>
       <div
