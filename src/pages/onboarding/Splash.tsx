@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { login } from "../../apis/auth";
 import { useAuth } from "../../contexts/AuthContext";
+import { useModal } from "../../contexts/ui/modalContext";
+import LandingModal from "../../components/onboarding/LandingModal";
 
 function Splash() {
   const navigate = useNavigate();
@@ -13,6 +15,23 @@ function Splash() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [desktop, setDesktop] = useState<string>("");
+  const { openModal } = useModal();
+
+  useEffect(() => {
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
+    const isPWA = window.matchMedia("(display-mode: standalone)").matches;
+    if (!isMobile) {
+      setDesktop(
+        "마핏(MyFit) 서비스는 모바일 환경에 최적화 \n되어있습니다. 보다 부드러운 사용자 경험을 위해 \n스마트폰으로 접속해주세요!"
+      );
+    } else if (!isPWA) {
+      openModal(<LandingModal />);
+    }
+  }, []);
 
   // 카드 등록 완료 후 전달된 메시지 표시
   useEffect(() => {
@@ -146,6 +165,11 @@ function Splash() {
             회원가입
           </button>
         </div>
+        {desktop && (
+          <h1 className="text-center text-red-500 whitespace-pre-line">
+            {desktop}
+          </h1>
+        )}
       </div>
     </div>
   );
