@@ -13,7 +13,7 @@ function Splash() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [test, setTest] = useState<string>("");
+  const [desktop, setDesktop] = useState<string>("");
 
   useEffect(() => {
     const isMobile =
@@ -22,11 +22,13 @@ function Splash() {
       );
     const isPWA = window.matchMedia("(display-mode: standalone)").matches;
     if (!isMobile) {
-      setTest("not mobile");
+      setDesktop(
+        "마핏(MyFit) 서비스는 모바일 환경에 최적화 \n되어있습니다. 보다 부드러운 사용자 경험을 위해 \n스마트폰으로 접속해주세요!"
+      );
     } else if (isPWA) {
-      setTest("PWA");
+      setDesktop("PWA");
     } else {
-      setTest("mobile");
+      setDesktop("mobile");
     }
   }, []);
 
@@ -152,8 +154,6 @@ function Splash() {
           {isLoading ? "로그인 중..." : "로그인"}
         </button>
 
-        <h1>{test}</h1>
-
         {/* 하단 링크 */}
         <div className="ct-center gap-[32px] text-ct-white text-sub2 mb-[57px]">
           <button onClick={() => navigate("/onboarding/reset-password")}>
@@ -164,6 +164,11 @@ function Splash() {
             회원가입
           </button>
         </div>
+        {desktop && (
+          <h1 className="text-ct-white text-center text-red-500 whitespace-pre-line">
+            {desktop}
+          </h1>
+        )}
       </div>
     </div>
   );
