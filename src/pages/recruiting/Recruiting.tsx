@@ -88,14 +88,7 @@ function Recruiting() {
 
   return (
     <div className="flex flex-col bg-white">
-      {/* 상단 안전영역: 고정바 대신 흐름 내 스페이서로 안전영역만 확보 */}
-      <div style={{ height: "env(safe-area-inset-top)" }} />
-
-      {/* 헤더: safe-area 바로 아래에 sticky, 좌우 19px + 최대폭 401px 정렬 */}
-      <div
-        className="sticky z-30 bg-ct-white"
-        style={{ top: "env(safe-area-inset-top)" }}
-      >
+      <div className="sticky z-30 bg-ct-white">
         <div className="max-w-[401px] mx-auto px-[19px] pt-[12px] pb-[8px]">
           <div className="flex h-[36px] overflow-x-scroll whitespace-nowrap scrollbar-hide">
             {jobs.map((item) => (
@@ -135,11 +128,9 @@ function Recruiting() {
             ))}
           </div>
         </div>
-        {/* 헤더와 본문이 겹치지 않도록 확실한 하단 여백 */}
         <div className="h-[8px]" />
       </div>
 
-      {/* 본문: 헤더와 동일한 좌우 패딩/최대폭 적용 */}
       <div className="mb-[21px] flex justify-between items-center w-full max-w-[401px] mx-auto px-[19px]">
         <button
           className="w-[70px] h-[24px] text-body1 font-Pretendard font-[500] text-ct-white bg-ct-main-blue-200 rounded-[5px]"
