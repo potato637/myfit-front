@@ -57,14 +57,21 @@ function CardDetail() {
       const timer = setTimeout(() => {
         const cardElement = cardsRef.current[cardId];
         if (cardElement) {
-          // Calculate the height of the fixed elements (header + introduction)
+          // Calculate the height of the fixed elements (header + introduction + safe area)
           const headerHeight = 60; // Adjust this value based on your header height
           const introductionHeight = 80; // Adjust this value based on your introduction height
-          const offset = headerHeight + introductionHeight;
+          
+          // Get safe area insets from CSS variables
+          const safeAreaTop = parseInt(
+            getComputedStyle(document.documentElement).getPropertyValue('--sat') || 
+            '0px', 
+            10
+          );
+          
+          const offset = headerHeight + introductionHeight + safeAreaTop;
 
           // Calculate the scroll position
-          const elementPosition =
-            cardElement.getBoundingClientRect().top + window.pageYOffset;
+          const elementPosition = cardElement.getBoundingClientRect().top + window.scrollY;
           const offsetPosition = Math.max(0, elementPosition - offset);
 
           // Smooth scroll to the calculated position
