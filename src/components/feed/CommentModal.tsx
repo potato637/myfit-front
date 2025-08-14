@@ -60,20 +60,56 @@ export default function CommentModal({
   }, []);
 
   useEffect(() => {
+    const scrollableElement = modalRef.current;
+    if (!scrollableElement) return;
+
+    // Prevent body scroll
     document.body.style.overflow = "hidden";
 
-    const handleTouchMove = (e: TouchEvent) => {
-      // 모달 내부의 스크롤 가능한 요소가 아닌 곳에서 발생하는 터치 이벤트를 막음
-      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+    const handleWheel = (e: WheelEvent) => {
+      const { deltaY } = e;
+      const { scrollTop, scrollHeight, clientHeight } = scrollableElement;
+
+      if (scrollTop === 0 && deltaY < 0) {
+        e.preventDefault();
+      }
+      if (scrollTop + clientHeight >= scrollHeight - 1 && deltaY > 0) {
+        // -1 to account for potential float values
         e.preventDefault();
       }
     };
 
-    document.addEventListener("touchmove", handleTouchMove, { passive: false });
+    let touchStartY = 0;
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.targetTouches[0].clientY;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const { scrollTop, scrollHeight, clientHeight } = scrollableElement;
+      const touchCurrentY = e.targetTouches[0].clientY;
+      const isScrollingUp = touchCurrentY > touchStartY;
+      const isScrollingDown = touchCurrentY < touchStartY;
+
+      if (scrollTop === 0 && isScrollingUp) {
+        e.preventDefault();
+      }
+
+      if (scrollTop + clientHeight >= scrollHeight - 1 && isScrollingDown) {
+        // -1 to account for potential float values
+        e.preventDefault();
+      }
+    };
+
+    scrollableElement.addEventListener("wheel", handleWheel, { passive: false });
+    scrollableElement.addEventListener("touchstart", handleTouchStart, { passive: false });
+    scrollableElement.addEventListener("touchmove", handleTouchMove, { passive: false });
 
     return () => {
-      document.body.style.overflow = "";
-      document.removeEventListener("touchmove", handleTouchMove);
+      // Restore body scroll
+      document.body.style.overflow = "auto";
+      scrollableElement.removeEventListener("wheel", handleWheel);
+      scrollableElement.removeEventListener("touchstart", handleTouchStart);
+      scrollableElement.removeEventListener("touchmove", handleTouchMove);
     };
   }, []);
 
@@ -161,8 +197,6 @@ export default function CommentModal({
           <div
             ref={modalRef}
             className="flex-1 overflow-y-auto px-4 pt-6 pb-24 scrollbar-hide"
-            onClick={(e) => e.stopPropagation()}
-            onScroll={(e) => e.stopPropagation()}
           >
             <CommentList
               comments={comments}
