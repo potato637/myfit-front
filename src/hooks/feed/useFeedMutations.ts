@@ -52,6 +52,14 @@ export const useFeedMutations = ({
       // 각 쿼리에 낙관적 업데이트 적용
       queryClient.setQueryData(["feeds"], updateFeedData);
       
+      // 프로필별 피드 쿼리들도 업데이트 (DetailFeedItem용)
+      const feedQueries = queryClient.getQueriesData({ queryKey: ["feeds"] });
+      feedQueries.forEach(([queryKey, data]) => {
+        if (Array.isArray(queryKey) && queryKey[0] === "feeds" && queryKey.length > 1) {
+          queryClient.setQueryData(queryKey, updateFeedData(data));
+        }
+      });
+      
       // 검색 쿼리들에도 적용
       previousSearchKeyword.forEach(([queryKey, data]) => {
         queryClient.setQueryData(queryKey, updateFeedData(data));
@@ -122,6 +130,14 @@ export const useFeedMutations = ({
       
       // 각 쿼리에 낙관적 업데이트 적용
       queryClient.setQueryData(["feeds"], updateFeedData);
+      
+      // 프로필별 피드 쿼리들도 업데이트 (DetailFeedItem용)
+      const feedQueries = queryClient.getQueriesData({ queryKey: ["feeds"] });
+      feedQueries.forEach(([queryKey, data]) => {
+        if (Array.isArray(queryKey) && queryKey[0] === "feeds" && queryKey.length > 1) {
+          queryClient.setQueryData(queryKey, updateFeedData(data));
+        }
+      });
       
       // 검색 쿼리들에도 적용
       previousSearchKeyword.forEach(([queryKey, data]) => {
