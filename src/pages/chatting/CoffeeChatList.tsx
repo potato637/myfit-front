@@ -44,8 +44,7 @@ function CoffeeChatList() {
           </div>
         }
       >
-        {/* 내부 컨텐츠는 페이지 스크롤에 따라 움직이고, 탭바는 고정 */}
-        <div className="pt-[19px] px-[18px] flex flex-col pb-[90px]">
+        <div className="pt-[10px] px-[18px] flex flex-col pb-[90px]">
           <div className="flex flex-col gap-[9px] text-[17px] font-[600] text-ct-black-100">
             지난 커피챗은 이곳에서 보관해요!
             <div className="flex justify-center">
