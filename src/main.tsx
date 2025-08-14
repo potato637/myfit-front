@@ -5,6 +5,7 @@ import "./index.css";
 import router from "./routes/router.tsx";
 import { AppProvider } from "./contexts/appContext.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "./components/common/custom-toast.css";
 
 const queryClient = new QueryClient();
 
