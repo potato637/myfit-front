@@ -63,7 +63,7 @@ function PersonalInputField({
           readOnly={!!onClick}
           placeholder={placeholder}
           maxLength={maxLength}
-          className={`${inputBase} ${inputError} min-h-[44px] pl-[26px]`}
+          className={`${inputBase} ${inputError} min-h-[44px] pl-[26px] scrollbar-hide resize-none`}
           onClick={onClick}
           onChange={onChange}
         />

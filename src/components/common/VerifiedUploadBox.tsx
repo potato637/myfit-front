@@ -67,11 +67,9 @@ function VerifiedUploadBox({
 
       await s3.send(command);
       const fileUrl = `https://${awsBucketName}.s3.${awsRegion}.amazonaws.com/${key}`;
-      alert("이미지 업로드에 성공했습니다.");
       onUploadSuccess?.(fileUrl);
     } catch (err: any) {
       console.error(err);
-      alert(`업로드 중 오류가 발생했습니다: ${err.message}`);
       setPreview(initialPreview ?? null);
     } finally {
       setIsUploading(false);

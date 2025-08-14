@@ -247,7 +247,11 @@ function Chatting() {
   );
 
   return (
-    <TopBarContainer TopBarContent={<TopBarContent />}>
+    <TopBarContainer
+      backTo="/chatting"
+      replace
+      TopBarContent={<TopBarContent />}
+    >
       <div className="pt-[24px] h-[calc(100vh-42px)] flex flex-col overflow-hidden">
         <div className="flex-1 overflow-y-auto px-4" ref={scrollRef}>
           <div ref={topSentinelRef} className="h-1" />

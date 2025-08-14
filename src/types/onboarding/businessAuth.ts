@@ -5,9 +5,14 @@ export interface BusinessAuthRequest {
 }
 
 /** 성공 응답 */
-export interface BusinessAuthSuccessResponse {
-  /** 처리 결과 메시지 */
-  message: string; // ex) "사업자 등록증 등록이 완료되었습니다."
+export interface BusinessAuthResponse {
+  isSuccess: boolean;
+  code: number;
+  message: string;
+  result: {
+    service_id: number;
+    inc_AuthN_file: string;
+  };
 }
 
 /** 에러 응답 */

@@ -144,6 +144,7 @@ function CompanyProfile() {
           onChange={(e) => setShortIntro(e.target.value)}
           maxLength={50}
           showCounter={true}
+          inputClassName="scrollbar-hide resize-none"
           helperText={
             <>
               한줄로 나에 대해 나타내보세요! <br />
@@ -183,7 +184,7 @@ function CompanyProfile() {
           error={employmentStatusError}
         />
         <PersonalInputField
-          label="구분!"
+          label="구분"
           value={division}
           placeholder="선택"
           onClick={() => openModal("division")}

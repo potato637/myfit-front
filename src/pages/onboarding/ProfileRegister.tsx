@@ -16,6 +16,7 @@ import { SignUpRequest } from "../../types/onboarding/signup";
 
 type JobState =
   | {
+      from?: "onboarding" | "setting" | "filter" | "recruit";
       prevData?: {
         region?: string;
         subRegion?: string;
@@ -103,10 +104,12 @@ function ProfileRegister() {
           : state.high_sector
       );
     }
+
+    // ✅ join 제거: 이제 단일 문자열로 온다고 가정 (배열이 오면 첫 값만 사용)
     if (state?.low_sector !== undefined && state?.low_sector !== null) {
       setLowSectorText(
         Array.isArray(state.low_sector)
-          ? state.low_sector.join(", ")
+          ? state.low_sector[0] ?? ""
           : state.low_sector
       );
     }
@@ -129,74 +132,6 @@ function ProfileRegister() {
     else if (/[^a-zA-Z0-9가-힣 ]/.test(val))
       setNicknameError("특수문자는 사용이 불가합니다");
     else setNicknameError("");
-  };
-
-  const validateAndScroll = () => {
-    let firstErrorEl: HTMLElement | null = null;
-
-    if (!nickname || hasSpecial(nickname)) {
-      setNicknameError(
-        !nickname ? "닉네임을 입력해주세요" : "특수문자는 사용이 불가합니다"
-      );
-      firstErrorEl = firstErrorEl || nicknameRef.current;
-    }
-
-    if (!birthDate) {
-      setBirthError("생년월일을 입력해주세요");
-      firstErrorEl = firstErrorEl || birthRef.current;
-    } else {
-      setBirthError("");
-    }
-
-    if (!region) {
-      setRegionError("주 활동 지역을 선택해주세요");
-      firstErrorEl = firstErrorEl || regionRef.current;
-    } else {
-      setRegionError("");
-    }
-
-    if (!subRegion) {
-      setSubRegionError("세부 활동 지역을 선택해주세요");
-      firstErrorEl = firstErrorEl || subRegionRef.current;
-    }
-
-    if (!employ) {
-      setEmployError("구인/구직 상태를 선택해주세요");
-      firstErrorEl = firstErrorEl || employRef.current;
-    } else {
-      setEmployError("");
-    }
-
-    if (!lowSectorText) {
-      setLowSectorError("희망 직무를 선택해주세요");
-      firstErrorEl = firstErrorEl || lowSectorRef.current;
-    } else {
-      setLowSectorError("");
-    }
-
-    if (!educationLevel) {
-      setEducationError("최종 학력을 입력해주세요");
-      firstErrorEl = firstErrorEl || educationRef.current;
-    } else {
-      setEducationError("");
-    }
-
-    if (!academic) {
-      setAcademicError("재학/졸업 상태를 입력해주세요");
-      firstErrorEl = firstErrorEl || academicRef.current;
-    } else {
-      setAcademicError("");
-    }
-
-    if (firstErrorEl) {
-      firstErrorEl.scrollIntoView({ behavior: "smooth", block: "center" });
-      const focusable = firstErrorEl.querySelector(
-        "input, textarea"
-      ) as HTMLElement | null;
-      focusable?.focus();
-      return false;
-    }
-    return true;
   };
 
   return (
@@ -299,6 +234,7 @@ function ProfileRegister() {
                   educationLevel: educationLevel,
                 });
                 const state: JobState = {
+                  from: "onboarding", // ✅ 온보딩 플로우 표시
                   prevData: {
                     region,
                     subRegion,
@@ -348,7 +284,64 @@ function ProfileRegister() {
             text={isSubmitting ? "회원가입 중..." : "첫 카드 등록하러 가기"}
             disabled={isSubmitting}
             onClick={async () => {
-              if (!validateAndScroll()) return;
+              // 이하 로직은 그대로 유지
+              // (유효성 → updateProfileInfo → signUp → nextStep → 이동)
+              // --- 생략 없이 기존 코드 사용 ---
+              if (
+                (() => {
+                  let firstErrorEl: HTMLElement | null = null;
+                  if (!nickname || hasSpecial(nickname)) {
+                    setNicknameError(
+                      !nickname
+                        ? "닉네임을 입력해주세요"
+                        : "특수문자는 사용이 불가합니다"
+                    );
+                    firstErrorEl = firstErrorEl || nicknameRef.current;
+                  }
+                  if (!birthDate) {
+                    setBirthError("생년월일을 입력해주세요");
+                    firstErrorEl = firstErrorEl || birthRef.current;
+                  } else setBirthError("");
+                  if (!region) {
+                    setRegionError("주 활동 지역을 선택해주세요");
+                    firstErrorEl = firstErrorEl || regionRef.current;
+                  } else setRegionError("");
+                  if (!subRegion) {
+                    setSubRegionError("세부 활동 지역을 선택해주세요");
+                    firstErrorEl = firstErrorEl || subRegionRef.current;
+                  }
+                  if (!employ) {
+                    setEmployError("구인/구직 상태를 선택해주세요");
+                    firstErrorEl = firstErrorEl || employRef.current;
+                  } else setEmployError("");
+                  if (!lowSectorText) {
+                    setLowSectorError("희망 직무를 선택해주세요");
+                    firstErrorEl = firstErrorEl || lowSectorRef.current;
+                  } else setLowSectorError("");
+                  if (!educationLevel) {
+                    setEducationError("최종 학력을 입력해주세요");
+                    firstErrorEl = firstErrorEl || educationRef.current;
+                  } else setEducationError("");
+                  if (!academic) {
+                    setAcademicError("재학/졸업 상태를 입력해주세요");
+                    firstErrorEl = firstErrorEl || academicRef.current;
+                  } else setAcademicError("");
+                  if (firstErrorEl) {
+                    firstErrorEl.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                    });
+                    const focusable = firstErrorEl.querySelector(
+                      "input, textarea"
+                    ) as HTMLElement | null;
+                    focusable?.focus();
+                    return false;
+                  }
+                  return true;
+                })() === false
+              )
+                return;
+
               try {
                 setIsSubmitting(true);
 

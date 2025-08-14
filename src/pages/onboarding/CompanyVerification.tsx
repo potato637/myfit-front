@@ -3,15 +3,27 @@ import BottomCTAButton from "../../components/common/BottomCTAButton";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import VerifiedUploadBox from "../../components/common/VerifiedUploadBox";
 import { useNavigate } from "react-router-dom";
+import { useBusinessLicenseMutation } from "../../apis/onboarding";
+import { toast } from "react-toastify";
 
 function CompanyVerification() {
   const navigate = useNavigate();
   const [businessDocument, setBusinessDocument] = useState<string>(""); // 사업자등록증 이미지
+  const { mutate: submitLicense } = useBusinessLicenseMutation();
 
   const handleSubmit = () => {
-    // TODO: 사업자등록증과 함께 서버에 저장
-    console.log("🏢 사업자등록증 제출:", businessDocument);
-    // 제출 완료 후 피드 페이지로 이동
+    if (!businessDocument) return;
+    submitLicense(
+      { inc_AuthN_file: businessDocument },
+      {
+        onSuccess: () => {
+          toast.success("사업자 등록증 등록에 성공하였습니다");
+        },
+        onError: () => {
+          toast.error("사업자 등록증 등록에 실패하였습니다.");
+        },
+      }
+    );
     navigate("/feed");
   };
 
@@ -44,7 +56,7 @@ function CompanyVerification() {
             파일은 최대 10MB까지 가능합니다.
           </p>
           <VerifiedUploadBox
-            className="w-full h-[132px] rounded-[12px] bg-ct-gray-100 mb-[20px]"
+            className="w-full min-h-[132px] rounded-[12px] bg-ct-gray-100 mb-[20px]"
             textClassName="text-body2 text-ct-gray-300"
             onUploadSuccess={(url) => setBusinessDocument(url)}
           />
