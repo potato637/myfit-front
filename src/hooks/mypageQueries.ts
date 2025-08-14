@@ -15,7 +15,10 @@ import {
   PatchProfileProps,
   deleteCard,
   deleteUser,
+  getActivityCard,
+  updateActivityCard,
 } from "../apis/mypageAPI";
+import { ActivityCardRequest } from "../types/common/activityCard";
 
 export const useGetProfile = ({ service_id }: { service_id: string }) => {
   return useQuery({
@@ -141,6 +144,33 @@ export const useDeleteUser = () => {
     },
     onError: (error) => {
       console.error("Failed to delete user:", error);
+    },
+  });
+};
+
+// 이력/활동 카드 상세 조회
+export const useGetActivityCard = (cardId: number) => {
+  return useQuery({
+    queryKey: ["activityCard", cardId],
+    queryFn: () => getActivityCard(cardId),
+    enabled: !!cardId,
+    staleTime: 1000 * 60 * 5, // 5분
+  });
+};
+
+// 이력/활동 카드 수정
+export const useUpdateActivityCard = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ cardId, request }: { cardId: number; request: ActivityCardRequest }) =>
+      updateActivityCard(cardId, request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cards"] });
+      queryClient.invalidateQueries({ queryKey: ["activityCard"] });
+    },
+    onError: (error) => {
+      console.error("Failed to update activity card:", error);
     },
   });
 };
