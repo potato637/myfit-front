@@ -11,14 +11,13 @@ import {
   subscribeRecruitment,
   unsubscribeRecruitment,
 } from "../../apis/recruiting/recruiting";
+import { toast } from "react-toastify";
 
 export const useRegisterRecruitPost = () => {
-  const nav = useNavigate();
   return useMutation({
     mutationFn: (data: RegisterRecruitRequest) => RegisterRecruitPost(data),
     onSuccess: () => {
-      alert("공고가 성공적으로 등록되었습니다.");
-      nav("/recruiting");
+      toast.success("공고 등록을 성공하였습니다");
     },
   });
 };

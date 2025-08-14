@@ -62,17 +62,32 @@ function RegisterAnnouncement() {
       alert("이미지를 선택해주세요.");
       return;
     }
-    registerPost({
-      title,
-      high_sector: highSector,
-      low_sector: lowSector,
-      area,
-      require,
-      salary,
-      work_type: workType,
-      dead_line: formattedDate,
-      recruiting_img: imageUrl,
-    });
+    registerPost(
+      {
+        title,
+        high_sector: highSector,
+        low_sector: lowSector,
+        area,
+        require,
+        salary,
+        work_type: workType,
+        dead_line: formattedDate,
+        recruiting_img: imageUrl,
+      },
+      {
+        onSuccess: () => {
+          const hs = highSector?.[0] ?? "";
+          const ls = lowSector?.[0];
+
+          const params = new URLSearchParams();
+          if (hs) params.set("highSector", hs);
+          if (ls) params.set("lowSector", ls);
+          params.set("page", "1");
+
+          navigate(`/recruiting?${params.toString()}`, { replace: true });
+        },
+      }
+    );
   };
 
   const handleOpenModal = (type: "salary" | "calendar" | "worktype") => {
