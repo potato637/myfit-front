@@ -47,7 +47,7 @@ function PersonalInputField({
           readOnly={!!onClick}
           placeholder={placeholder}
           maxLength={maxLength}
-          className={`${inputBase} ${inputError} h-[44px] max-h-[88px] px-[26px] py-[12px] resize-none overflow-y-auto`}
+          className={`${inputBase} ${inputError} h-[44px] max-h-[88px] px-[26px] py-[12px] !overflow-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden`}
           onClick={onClick}
           onChange={onChange}
           onInput={(e) => {
@@ -63,7 +63,7 @@ function PersonalInputField({
           readOnly={!!onClick}
           placeholder={placeholder}
           maxLength={maxLength}
-          className={`${inputBase} ${inputError} min-h-[44px] pl-[26px] scrollbar-hide resize-none`}
+          className={`${inputBase} ${inputError} min-h-[44px] pl-[26px]`}
           onClick={onClick}
           onChange={onChange}
         />
