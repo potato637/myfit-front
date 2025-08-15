@@ -17,9 +17,15 @@ function DetailIntroduction() {
     return null;
   }
 
+  const isPWA = window.matchMedia("(display-mode: standalone)").matches;
+
   return (
     <>
-      <div className="w-full h-[61px] flex items-center px-[17px] gap-[7px] bg-ct-white fixed z-10 left-0 top-[calc(pb-safe+42px)]">
+      <div
+        className={`w-full h-[61px] flex items-center px-[17px] gap-[7px] bg-ct-white fixed z-10 left-0 ${
+          isPWA ? "top-[calc(pb-safe+42px)]" : "top-[40px]"
+        }`}
+      >
         <img
           src={profile?.result.service.profile_img}
           alt="프로필 이미지"
