@@ -16,8 +16,10 @@ function ModalContent({ type }: { type: "feed" | "card" }) {
   const handleDelete = () => {
     closeModal();
     if (type === "feed") {
+      console.log("feed_id", itemId);
       deleteFeed({ feed_id: itemId });
     } else {
+      console.log("card_id", itemId);
       deleteCard({ card_id: itemId });
     }
   };
