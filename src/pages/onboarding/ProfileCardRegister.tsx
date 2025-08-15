@@ -53,7 +53,7 @@ function ProfileCardRegister() {
           "❌ [ProfileCardRegister] service_id가 없습니다:",
           signupData
         );
-        toast.error("회원가입 정보가 없습니다. 다시 로그인해주세요.");
+        toast.error("회원가입 정보가 없습니다.");
         return;
       }
 
@@ -83,7 +83,6 @@ function ProfileCardRegister() {
         keyword_text: keywords,
       };
 
-
       const response = await createActivityCard(cardRequest);
 
       if (response.isSuccess) {
@@ -92,18 +91,17 @@ function ProfileCardRegister() {
         throw new Error("카드 등록 실패");
       }
     } catch (error: any) {
-
       // 구체적인 에러 메시지 표시
       if (error.response?.status === 400) {
         toast.error("입력 정보를 다시 확인해주세요.");
       } else if (error.response?.status === 401) {
-        toast.error("로그인이 필요합니다. 다시 로그인해주세요.");
+        toast.error("로그인이 필요합니다.");
         navigate("/onboarding/");
         return;
       } else if (error.response?.status === 500) {
-        toast.error("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        toast.error("서버 오류가 발생했습니다.");
       } else {
-        toast.error("카드 등록에 실패했습니다. 다시 시도해주세요.");
+        toast.error("카드 등록에 실패했습니다.");
       }
     } finally {
       setIsSubmitting(false);
