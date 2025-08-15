@@ -97,6 +97,7 @@ function CreateCard() {
         queryKey: ["cards", user?.id?.toString()],
       });
       navigate("/mypage");
+      toast.success("카드 등록이 완료되었습니다.");
     } catch (error: any) {
       console.error("❌ [CompanyCardRegister] 카드 등록 실패:", error);
 
@@ -229,7 +230,7 @@ function CreateCard() {
               cardImageUrl,
               from: "company-card-register",
             };
-            
+
             navigate("/onboarding/company-preview", { state });
           }}
           className="text-center text-sub1 text-ct-main-blue-100 my-[24px] cursor-pointer"
