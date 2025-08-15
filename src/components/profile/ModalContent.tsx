@@ -3,7 +3,13 @@ import { useModal } from "../../contexts/ui/modalContext";
 import { useDeleteFeed, useDeleteCard } from "../../hooks/mypageQueries";
 import { useAuth } from "../../contexts/AuthContext";
 
-function ModalContent({ type, itemId }: { type: "feed" | "card"; itemId: string }) {
+function ModalContent({
+  type,
+  itemId,
+}: {
+  type: "feed" | "card";
+  itemId: string;
+}) {
   const { closeModal } = useModal();
 
   const { user } = useAuth();
@@ -16,10 +22,8 @@ function ModalContent({ type, itemId }: { type: "feed" | "card"; itemId: string 
   const handleDelete = () => {
     closeModal();
     if (type === "feed") {
-      console.log("feed_id", itemId);
       deleteFeed({ feed_id: itemId });
     } else {
-      console.log("card_id", itemId);
       deleteCard({ card_id: itemId });
     }
   };
