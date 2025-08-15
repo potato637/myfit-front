@@ -167,9 +167,11 @@ function FeedCard({
       {/* 본문 */}
       <p className="text-body2 text-ct-black-300 px-3">{post.content}</p>
       {/* 해시태그 */}
-      <div className="px-3">
-        <FeedTagContainer tags={post.tags} />
-      </div>
+      {post.tags && post.tags.length > 0 && (
+        <div className="px-3">
+          <FeedTagContainer tags={post.tags} />
+        </div>
+      )}
     </div>
   );
 }
