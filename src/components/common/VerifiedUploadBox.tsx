@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
@@ -36,7 +37,7 @@ function VerifiedUploadBox({
     if (!file) return;
 
     if (!(file instanceof File)) {
-      alert("파일 형식이 잘못되었습니다.");
+      toast.error("잘못된 파일 형식입니다.");
       e.target.value = "";
       return;
     }

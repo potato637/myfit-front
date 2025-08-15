@@ -1,4 +1,5 @@
 import { AxiosInstance, AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 export function applyErrorHandlerInterceptor(apiInstance: AxiosInstance): void {
   apiInstance.interceptors.response.use(
@@ -10,9 +11,7 @@ export function applyErrorHandlerInterceptor(apiInstance: AxiosInstance): void {
       if (!error.response) {
         console.error("Network Error or No Response:", error.message);
         console.error("🔍 [디버깅] 네트워크 에러 상세:", error);
-        // alert(
-        //   "네트워크 연결 상태를 확인해주세요. 문제가 지속되면 관리자에게 문의하세요."
-        // ); // 임시 비활성화
+        toast.error("네트워크 오류가 발생했습니다.");
         return Promise.reject(error);
       }
 
@@ -47,8 +46,7 @@ export function applyErrorHandlerInterceptor(apiInstance: AxiosInstance): void {
           errorMessage = "요청하신 페이지나 리소스를 찾을 수 없습니다.";
           console.error(`HTTP 404 Not Found: ${errorMessage}`, data);
           console.error("🔍 [디버깅] 404 에러 상세:", { status, data, url: error.config?.url });
-          // alert(errorMessage); // 임시 비활성화
-          // window.location.href = "/home"; // 임시 비활성화
+          toast.error("페이지를 찾을 수 없습니다.");
           return Promise.reject(error);
 
         case 500: // Internal Server Error
@@ -58,8 +56,7 @@ export function applyErrorHandlerInterceptor(apiInstance: AxiosInstance): void {
             "서버에 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
           console.error(`HTTP ${status} Server Error: ${errorMessage}`, data);
           console.error("🔍 [디버깅] 서버 에러 상세:", { status, data, url: error.config?.url });
-          // alert(errorMessage); // 임시 비활성화
-          // window.location.href = "/error"; // 임시 비활성화
+          toast.error("서버 오류가 발생했습니다.");
           return Promise.reject(error);
 
         default: // unexpected

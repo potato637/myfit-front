@@ -52,22 +52,22 @@ function CompanyCardRegister() {
           "❌ [CompanyCardRegister] service_id가 없습니다:",
           signupData
         );
-        alert("회원가입 정보가 없습니다. 다시 로그인해주세요.");
+        toast.error("로그인 정보가 없습니다.");
         return;
       }
 
       if (!oneLineIntro.trim() || !detailedDescription.trim()) {
-        alert("한줄 소개와 상세 설명을 모두 입력해주세요.");
+        toast.error("소개글을 모두 입력해주세요.");
         return;
       }
 
       if (keywords.length === 0) {
-        alert("키워드를 최소 1개 이상 선택해주세요.");
+        toast.error("키워드를 1개 이상 선택해주세요.");
         return;
       }
 
       if (!cardImageUrl) {
-        alert("카드 이미지를 업로드해주세요.");
+        toast.error("카드 이미지를 업로드해주세요.");
         return;
       }
 
