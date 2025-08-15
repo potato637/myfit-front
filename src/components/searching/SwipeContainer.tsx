@@ -78,7 +78,7 @@ function SwipeContainer({
           {cards.map((card) => (
             <SwiperSlide key={card.card_id} className="!h-auto">
               <div className="p-[10px]">
-                <SearchingSwipeItem card={card} />
+                <SearchingSwipeItem card={card} mode="horizontal" />
               </div>
             </SwiperSlide>
           ))}
