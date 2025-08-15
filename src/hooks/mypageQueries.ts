@@ -99,6 +99,7 @@ export const useDeleteFeed = ({ service_id }: { service_id: string }) => {
     mutationFn: ({ feed_id }: { feed_id: string }) => deleteFeed({ feed_id }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["feeds", service_id] });
+      queryClient.invalidateQueries({ queryKey: ["feeds"] });
     },
     onError: (error) => {
       console.error("Failed to delete feed:", error);

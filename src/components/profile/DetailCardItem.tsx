@@ -13,7 +13,7 @@ function DetailCardItem({ item }: { item: CardItem }) {
   const isMine = location.pathname.startsWith("/mypage");
 
   const handleClick = () => {
-    openBottomSheet(<BottomSheetContent type="card" />);
+    openBottomSheet(<BottomSheetContent type="card" itemId={item.id} />);
     setItemId(item.id);
   };
 
