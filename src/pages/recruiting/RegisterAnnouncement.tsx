@@ -10,6 +10,7 @@ import { useCoffeeChat } from "../../contexts/coffeeChatContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRegisterRecruitPost } from "../../hooks/recruiting/recruiting";
 import WorkTypeModal from "../../components/recruiting/WorkTypeModal";
+import { toast } from "react-toastify";
 
 function RegisterAnnouncement() {
   const { state } = useLocation();
@@ -57,7 +58,7 @@ function RegisterAnnouncement() {
 
   const handleSubmit = () => {
     if (!imageUrl) {
-      alert("이미지를 선택해주세요.");
+      toast.error("이미지를 선택해주세요.");
       return;
     }
     registerPost(

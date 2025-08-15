@@ -34,13 +34,13 @@ function PostFeed() {
   const createFeedMutation = useMutation({
     mutationFn: createFeed,
     onSuccess: () => {
-      toast.success("게시글이 작성되었습니다!");
+      toast.success("피드가 작성되었습니다!");
       // 피드 목록 새로고침
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
       navigate("/feed");
     },
     onError: () => {
-      toast.error("게시글 작성에 실패했습니다. 다시 시도해주세요.");
+      toast.error("피드 작성에 실패했습니다.");
     },
   });
 

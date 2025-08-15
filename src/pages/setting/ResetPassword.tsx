@@ -11,6 +11,7 @@ import {
 import { sendVerificationCode, validateAuthCode } from "../../apis/onboarding";
 import { resetPassword } from "../../apis/auth";
 import { usePostLogout } from "../../hooks/settingQueries";
+import { toast } from "react-toastify";
 
 function ResetPasssword() {
   const navigate = useNavigate();
@@ -116,12 +117,12 @@ function ResetPasssword() {
       } else if (error.response?.status === 404) {
         errorMessage = "가입되지 않은 이메일입니다.";
       } else if (error.response?.status === 500) {
-        errorMessage = "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+        errorMessage = "서버 오류가 발생했습니다.";
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       }
 
-      alert(errorMessage);
+      toast.error(errorMessage);
     }
   };
 

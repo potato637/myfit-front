@@ -8,6 +8,7 @@ import { createActivityCard } from "../../apis/onboarding";
 import { ActivityCardRequest } from "../../types/common/activityCard";
 import { useAuth } from "../../contexts/AuthContext";
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 function CreateCard() {
   const navigate = useNavigate();
@@ -57,22 +58,22 @@ function CreateCard() {
       // 필수 데이터 검증
       if (!user?.id) {
         console.error("❌ [CompanyCardRegister] service_id가 없습니다:", user);
-        alert("회원가입 정보가 없습니다. 다시 로그인해주세요.");
+        toast.error("로그인 정보가 없습니다.");
         return;
       }
 
       if (!oneLineIntro.trim() || !detailedDescription.trim()) {
-        alert("한줄 소개와 상세 설명을 모두 입력해주세요.");
+        toast.error("소개글을 모두 입력해주세요.");
         return;
       }
 
       if (keywords.length === 0) {
-        alert("키워드를 최소 1개 이상 선택해주세요.");
+        toast.error("키워드를 1개 이상 선택해주세요.");
         return;
       }
 
       if (!cardImageUrl) {
-        alert("카드 이미지를 업로드해주세요.");
+        toast.error("카드 이미지를 업로드해주세요.");
         return;
       }
 
@@ -96,20 +97,21 @@ function CreateCard() {
         queryKey: ["cards", user?.id?.toString()],
       });
       navigate("/mypage");
+      toast.success("카드 등록이 완료되었습니다.");
     } catch (error: any) {
       console.error("❌ [CompanyCardRegister] 카드 등록 실패:", error);
 
       // 구체적인 에러 메시지 표시
       if (error.response?.status === 400) {
-        alert("입력 정보를 다시 확인해주세요.");
+        toast.error("입력 정보를 확인해주세요.");
       } else if (error.response?.status === 401) {
-        alert("로그인이 필요합니다. 다시 로그인해주세요.");
+        toast.error("다시 로그인해주세요.");
         navigate("/onboarding/splash");
         return;
       } else if (error.response?.status === 500) {
-        alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        toast.error("서버 오류가 발생했습니다.");
       } else {
-        alert("카드 등록에 실패했습니다. 다시 시도해주세요.");
+        toast.error("카드 등록에 실패했습니다.");
       }
     } finally {
       setIsSubmitting(false);
@@ -228,7 +230,7 @@ function CreateCard() {
               cardImageUrl,
               from: "company-card-register",
             };
-            
+
             navigate("/onboarding/company-preview", { state });
           }}
           className="text-center text-sub1 text-ct-main-blue-100 my-[24px] cursor-pointer"
