@@ -15,7 +15,7 @@ function InputField({
 }: InputFieldProps) {
   return (
     <div className="flex flex-col gap-[13.15px] mb-[24.85px]">
-      <label className="pl-[7px] text-sub1 text-ct-black-200">{label}</label>
+      <label className="pl-[7px] text-sub2 text-ct-black-200">{label}</label>
       <input
         type="text"
         placeholder={placeholder}
