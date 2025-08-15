@@ -20,7 +20,7 @@ function InputField({
         type="text"
         placeholder={placeholder}
         readOnly={!!onClick}
-        className="text-body1 placeholder:text-ct-gray-300 text-ct-black-200 w-full min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100"
+        className="text-sub2 placeholder:text-ct-gray-300 text-ct-black-200 w-full min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100"
         value={value}
         onChange={onChange}
         onClick={onClick}
