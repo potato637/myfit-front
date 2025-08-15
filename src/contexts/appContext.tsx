@@ -9,28 +9,31 @@ import { AuthProvider } from "./AuthContext";
 import { SignupProvider } from "./SignupContext";
 import { ItemContextProvider } from "./ItemContext";
 import { ChattingProvider } from "./ChattingContext";
+import { FilterProvider } from "./filterContext";
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   return (
     <>
       <AuthProvider>
-        <ChattingProvider roomId={null}>
-          <ItemContextProvider>
-            <SignupProvider>
-              <CoffeeChatProvider>
-                <BottomSheetProvider>
-                  <UserProvider>
-                    <CoffeeChatModalProvider>
-                      <ProfileImgModalProvider>
-                        <ModalProvider>{children}</ModalProvider>
-                      </ProfileImgModalProvider>
-                    </CoffeeChatModalProvider>
-                  </UserProvider>
-                </BottomSheetProvider>
-              </CoffeeChatProvider>
-            </SignupProvider>
-          </ItemContextProvider>
-        </ChattingProvider>
+        <FilterProvider>
+          <ChattingProvider roomId={null}>
+            <ItemContextProvider>
+              <SignupProvider>
+                <CoffeeChatProvider>
+                  <BottomSheetProvider>
+                    <UserProvider>
+                      <CoffeeChatModalProvider>
+                        <ProfileImgModalProvider>
+                          <ModalProvider>{children}</ModalProvider>
+                        </ProfileImgModalProvider>
+                      </CoffeeChatModalProvider>
+                    </UserProvider>
+                  </BottomSheetProvider>
+                </CoffeeChatProvider>
+              </SignupProvider>
+            </ItemContextProvider>
+          </ChattingProvider>
+        </FilterProvider>
       </AuthProvider>
     </>
   );

@@ -3,7 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { getActivityCard } from "../../apis/mypageAPI";
 import { useState } from "react";
 
-function SearchingSwipeItem({ card }: { card: SectorBaseSearchingItem }) {
+interface Props {
+  card: SectorBaseSearchingItem;
+  mode?: 'vertical' | 'horizontal';
+}
+
+function SearchingSwipeItem({ card, mode = 'vertical' }: Props) {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,11 +30,24 @@ function SearchingSwipeItem({ card }: { card: SectorBaseSearchingItem }) {
     }
   };
 
+  // 모드에 따른 스타일 설정
+  const getCardStyles = () => {
+    const baseStyles = "flex flex-col items-center rounded-[16px] py-[16px] px-[10px] cursor-pointer transition-all duration-300 ease-in-out relative";
+    
+    if (mode === 'horizontal') {
+      return `${baseStyles} w-[300px] min-h-[520px] shadow-lg border border-gray-100 ${
+        isLoading ? 'opacity-50' : 'hover:shadow-xl hover:scale-[1.02] hover:border-blue-200'
+      }`;
+    } else {
+      return `${baseStyles} w-[340px] min-h-[570px] shadow-xl border border-gray-100 ${
+        isLoading ? 'opacity-50' : 'hover:shadow-2xl hover:scale-[1.03] hover:-translate-y-2 hover:border-blue-200'
+      }`;
+    }
+  };
+
   return (
     <div 
-      className={`w-[340px] min-h-[570px] flex flex-col items-center rounded-[16px] py-[16px] px-[10px] shadow-xl border border-gray-100 cursor-pointer transition-all duration-300 ease-in-out relative ${
-        isLoading ? 'opacity-50' : 'hover:shadow-2xl hover:scale-[1.03] hover:-translate-y-2 hover:border-blue-200'
-      }`}
+      className={getCardStyles()}
       onClick={handleCardClick}
     >
       <div className="w-full flex flex-col gap-[8px]">

@@ -69,7 +69,7 @@ function Searching() {
             </div>
 
             {/* 최신 순 및 필터 */}
-            <div className="w-full ct-center pb-[15px]">
+            <div className="w-full ct-center">
               <div className="w-[340px] flex justify-between items-center">
                 <div className="relative">
                   <select

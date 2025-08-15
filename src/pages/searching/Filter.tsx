@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { z } from "zod";
 import { useModal } from "../../contexts/ui/modalContext";
 import { useCountCard } from "../../hooks/searchingQueries";
+import { useFilter } from "../../contexts/filterContext";
 
 import RegionModal from "../../components/onboarding/RegionModal";
 import EmploymentStatusModal from "../../components/onboarding/EmploymentStatusModal";
@@ -21,13 +22,16 @@ function TopBarContent() {
 function Filter() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [region, setRegion] = useState("");
-  const [employmentStatus, setEmploymentStatus] = useState("");
-  const [keyword, setKeyword] = useState<string[]>([]);
-  const [keywordInput, setKeywordInput] = useState("");
+  const { 
+    filterState, 
+    updateRegion, 
+    updateEmploymentStatus, 
+    updateKeywords, 
+    updateKeywordInput, 
+    updateJobPreference 
+  } = useFilter();
+  
   const [keywordError, setKeywordError] = useState("");
-  const [highSectorText, setHighSectorText] = useState<string>("");
-  const [lowSectorText, setLowSectorText] = useState<string>("");
   const [debouncedKeyword, setDebouncedKeyword] = useState<string[]>([]);
 
   useEffect(() => {
@@ -38,17 +42,14 @@ function Filter() {
       high_sector_list?: string[];
       low_sector_list?: string[];
     };
+    
     if (s.high_sector !== undefined && s.high_sector !== null) {
-      setHighSectorText(
-        Array.isArray(s.high_sector) ? s.high_sector[0] ?? "" : s.high_sector
-      );
-    }
-    if (s.low_sector !== undefined && s.low_sector !== null) {
-      setLowSectorText(
-        Array.isArray(s.low_sector) ? s.low_sector[0] ?? "" : s.low_sector
-      );
-    } else if (Array.isArray(s.low_sector_list)) {
-      setLowSectorText(s.low_sector_list[0] ?? "");
+      const highSector = Array.isArray(s.high_sector) ? s.high_sector[0] ?? "" : s.high_sector;
+      const lowSector = s.low_sector !== undefined && s.low_sector !== null
+        ? Array.isArray(s.low_sector) ? s.low_sector[0] ?? "" : s.low_sector
+        : Array.isArray(s.low_sector_list) ? s.low_sector_list[0] ?? "" : "";
+      
+      updateJobPreference(highSector, lowSector);
     }
   }, [location.state]);
 
@@ -60,26 +61,26 @@ function Filter() {
 
   useEffect(() => {
     const timerId = setTimeout(() => {
-      setDebouncedKeyword(keyword);
+      setDebouncedKeyword(filterState.keywords);
     }, 500);
     return () => clearTimeout(timerId);
-  }, [keyword]);
+  }, [filterState.keywords]);
 
   const { data: countData } = useCountCard({
-    area: region,
-    status: employmentStatus,
-    hope_job: lowSectorText,
+    area: filterState.region,
+    status: filterState.employmentStatus,
+    hope_job: filterState.lowSectorText,
     keywords: debouncedKeyword,
   });
 
   const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setKeywordInput(value);
+    updateKeywordInput(value);
     const keywords = value
       .split(",")
       .map((k) => k.trim())
       .filter((k) => k.length > 0);
-    setKeyword(keywords);
+    updateKeywords(keywords);
     const result = keywordSchema.safeParse({ keywords });
     if (!result.success) {
       const firstError =
@@ -99,13 +100,13 @@ function Filter() {
           <div className="mt-[50px] ct-center flex-col w-[330px] gap-[20px]">
             <PersonalInputField
               label="주 활동 지역"
-              value={region}
+              value={filterState.region}
               placeholder="'시/도' 를 선택해주세요!"
               onClick={() =>
                 openModal(
                   <RegionModal
                     onConfirm={(val) => {
-                      setRegion(val);
+                      updateRegion(val);
                       closeModal();
                     }}
                   />
@@ -114,13 +115,13 @@ function Filter() {
             />
             <PersonalInputField
               label="구인/구직"
-              value={employmentStatus}
+              value={filterState.employmentStatus}
               placeholder="구인/구직 상태를 선택해주세요!"
               onClick={() =>
                 openModal(
                   <EmploymentStatusModal
                     onConfirm={(val) => {
-                      setEmploymentStatus(val);
+                      updateEmploymentStatus(val);
                       closeModal();
                     }}
                   />
@@ -131,7 +132,7 @@ function Filter() {
               <label className="ml-1 text-sub1 text-ct-black-200">키워드</label>
               <input
                 type="text"
-                value={keywordInput}
+                value={filterState.keywordInput}
                 onChange={handleKeywordChange}
                 placeholder="최대 3개 ( ,로 구분됩니다. )"
                 className="w-full flex text-sub2 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100"
@@ -146,7 +147,7 @@ function Filter() {
               <label className="ml-1 text-sub1 text-ct-black-200">직무</label>
               <input
                 type="text"
-                value={lowSectorText}
+                value={filterState.lowSectorText}
                 readOnly
                 placeholder="직무를 선택해주세요"
                 className="w-full flex text-sub2 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100 cursor-pointer"
@@ -154,8 +155,8 @@ function Filter() {
                   navigate("/searching/filter/job-select", {
                     state: {
                       from: "filter",
-                      high_sector: highSectorText,
-                      low_sector: lowSectorText,
+                      high_sector: filterState.highSectorText,
+                      low_sector: filterState.lowSectorText,
                     },
                   });
                 }}
@@ -169,9 +170,9 @@ function Filter() {
                 navigate("/searching/filter/result", {
                   state: {
                     keywords: debouncedKeyword,
-                    region,
-                    employmentStatus,
-                    hope_job: lowSectorText,
+                    region: filterState.region,
+                    employmentStatus: filterState.employmentStatus,
+                    hope_job: filterState.lowSectorText,
                     count: countData?.result?.count,
                   },
                 });
