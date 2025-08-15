@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import TopBarContainer from "../../components/common/TopBarContainer";
 import { jobs } from "../../data/jobs";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useFilter } from "../../contexts/filterContext";
 
 type From = "onboarding" | "recruit" | "filter" | "setting" | undefined;
 type Mode = "single" | "multi";
@@ -18,6 +19,7 @@ type LocationState =
 function JobPreference() {
   const { state } = useLocation() as { state: LocationState };
   const navigate = useNavigate();
+  const { updateJobPreference } = useFilter();
 
   const from = state?.from as From;
   const mode: Mode = from === "recruit" ? "multi" : "single";
@@ -101,6 +103,12 @@ function JobPreference() {
     } else {
       const highArr = highSectorOne ? [highSectorOne] : [];
       const lowArr = lowSectorOne ? [lowSectorOne] : [];
+      
+      // Filter에서 온 경우 Context 업데이트
+      if (from === "filter") {
+        updateJobPreference(highSectorOne || "", lowSectorOne || "");
+      }
+      
       navigate(dest, {
         state: {
           prevData: state?.prevData,
