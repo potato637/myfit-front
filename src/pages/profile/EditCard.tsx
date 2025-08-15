@@ -179,6 +179,7 @@ function EditCard() {
         />
         <InputField
           label="링크(선택)"
+          as="textarea"
           value={link}
           onChange={(e) => setLink(e.target.value)}
           helperText={

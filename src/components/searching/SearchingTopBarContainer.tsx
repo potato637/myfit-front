@@ -10,7 +10,7 @@ function SearchingTopBarContainer({ TopBarContent, children }: Props) {
   return (
     <>
       <SearchingTopBar>{TopBarContent}</SearchingTopBar>
-      <div className="h-[calc(145px+env(safe-area-inset-top))]" />
+      <div className="h-[calc(135px+env(safe-area-inset-top))]" />
       {children}
     </>
   );

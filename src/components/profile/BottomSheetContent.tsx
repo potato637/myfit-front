@@ -91,7 +91,7 @@ function BottomSheetContent({ type }: { type: "feed" | "card" }) {
           className="bg-ct-main-blue-100 flex-1 h-[46px] rounded-[10px] ct-center"
           onClick={handleSave}
         >
-          <span className="text-sub2 text-ct-white">저장</span>
+          <span className="text-sub2 text-ct-white">다음</span>
         </div>
       </div>
     </div>
