@@ -44,25 +44,22 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [activePostId, setActivePostId] = useState<string | null>(null);
-  
+
   // useFeedMutations 훅 사용 (다른 컴포넌트들과 동일한 방식)
-  const {
-    handleLikeToggle,
-  } = useFeedMutations({});
+  const { handleLikeToggle } = useFeedMutations({});
 
   const handleClick = () => {
     openBottomSheet(<BottomSheetContent type="feed" />);
     setItemId(item.feed_id);
   };
 
-  
   const handleHeartClick = () => {
-    console.log('💖 좋아요 클릭 - useFeedMutations 사용', {
+    console.log("💖 좋아요 클릭 - useFeedMutations 사용", {
       feed_id: item.feed_id,
       is_liked: item.is_liked,
-      pathname: location.pathname
+      pathname: location.pathname,
     });
-    
+
     handleLikeToggle(Number(item.feed_id), item.is_liked);
   };
 
@@ -259,7 +256,7 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
       <div className="w-full">
         <p className="text-ct-black-300 text-body2">{item.feed_text}</p>
       </div>
-      <FeedTagContainer tags={item.hashtags} />
+      {item.hashtags.length > 0 && <FeedTagContainer tags={item.hashtags} />}
 
       <AnimatePresence>
         {activePostId && (

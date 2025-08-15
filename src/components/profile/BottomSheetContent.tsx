@@ -23,9 +23,9 @@ function BottomSheetContent({ type }: { type: "feed" | "card" }) {
     } else {
       closeBottomSheet();
       if (type === "feed") {
-        openModal(<ModalContent type="feed" />);
+        openModal(<ModalContent type="feed" itemId={itemId} />);
       } else {
-        openModal(<ModalContent type="card" />);
+        openModal(<ModalContent type="card" itemId={itemId} />);
       }
     }
   };
