@@ -2,14 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBottomSheet } from "../../contexts/ui/bottomSheetContext";
 import { useModal } from "../../contexts/ui/modalContext";
-
+import { useItemContext } from "../../contexts/ItemContext";
 import ModalContent from "./ModalContent";
 
-function BottomSheetContent({ type, itemId }: { type: "feed" | "card", itemId: string }) {
+function BottomSheetContent({ type }: { type: "feed" | "card" }) {
   const navigate = useNavigate();
   const { closeBottomSheet } = useBottomSheet();
   const { openModal } = useModal();
-  
+  const { itemId } = useItemContext();
   const [how, setHow] = useState<"edit" | "delete">("edit");
 
   const handleSave = () => {

@@ -7,7 +7,7 @@ import FeedTagContainer from "./FeedTagContainer";
 import { useEffect, useRef, useState } from "react";
 import { FeedItem } from "../../apis/mypageAPI";
 import { useBottomSheet } from "../../contexts/ui/bottomSheetContext";
-
+import { useItemContext } from "../../contexts/ItemContext";
 import { formatTimeAgo } from "../../utils/date";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -38,7 +38,7 @@ const bulletStyles = `
 function DetailFeedItem({ item }: { item: FeedItem }) {
   const swiperRef = useRef<any>(null);
   const { openBottomSheet } = useBottomSheet();
-  
+  const { setItemId } = useItemContext();
   const location = useLocation();
   const isMine = location.pathname.startsWith("/mypage");
   const { user } = useAuth();
@@ -49,7 +49,8 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
   const { handleLikeToggle } = useFeedMutations({});
 
   const handleClick = () => {
-    openBottomSheet(<BottomSheetContent type="feed" itemId={item.feed_id} />);
+    openBottomSheet(<BottomSheetContent type="feed" />);
+    setItemId(item.feed_id);
   };
 
   const handleHeartClick = () => {
