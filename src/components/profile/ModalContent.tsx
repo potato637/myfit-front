@@ -1,7 +1,7 @@
 import { useModal } from "../../contexts/ui/modalContext";
-
 import { useDeleteFeed, useDeleteCard } from "../../hooks/mypageQueries";
 import { useAuth } from "../../contexts/AuthContext";
+import { toast } from "react-toastify";
 
 function ModalContent({
   type,
@@ -23,8 +23,10 @@ function ModalContent({
     closeModal();
     if (type === "feed") {
       deleteFeed({ feed_id: itemId });
+      toast.success("피드가 삭제되었습니다!");
     } else {
       deleteCard({ card_id: itemId });
+      toast.success("카드가 삭제되었습니다!");
     }
   };
 
