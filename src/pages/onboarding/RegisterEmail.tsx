@@ -9,7 +9,11 @@ import {
   registerEmailSchema,
 } from "../../validations/registerEmailSchema";
 import { useSignup } from "../../contexts/SignupContext";
-import { sendVerificationCode, validateAuthCode, verifyUser } from "../../apis/onboarding";
+import {
+  sendVerificationCode,
+  validateAuthCode,
+  verifyUser,
+} from "../../apis/onboarding";
 import { toast } from "react-toastify";
 
 function RegisterEmail() {
@@ -103,12 +107,12 @@ function RegisterEmail() {
 
     try {
       const fullEmailAddress = `${data.email}@${data.domain}`;
-      
+
       // 사용자 검증 API 호출
       const response = await verifyUser({
         email: fullEmailAddress,
         password: data.password,
-        authCode: data.authCode
+        authCode: data.authCode,
       });
 
       if (response.isSuccess) {
@@ -127,7 +131,6 @@ function RegisterEmail() {
         toast.error(response.message);
       }
     } catch (error: any) {
-      
       // 서버 에러 응답 처리
       if (error.response?.status === 400) {
         toast.error("비밀번호가 유효하지 않습니다.");
