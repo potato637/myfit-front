@@ -216,6 +216,7 @@ export default function CommentModal({
           style={{
             maxHeight: "calc(var(--vh, 1vh) * 80)",
             minHeight: "calc(var(--vh, 1vh) * 50)",
+            overflow: "hidden",
           }}
         >
           {/* 핸들바 */}
@@ -311,10 +312,10 @@ export default function CommentModal({
             )}
           </div>
 
-          {/* 인풋바 언더레이: 여백 구간도 같은 레이어로 덮기 */}
+          {/* 인풋바 언더레이: 모달 패널 내부 absolute로 배치 */}
           <div
             aria-hidden
-            className="pointer-events-none fixed left-0 right-0 z-[90] bg-white"
+            className="pointer-events-none absolute left-0 right-0 z-[90] bg-white"
             style={{
               bottom: 0,
               height: "calc(env(safe-area-inset-bottom, 0px) + var(--keyboard-inset, 0px))"
