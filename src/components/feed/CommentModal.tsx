@@ -260,14 +260,20 @@ export default function CommentModal({
             </div>
           </div>
 
+          {/* 인풋창 + 여백을 하나로 묶은 블록 */}
           <div 
-            ref={footerRef}
-            className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 absolute left-0 right-0"
+            className="absolute left-0 right-0 bg-white"
             style={{
-              bottom: "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px) + 20px)",
-              zIndex: 10
+              bottom: "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px))",
+              zIndex: 10,
+              height: "120px" // 인풋 영역 + 여백을 포함한 고정 높이
             }}
           >
+            <div 
+              ref={footerRef}
+              className="px-4 pt-2 pb-4 space-y-2 border-t border-gray-200"
+              style={{ marginTop: "20px" }}
+            >
             <CommentInputField
               ref={inputRef}
               onSend={(text) => {
@@ -296,6 +302,7 @@ export default function CommentModal({
                 </button>
               </div>
             )}
+            </div>
           </div>
         </motion.div>
       </motion.div>
