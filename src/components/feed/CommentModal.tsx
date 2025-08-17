@@ -6,7 +6,6 @@ import { Comment } from "../../types/feed/comment";
 import CommentInputField, { CommentInputFieldRef } from "./CommentInputField";
 import { createPortal } from "react-dom";
 import useElementFreeze from "../../hooks/useElementFreeze";
-import useKeyboardHeight from "../../hooks/useKeyboardHeight";
 
 interface CommentModalProps {
   postId: string;
@@ -40,8 +39,6 @@ export default function CommentModal({
   const [closing, setClosing] = useState(false);
   const [replyToCommentId, setReplyToCommentId] = useState<number | null>(null);
   const [replyToUserName, setReplyToUserName] = useState<string>("");
-  const [inputFocused, setInputFocused] = useState(false);
-  const keyboardHeight = useKeyboardHeight();
 
   // 열려있는 동안만 FeedPage 스크롤 루트를 얼림
   useElementFreeze(freezeRootRef as React.RefObject<HTMLElement>, !closing);
@@ -183,9 +180,8 @@ export default function CommentModal({
           onClick={(e) => e.stopPropagation()}
           className="w-full bg-white rounded-t-[20px] flex flex-col relative"
           style={{ 
-            maxHeight: inputFocused ? "calc(var(--vh, 1vh) * 45)" : "calc(var(--vh, 1vh) * 80)",
-            transform: inputFocused ? "translateY(-320px)" : "none",
-            transition: "transform 0.3s ease-out, max-height 0.3s ease-out"
+            maxHeight: "calc(var(--vh, 1vh) * 45)",
+            transform: "translateY(calc(var(--vh, 1vh) * -5))"
           }}
         >
           {/* 핸들바 */}
@@ -249,8 +245,6 @@ export default function CommentModal({
                 }
                 inputRef.current?.setText("");
               }}
-              onFocus={() => setInputFocused(true)}
-              onBlur={() => setInputFocused(false)}
             />
             {replyToCommentId && (
               <div className="flex items-center justify-between text-sm text-ct-gray-300 mb-2">
