@@ -46,7 +46,7 @@ const CommentInputField = forwardRef<
   }));
 
   return (
-    <div className="w-full bg-white px-0">
+    <div className="w-full bg-white px-0 relative z-[200]">
       <div className="relative">
         <input
           ref={inputRef}
