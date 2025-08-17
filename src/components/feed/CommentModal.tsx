@@ -229,7 +229,7 @@ export default function CommentModal({
           <div
             ref={modalRef}
             className="flex-1 overflow-y-auto px-4 pt-6 scrollbar-hide"
-            style={{ paddingBottom: `${footerHeight + 20}px` }}
+            style={{ paddingBottom: `${footerHeight + 28}px` }}
           >
             <CommentList
               comments={comments}
@@ -264,7 +264,8 @@ export default function CommentModal({
             ref={footerRef}
             className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 absolute left-0 right-0"
             style={{
-              bottom: "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px) + 20px)"
+              bottom: "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px) + 20px)",
+              zIndex: 10
             }}
           >
             <CommentInputField
