@@ -191,7 +191,7 @@ export default function CommentModal({
             if (closing) onClose();
           }}
           onClick={(e) => e.stopPropagation()}
-          className="w-full bg-white rounded-t-[20px] flex flex-col relative"
+          className="w-full bg-white rounded-t-[20px] flex flex-col relative min-h-0"
           style={{
             maxHeight: "calc(var(--vh, 1vh) * 80)",
             minHeight: "calc(var(--vh, 1vh) * 50)",
@@ -215,7 +215,11 @@ export default function CommentModal({
           {/* 댓글 목록 + 인풋바 (한 컨테이너 안) */}
           <div
             ref={modalRef}
-            className="flex-1 overflow-y-auto scrollbar-hide"
+            className="flex-1 min-h-0 overflow-y-auto scrollbar-hide"
+            style={{
+              WebkitOverflowScrolling: "touch",
+              overscrollBehavior: "contain", // 상/하단 바운스 전파 차단
+            }}
           >
             {/* 콘텐츠 패딩은 상하만 적당히 */}
             <div className="px-4 pt-6 pb-4">
