@@ -40,6 +40,7 @@ export default function CommentModal({
   const [closing, setClosing] = useState(false);
   const [replyToCommentId, setReplyToCommentId] = useState<number | null>(null);
   const [replyToUserName, setReplyToUserName] = useState<string>("");
+  const [footerHeight, setFooterHeight] = useState(0);
 
   // 열려있는 동안만 FeedPage 스크롤 루트를 얼림 (ref가 있을 때만)
   useElementFreeze(freezeRootRef ?? null, !closing);
@@ -60,6 +61,7 @@ export default function CommentModal({
   const modalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<CommentInputFieldRef>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -157,6 +159,21 @@ export default function CommentModal({
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+  // Footer 높이 측정
+  useEffect(() => {
+    const footer = footerRef.current;
+    if (!footer) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setFooterHeight(entry.contentRect.height);
+      }
+    });
+
+    resizeObserver.observe(footer);
+    return () => resizeObserver.disconnect();
+  }, []);
+
   return createPortal(
     <AnimatePresence>
       <motion.div
@@ -212,7 +229,7 @@ export default function CommentModal({
           <div
             ref={modalRef}
             className="flex-1 overflow-y-auto px-4 pt-6 scrollbar-hide"
-            style={{ paddingBottom: "140px" }}
+            style={{ paddingBottom: `${footerHeight + 20}px` }}
           >
             <CommentList
               comments={comments}
@@ -244,6 +261,7 @@ export default function CommentModal({
           </div>
 
           <div 
+            ref={footerRef}
             className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 absolute left-0 right-0"
             style={{
               bottom: "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px) + 20px)"
