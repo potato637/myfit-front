@@ -57,21 +57,17 @@ export default function FeedPage() {
 
 
   return (
-    <div
-      id="feed-scroll-root"
-      ref={feedRootRef}
-      className="feed-scroll-root"
-    >
-      <BottomNavContainer showBottomNav={!activePostId}>
-        <FixedHeader />
-        <div 
-          className="px-[10px] bg-ct-white flex flex-col gap-6"
-          style={{
-            paddingTop: "calc(82px + env(safe-area-inset-top, 0px))",
-            paddingBottom: "calc(89px + env(safe-area-inset-bottom, 0px))",
-            minHeight: "calc(var(--vh, 1vh) * 100)",
-          }}
-        >
+    <BottomNavContainer showBottomNav={!activePostId}>
+      <FixedHeader />
+      <div
+        id="feed-scroll-root"
+        ref={feedRootRef}
+        className="feed-scroll-root px-[10px] bg-ct-white flex flex-col gap-6"
+        style={{
+          paddingTop: "calc(82px + env(safe-area-inset-top, 0px))",
+          paddingBottom: "calc(89px + env(safe-area-inset-bottom, 0px))",
+        }}
+      >
         {isLoading
           ? Array(5)
               .fill(0)
@@ -132,28 +128,27 @@ export default function FeedPage() {
         )}
       </div>
 
-        {activePostId && (
-          <CommentModal
-            postId={activePostId}
-            comments={
-              commentsData?.pages.flatMap((page) => page.result.feeds) || []
-            }
-            onClose={() => setActivePostId(null)}
-            onCommentCreate={handleCommentCreate}
-            onReplyCreate={handleReplyCreate}
-            onCommentDelete={handleCommentDelete}
-            currentUserId={user?.id}
-            postOwnerId={
-              allFeeds.find((feed) => feed.feed_id === Number(activePostId))?.user
-                ?.id
-            }
-            fetchNextPage={fetchCommentsNextPage}
-            hasNextPage={hasCommentsNextPage}
-            isFetchingNextPage={isFetchingCommentsNextPage}
-            freezeRootRef={feedRootRef}
-          />
-        )}
-      </BottomNavContainer>
-    </div>
+      {activePostId && (
+        <CommentModal
+          postId={activePostId}
+          comments={
+            commentsData?.pages.flatMap((page) => page.result.feeds) || []
+          }
+          onClose={() => setActivePostId(null)}
+          onCommentCreate={handleCommentCreate}
+          onReplyCreate={handleReplyCreate}
+          onCommentDelete={handleCommentDelete}
+          currentUserId={user?.id}
+          postOwnerId={
+            allFeeds.find((feed) => feed.feed_id === Number(activePostId))?.user
+              ?.id
+          }
+          fetchNextPage={fetchCommentsNextPage}
+          hasNextPage={hasCommentsNextPage}
+          isFetchingNextPage={isFetchingCommentsNextPage}
+          freezeRootRef={feedRootRef}
+        />
+      )}
+    </BottomNavContainer>
   );
 }
