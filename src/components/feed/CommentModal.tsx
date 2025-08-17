@@ -5,6 +5,7 @@ import CommentList from "../feed/CommentList";
 import { Comment } from "../../types/feed/comment";
 import CommentInputField, { CommentInputFieldRef } from "./CommentInputField";
 import { createPortal } from "react-dom";
+import useElementFreeze from "../../hooks/useElementFreeze";
 
 interface CommentModalProps {
   postId: string;
@@ -18,6 +19,7 @@ interface CommentModalProps {
   fetchNextPage?: () => void;
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
+  freezeRootRef?: React.RefObject<HTMLElement | null>;
 }
 
 export default function CommentModal({
@@ -31,11 +33,15 @@ export default function CommentModal({
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage,
+  freezeRootRef,
 }: CommentModalProps) {
   const navigate = useNavigate();
   const [closing, setClosing] = useState(false);
   const [replyToCommentId, setReplyToCommentId] = useState<number | null>(null);
   const [replyToUserName, setReplyToUserName] = useState<string>("");
+
+  // 열려있는 동안만 FeedPage 스크롤 루트를 얼림
+  useElementFreeze(freezeRootRef as React.RefObject<HTMLElement>, !closing);
 
   const handleRequestClose = () => setClosing(true);
 
@@ -62,9 +68,6 @@ export default function CommentModal({
   useEffect(() => {
     const scrollableElement = modalRef.current;
     if (!scrollableElement) return;
-
-    // Prevent body scroll
-    document.body.style.overflow = "hidden";
 
     const handleWheel = (e: WheelEvent) => {
       const { deltaY } = e;
@@ -105,8 +108,6 @@ export default function CommentModal({
     scrollableElement.addEventListener("touchmove", handleTouchMove, { passive: false });
 
     return () => {
-      // Restore body scroll
-      document.body.style.overflow = "auto";
       scrollableElement.removeEventListener("wheel", handleWheel);
       scrollableElement.removeEventListener("touchstart", handleTouchStart);
       scrollableElement.removeEventListener("touchmove", handleTouchMove);
@@ -160,7 +161,7 @@ export default function CommentModal({
           top: 0,
           left: 0,
           width: "100vw",
-          height: "100vh",
+          height: "calc(var(--vh, 1vh) * 100)",
           overflow: "hidden",
           touchAction: "none",
         }}
@@ -177,7 +178,8 @@ export default function CommentModal({
             if (closing) onClose();
           }}
           onClick={(e) => e.stopPropagation()}
-          className="w-full h-[75vh] max-h-[65vh] bg-white rounded-t-[20px] flex flex-col relative"
+          className="w-full bg-white rounded-t-[20px] flex flex-col relative"
+          style={{ maxHeight: "calc(var(--vh, 1vh) * 80)" }}
         >
           {/* 핸들바 */}
           <div className="w-full flex justify-center py-2">

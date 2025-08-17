@@ -28,6 +28,14 @@ body.modal-open {
   width: 100%;
 }
 
+/* Feed 전용 스크롤 루트 (전역 영향을 주지 않음) */
+.feed-scroll-root {
+  height: calc(var(--vh, 1vh) * 100);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: none; /* 바운스 줄이기(선택) */
+}
+
 body.bottom-sheet-open {
   overflow: hidden;
   width: 100%;

@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import FeedCard from "../../components/feed/FeedCard";
 import FixedHeader from "../../components/feed/FixedHeader";
@@ -12,11 +12,14 @@ import { useFeedMutations } from "../../hooks/feed/useFeedMutations";
 import { useFeedComments } from "../../hooks/feed/useFeedComments";
 import { useInfiniteScroll } from "../../hooks/common/useInfiniteScroll";
 import { FeedResponse } from "../../types/feed/feed";
+import useFix100vh from "../../hooks/useFix100vh";
 
 export default function FeedPage() {
+  useFix100vh();
   const [activePostId, setActivePostId] = useState<string | null>(null);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const feedRootRef = useRef<HTMLDivElement | null>(null);
 
   const {
     data,
@@ -61,9 +64,21 @@ export default function FeedPage() {
   }, [activePostId]);
 
   return (
-    <BottomNavContainer showBottomNav={!activePostId}>
-      <FixedHeader />
-      <div className="pt-[82px] pb-[89px] px-[10px] bg-ct-white min-h-screen flex flex-col gap-6">
+    <div
+      id="feed-scroll-root"
+      ref={feedRootRef}
+      className="feed-scroll-root"
+    >
+      <BottomNavContainer showBottomNav={!activePostId}>
+        <FixedHeader />
+        <div 
+          className="px-[10px] bg-ct-white flex flex-col gap-6"
+          style={{
+            paddingTop: "calc(82px + env(safe-area-inset-top, 0px))",
+            paddingBottom: "calc(89px + env(safe-area-inset-bottom, 0px))",
+            minHeight: "calc(var(--vh, 1vh) * 100)",
+          }}
+        >
         {isLoading
           ? Array(5)
               .fill(0)
@@ -124,26 +139,28 @@ export default function FeedPage() {
         )}
       </div>
 
-      {activePostId && (
-        <CommentModal
-          postId={activePostId}
-          comments={
-            commentsData?.pages.flatMap((page) => page.result.feeds) || []
-          }
-          onClose={() => setActivePostId(null)}
-          onCommentCreate={handleCommentCreate}
-          onReplyCreate={handleReplyCreate}
-          onCommentDelete={handleCommentDelete}
-          currentUserId={user?.id}
-          postOwnerId={
-            allFeeds.find((feed) => feed.feed_id === Number(activePostId))?.user
-              ?.id
-          }
-          fetchNextPage={fetchCommentsNextPage}
-          hasNextPage={hasCommentsNextPage}
-          isFetchingNextPage={isFetchingCommentsNextPage}
-        />
-      )}
-    </BottomNavContainer>
+        {activePostId && (
+          <CommentModal
+            postId={activePostId}
+            comments={
+              commentsData?.pages.flatMap((page) => page.result.feeds) || []
+            }
+            onClose={() => setActivePostId(null)}
+            onCommentCreate={handleCommentCreate}
+            onReplyCreate={handleReplyCreate}
+            onCommentDelete={handleCommentDelete}
+            currentUserId={user?.id}
+            postOwnerId={
+              allFeeds.find((feed) => feed.feed_id === Number(activePostId))?.user
+                ?.id
+            }
+            fetchNextPage={fetchCommentsNextPage}
+            hasNextPage={hasCommentsNextPage}
+            isFetchingNextPage={isFetchingCommentsNextPage}
+            freezeRootRef={feedRootRef}
+          />
+        )}
+      </BottomNavContainer>
+    </div>
   );
 }
