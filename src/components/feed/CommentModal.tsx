@@ -184,7 +184,8 @@ export default function CommentModal({
           onClick={(e) => e.stopPropagation()}
           className="w-full bg-white rounded-t-[20px] flex flex-col relative"
           style={{ 
-            maxHeight: "calc(var(--vh, 1vh) * 80)"
+            maxHeight: "calc(var(--vh, 1vh) * 80)",
+            minHeight: "calc(var(--vh, 1vh) * 50)"
           }}
         >
           {/* 핸들바 */}
@@ -238,7 +239,7 @@ export default function CommentModal({
           <div 
             className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 absolute left-0 right-0"
             style={{
-              bottom: "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px))"
+              bottom: "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px) + 10px)"
             }}
           >
             <CommentInputField
