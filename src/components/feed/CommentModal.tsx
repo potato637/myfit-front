@@ -232,7 +232,7 @@ export default function CommentModal({
             style={{ paddingBottom: `${footerHeight + 28}px` }}
           >
             <CommentList
-              comments={comments}
+              comments={[...comments].reverse()}
               onReplyClick={(commentId, userName) => {
                 setReplyToCommentId(commentId);
                 setReplyToUserName(userName);
