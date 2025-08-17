@@ -180,8 +180,8 @@ export default function CommentModal({
           onClick={(e) => e.stopPropagation()}
           className="w-full bg-white rounded-t-[20px] flex flex-col relative"
           style={{ 
-            maxHeight: "calc(var(--vh, 1vh) * 45)",
-            transform: "translateY(calc(var(--vh, 1vh) * -5))"
+            maxHeight: "calc(var(--vh, 1vh) * 70)",
+            transform: "translateY(calc(var(--vh, 1vh) * -15))"
           }}
         >
           {/* 핸들바 */}
