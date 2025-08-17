@@ -232,7 +232,7 @@ export default function CommentModal({
             </div>
           </div>
 
-          <div className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 absolute bottom-24 left-0 right-0">
+          <div className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 absolute left-0 right-0" style={{ bottom: "85px" }}>
             <CommentInputField
               ref={inputRef}
               onSend={(text) => {
