@@ -40,7 +40,6 @@ export default function CommentModal({
   const [closing, setClosing] = useState(false);
   const [replyToCommentId, setReplyToCommentId] = useState<number | null>(null);
   const [replyToUserName, setReplyToUserName] = useState<string>("");
-  const [footerHeight, setFooterHeight] = useState(0);
 
   // 열려있는 동안만 FeedPage 스크롤 루트를 얼림 (ref가 있을 때만)
   useElementFreeze(freezeRootRef ?? null, !closing);
@@ -50,12 +49,6 @@ export default function CommentModal({
 
   const handleRequestClose = () => setClosing(true);
 
-  // 스크롤을 맨 아래로 이동
-  const scrollToBottom = (smooth = true) => {
-    const el = modalRef.current;
-    if (!el) return;
-    el.scrollTo({ top: el.scrollHeight, behavior: smooth ? "smooth" : "auto" });
-  };
 
   // 프로필 클릭 핸들러
   const handleProfileClick = (userId: number) => {
@@ -166,20 +159,6 @@ export default function CommentModal({
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  // Footer 높이 측정
-  useEffect(() => {
-    const footer = footerRef.current;
-    if (!footer) return;
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        setFooterHeight(entry.contentRect.height);
-      }
-    });
-
-    resizeObserver.observe(footer);
-    return () => resizeObserver.disconnect();
-  }, []);
 
   return createPortal(
     <AnimatePresence>
@@ -233,94 +212,93 @@ export default function CommentModal({
               닫기
             </button>
           </div>
-          {/* 댓글 목록 */}
+          {/* 댓글 목록 + 인풋바 (한 컨테이너 안) */}
           <div
             ref={modalRef}
-            className="z-[10] flex-1 overflow-y-auto px-4 pt-6 scrollbar-hide"
-            style={{
-              paddingBottom: `calc(${footerHeight}px + env(safe-area-inset-bottom, 0px) + var(--keyboard-inset, 0px) + 28px + 12px)`
-            }}
+            className="flex-1 overflow-y-auto scrollbar-hide"
           >
-            <CommentList
-              comments={[...comments].reverse()}
-              onReplyClick={(commentId, userName) => {
-                setReplyToCommentId(commentId);
-                setReplyToUserName(userName);
-                // 답글 대상 사용자명을 입력 필드에 미리 채우기
-                inputRef.current?.setText(`@${userName} `);
-                // 입력 필드에 포커스
-                inputRef.current?.focus();
-              }}
-              onDeleteClick={onCommentDelete}
-              onProfileClick={handleProfileClick}
-              currentUserId={currentUserId}
-              postOwnerId={postOwnerId}
-            />
+            {/* 콘텐츠 패딩은 상하만 적당히 */}
+            <div className="px-4 pt-6 pb-4">
+              <CommentList
+                comments={[...comments].reverse()}
+                onReplyClick={(commentId, userName) => {
+                  setReplyToCommentId(commentId);
+                  setReplyToUserName(userName);
+                  inputRef.current?.setText(`@${userName} `);
+                  inputRef.current?.focus();
+                }}
+                onDeleteClick={onCommentDelete}
+                onProfileClick={handleProfileClick}
+                currentUserId={currentUserId}
+                postOwnerId={postOwnerId}
+              />
 
-            {/* 무한스크롤 트리거 */}
+              {/* 무한스크롤 트리거 */}
+              <div
+                ref={loadMoreRef}
+                className="h-4 flex items-center justify-center py-4"
+              >
+                {isFetchingNextPage && (
+                  <div className="text-gray-400 text-sm">
+                    댓글을 더 불러오는 중...
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* ⬇️ 인풋바: sticky + 동적 bottom */}
             <div
-              ref={loadMoreRef}
-              className="h-4 flex items-center justify-center py-4"
+              ref={footerRef}
+              className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 sticky z-[120]"
+              style={{
+                bottom: "calc(env(safe-area-inset-bottom, 0px) + var(--keyboard-inset, 0px))",
+                // 사파리 페인팅 튐 방지
+                transform: "translateZ(0)",
+                willChange: "transform"
+              }}
             >
-              {isFetchingNextPage && (
-                <div className="text-gray-400 text-sm">
-                  댓글을 더 불러오는 중...
+              <CommentInputField
+                ref={inputRef}
+                onFocus={() => {
+                  // 포커스 주면 리스트 맨 아래로
+                  const el = modalRef.current;
+                  if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+                }}
+                onSend={(text) => {
+                  if (replyToCommentId) {
+                    onReplyCreate(text, replyToCommentId);
+                    setReplyToCommentId(null);
+                    setReplyToUserName("");
+                  } else {
+                    onCommentCreate(text);
+                  }
+                  inputRef.current?.setText("");
+                  requestAnimationFrame(() => {
+                    const el = modalRef.current;
+                    if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+                  });
+                }}
+              />
+              {replyToCommentId && (
+                <div className="flex items-center justify-between text-sm text-ct-gray-300 mb-2">
+                  <span>{replyToUserName}님에게 답글 작성 중...</span>
+                  <button
+                    onClick={() => {
+                      setReplyToCommentId(null);
+                      setReplyToUserName("");
+                      inputRef.current?.setText("");
+                    }}
+                    className="text-ct-main-blue-100 hover:underline"
+                  >
+                    취소
+                  </button>
                 </div>
               )}
             </div>
-          </div>
 
-          {/* 입력바 래퍼 */}
-          <div 
-            ref={footerRef}
-            className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 absolute left-0 right-0 z-[120]"
-            style={{
-              bottom: "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px) + 28px)",
-              transform: "translateZ(0)"
-            }}
-          >
-            <CommentInputField
-              ref={inputRef}
-              onFocus={() => scrollToBottom()}
-              onSend={(text) => {
-                if (replyToCommentId) {
-                  onReplyCreate(text, replyToCommentId);
-                  setReplyToCommentId(null);
-                  setReplyToUserName("");
-                } else {
-                  onCommentCreate(text);
-                }
-                inputRef.current?.setText("");
-                // 전송 직후에도 아래로
-                requestAnimationFrame(() => scrollToBottom());
-              }}
-            />
-            {replyToCommentId && (
-              <div className="flex items-center justify-between text-sm text-ct-gray-300 mb-2">
-                <span>{replyToUserName}님에게 답글 작성 중...</span>
-                <button
-                  onClick={() => {
-                    setReplyToCommentId(null);
-                    setReplyToUserName("");
-                    inputRef.current?.setText("");
-                  }}
-                  className="text-ct-main-blue-100 hover:underline"
-                >
-                  취소
-                </button>
-              </div>
-            )}
+            {/* 스크롤 끝이 sticky 뒤로 딱 붙지 않게 아주 얇은 스페이서 (선택) */}
+            <div style={{ height: 8 }} />
           </div>
-
-          {/* 인풋바 언더레이: 모달 패널 내부 absolute로 배치 */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-0 right-0 z-[90] bg-white"
-            style={{
-              bottom: 0,
-              height: "calc(env(safe-area-inset-bottom, 0px) + var(--keyboard-inset, 0px))"
-            }}
-          />
         </motion.div>
       </motion.div>
     </AnimatePresence>,
