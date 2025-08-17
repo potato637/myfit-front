@@ -50,6 +50,13 @@ export default function CommentModal({
 
   const handleRequestClose = () => setClosing(true);
 
+  // 스크롤을 맨 아래로 이동
+  const scrollToBottom = (smooth = true) => {
+    const el = modalRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior: smooth ? "smooth" : "auto" });
+  };
+
   // 프로필 클릭 핸들러
   const handleProfileClick = (userId: number) => {
     // 내 프로필이라면 마이페이지로, 다른 사람 프로필이라면 해당 사용자 프로필로 이동
@@ -229,7 +236,9 @@ export default function CommentModal({
           <div
             ref={modalRef}
             className="z-[10] flex-1 overflow-y-auto px-4 pt-6 scrollbar-hide"
-            style={{ paddingBottom: `${footerHeight + 40}px` }}
+            style={{
+              paddingBottom: `calc(${footerHeight}px + env(safe-area-inset-bottom, 0px) + var(--keyboard-inset, 0px) + 12px)`
+            }}
           >
             <CommentList
               comments={[...comments].reverse()}
@@ -265,11 +274,13 @@ export default function CommentModal({
             ref={footerRef}
             className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 absolute left-0 right-0 z-[100]"
             style={{
-              bottom: "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px) + 28px)"
+              bottom: "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px) + 32px)",
+              transform: "translateZ(0)"
             }}
           >
             <CommentInputField
               ref={inputRef}
+              onFocus={() => scrollToBottom()}
               onSend={(text) => {
                 if (replyToCommentId) {
                   onReplyCreate(text, replyToCommentId);
@@ -279,6 +290,8 @@ export default function CommentModal({
                   onCommentCreate(text);
                 }
                 inputRef.current?.setText("");
+                // 전송 직후에도 아래로
+                requestAnimationFrame(() => scrollToBottom());
               }}
             />
             {replyToCommentId && (
@@ -304,7 +317,7 @@ export default function CommentModal({
             className="pointer-events-none fixed left-0 right-0 z-[100] bg-white"
             style={{
               bottom: 0,
-              height: "calc(env(safe-area-inset-bottom, 0px) + var(--keyboard-inset, 0px) + 28px)"
+              height: "calc(env(safe-area-inset-bottom, 0px) + var(--keyboard-inset, 0px) + 32px)"
             }}
           />
         </motion.div>
