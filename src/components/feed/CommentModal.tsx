@@ -6,6 +6,7 @@ import { Comment } from "../../types/feed/comment";
 import CommentInputField, { CommentInputFieldRef } from "./CommentInputField";
 import { createPortal } from "react-dom";
 import useElementFreeze from "../../hooks/useElementFreeze";
+import useKeyboardHeight from "../../hooks/useKeyboardHeight";
 
 interface CommentModalProps {
   postId: string;
@@ -39,6 +40,7 @@ export default function CommentModal({
   const [closing, setClosing] = useState(false);
   const [replyToCommentId, setReplyToCommentId] = useState<number | null>(null);
   const [replyToUserName, setReplyToUserName] = useState<string>("");
+  const keyboardHeight = useKeyboardHeight();
 
   // 열려있는 동안만 FeedPage 스크롤 루트를 얼림
   useElementFreeze(freezeRootRef as React.RefObject<HTMLElement>, !closing);
@@ -179,7 +181,12 @@ export default function CommentModal({
           }}
           onClick={(e) => e.stopPropagation()}
           className="w-full bg-white rounded-t-[20px] flex flex-col relative"
-          style={{ maxHeight: "calc(var(--vh, 1vh) * 80)" }}
+          style={{ 
+            maxHeight: keyboardHeight > 0 
+              ? `calc(var(--vh, 1vh) * 100 - ${keyboardHeight}px - 20px)` 
+              : "calc(var(--vh, 1vh) * 80)",
+            transform: keyboardHeight > 0 ? `translateY(-${keyboardHeight}px)` : "none"
+          }}
         >
           {/* 핸들바 */}
           <div className="w-full flex justify-center py-2">
