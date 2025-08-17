@@ -211,7 +211,8 @@ export default function CommentModal({
           {/* 댓글 목록 */}
           <div
             ref={modalRef}
-            className="flex-1 overflow-y-auto px-4 pt-6 pb-24 scrollbar-hide"
+            className="flex-1 overflow-y-auto px-4 pt-6 scrollbar-hide"
+            style={{ paddingBottom: "140px" }}
           >
             <CommentList
               comments={comments}
