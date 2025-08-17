@@ -40,8 +40,8 @@ export default function CommentModal({
   const [replyToCommentId, setReplyToCommentId] = useState<number | null>(null);
   const [replyToUserName, setReplyToUserName] = useState<string>("");
 
-  // 열려있는 동안만 FeedPage 스크롤 루트를 얼림
-  useElementFreeze(freezeRootRef as React.RefObject<HTMLElement>, !closing);
+  // 열려있는 동안만 FeedPage 스크롤 루트를 얼림 (ref가 있을 때만)
+  useElementFreeze(freezeRootRef ?? null, !closing);
 
   const handleRequestClose = () => setClosing(true);
 
