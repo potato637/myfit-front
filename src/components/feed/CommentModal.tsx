@@ -6,6 +6,7 @@ import { Comment } from "../../types/feed/comment";
 import CommentInputField, { CommentInputFieldRef } from "./CommentInputField";
 import { createPortal } from "react-dom";
 import useElementFreeze from "../../hooks/useElementFreeze";
+import useKeyboardInset from "../../hooks/useKeyboardInset";
 
 interface CommentModalProps {
   postId: string;
@@ -42,6 +43,9 @@ export default function CommentModal({
 
   // 열려있는 동안만 FeedPage 스크롤 루트를 얼림 (ref가 있을 때만)
   useElementFreeze(freezeRootRef ?? null, !closing);
+  
+  // 키보드 높이를 CSS 변수로 관리
+  useKeyboardInset();
 
   const handleRequestClose = () => setClosing(true);
 
@@ -238,7 +242,12 @@ export default function CommentModal({
             </div>
           </div>
 
-          <div className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 absolute bottom-[100px] left-0 right-0">
+          <div 
+            className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 absolute left-0 right-0"
+            style={{
+              bottom: "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px) + 20px)"
+            }}
+          >
             <CommentInputField
               ref={inputRef}
               onSend={(text) => {
