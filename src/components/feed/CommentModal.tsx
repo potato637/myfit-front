@@ -103,9 +103,15 @@ export default function CommentModal({
       }
     };
 
-    scrollableElement.addEventListener("wheel", handleWheel, { passive: false });
-    scrollableElement.addEventListener("touchstart", handleTouchStart, { passive: false });
-    scrollableElement.addEventListener("touchmove", handleTouchMove, { passive: false });
+    scrollableElement.addEventListener("wheel", handleWheel, {
+      passive: false,
+    });
+    scrollableElement.addEventListener("touchstart", handleTouchStart, {
+      passive: false,
+    });
+    scrollableElement.addEventListener("touchmove", handleTouchMove, {
+      passive: false,
+    });
 
     return () => {
       scrollableElement.removeEventListener("wheel", handleWheel);
@@ -179,9 +185,9 @@ export default function CommentModal({
           }}
           onClick={(e) => e.stopPropagation()}
           className="w-full bg-white rounded-t-[20px] flex flex-col relative"
-          style={{ 
+          style={{
             maxHeight: "calc(var(--vh, 1vh) * 80)",
-            minHeight: "calc(var(--vh, 1vh) * 50)"
+            minHeight: "calc(var(--vh, 1vh) * 50)",
           }}
         >
           {/* 핸들바 */}
@@ -232,7 +238,7 @@ export default function CommentModal({
             </div>
           </div>
 
-          <div className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 absolute left-0 right-0" style={{ bottom: "85px" }}>
+          <div className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 absolute bottom-[100px] left-0 right-0">
             <CommentInputField
               ref={inputRef}
               onSend={(text) => {
