@@ -7,12 +7,14 @@ export interface CommentInputFieldRef {
 
 interface CommentInputFieldProps {
   onSend: (text: string) => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 const CommentInputField = forwardRef<
   CommentInputFieldRef,
   CommentInputFieldProps
->(({ onSend }, ref) => {
+>(({ onSend, onFocus, onBlur }, ref) => {
   const [text, setText] = useState("");
   const [isComposing, setIsComposing] = useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -53,6 +55,8 @@ const CommentInputField = forwardRef<
           onKeyDown={handleKeyDown}
           onCompositionStart={handleCompositionStart}
           onCompositionEnd={handleCompositionEnd}
+          onFocus={onFocus}
+          onBlur={onBlur}
           className="w-full h-[54px] rounded-[1000px] border border-ct-gray-200 pl-5 pr-12 text-sub2 placeholder:text-ct-gray-300"
           placeholder="메시지를 입력하세요"
         />
