@@ -237,7 +237,7 @@ export default function CommentModal({
             ref={modalRef}
             className="z-[10] flex-1 overflow-y-auto px-4 pt-6 scrollbar-hide"
             style={{
-              paddingBottom: `calc(${footerHeight}px + env(safe-area-inset-bottom, 0px) + var(--keyboard-inset, 0px) + 12px)`
+              paddingBottom: `calc(${footerHeight}px + env(safe-area-inset-bottom, 0px) + var(--keyboard-inset, 0px) + 28px + 12px)`
             }}
           >
             <CommentList
