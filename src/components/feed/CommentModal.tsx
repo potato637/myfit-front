@@ -212,96 +212,88 @@ export default function CommentModal({
               닫기
             </button>
           </div>
-          {/* 댓글 목록 + 인풋바 (한 컨테이너 안) */}
+          {/* 댓글 목록 */}
           <div
             ref={modalRef}
-            className="flex-1 min-h-0 overflow-y-auto scrollbar-hide"
+            className="flex-1 min-h-0 overflow-y-auto scrollbar-hide px-4 pt-6"
             style={{
               WebkitOverflowScrolling: "touch",
-              overscrollBehavior: "contain", // 상/하단 바운스 전파 차단
+              overscrollBehavior: "contain",
+              paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px) + var(--keyboard-inset, 0px))"
             }}
           >
-            {/* 콘텐츠 패딩은 상하만 적당히 */}
-            <div className="px-4 pt-6 pb-4">
-              <CommentList
-                comments={[...comments].reverse()}
-                onReplyClick={(commentId, userName) => {
-                  setReplyToCommentId(commentId);
-                  setReplyToUserName(userName);
-                  inputRef.current?.setText(`@${userName} `);
-                  inputRef.current?.focus();
-                }}
-                onDeleteClick={onCommentDelete}
-                onProfileClick={handleProfileClick}
-                currentUserId={currentUserId}
-                postOwnerId={postOwnerId}
-              />
-
-              {/* 무한스크롤 트리거 */}
-              <div
-                ref={loadMoreRef}
-                className="h-4 flex items-center justify-center py-4"
-              >
-                {isFetchingNextPage && (
-                  <div className="text-gray-400 text-sm">
-                    댓글을 더 불러오는 중...
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* ⬇️ 인풋바: sticky + 동적 bottom */}
-            <div
-              ref={footerRef}
-              className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 sticky z-[120]"
-              style={{
-                bottom: "calc(env(safe-area-inset-bottom, 0px) + var(--keyboard-inset, 0px))",
-                // 사파리 페인팅 튐 방지
-                transform: "translateZ(0)",
-                willChange: "transform"
+            <CommentList
+              comments={[...comments].reverse()}
+              onReplyClick={(commentId, userName) => {
+                setReplyToCommentId(commentId);
+                setReplyToUserName(userName);
+                inputRef.current?.setText(`@${userName} `);
+                inputRef.current?.focus();
               }}
+              onDeleteClick={onCommentDelete}
+              onProfileClick={handleProfileClick}
+              currentUserId={currentUserId}
+              postOwnerId={postOwnerId}
+            />
+
+            {/* 무한스크롤 트리거 */}
+            <div
+              ref={loadMoreRef}
+              className="h-4 flex items-center justify-center py-4"
             >
-              <CommentInputField
-                ref={inputRef}
-                onFocus={() => {
-                  // 포커스 주면 리스트 맨 아래로
-                  const el = modalRef.current;
-                  if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
-                }}
-                onSend={(text) => {
-                  if (replyToCommentId) {
-                    onReplyCreate(text, replyToCommentId);
-                    setReplyToCommentId(null);
-                    setReplyToUserName("");
-                  } else {
-                    onCommentCreate(text);
-                  }
-                  inputRef.current?.setText("");
-                  requestAnimationFrame(() => {
-                    const el = modalRef.current;
-                    if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
-                  });
-                }}
-              />
-              {replyToCommentId && (
-                <div className="flex items-center justify-between text-sm text-ct-gray-300 mb-2">
-                  <span>{replyToUserName}님에게 답글 작성 중...</span>
-                  <button
-                    onClick={() => {
-                      setReplyToCommentId(null);
-                      setReplyToUserName("");
-                      inputRef.current?.setText("");
-                    }}
-                    className="text-ct-main-blue-100 hover:underline"
-                  >
-                    취소
-                  </button>
+              {isFetchingNextPage && (
+                <div className="text-gray-400 text-sm">
+                  댓글을 더 불러오는 중...
                 </div>
               )}
             </div>
+          </div>
 
-            {/* 스크롤 끝이 sticky 뒤로 딱 붙지 않게 아주 얇은 스페이서 (선택) */}
-            <div style={{ height: 8 }} />
+          {/* 인풋바: 하단 고정 */}
+          <div
+            ref={footerRef}
+            className="absolute left-0 right-0 bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 z-[120]"
+            style={{
+              bottom: "calc(env(safe-area-inset-bottom, 0px) + var(--keyboard-inset, 0px))",
+              transform: "translateZ(0)"
+            }}
+          >
+            <CommentInputField
+              ref={inputRef}
+              onFocus={() => {
+                const el = modalRef.current;
+                if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+              }}
+              onSend={(text) => {
+                if (replyToCommentId) {
+                  onReplyCreate(text, replyToCommentId);
+                  setReplyToCommentId(null);
+                  setReplyToUserName("");
+                } else {
+                  onCommentCreate(text);
+                }
+                inputRef.current?.setText("");
+                requestAnimationFrame(() => {
+                  const el = modalRef.current;
+                  if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+                });
+              }}
+            />
+            {replyToCommentId && (
+              <div className="flex items-center justify-between text-sm text-ct-gray-300 mb-2">
+                <span>{replyToUserName}님에게 답글 작성 중...</span>
+                <button
+                  onClick={() => {
+                    setReplyToCommentId(null);
+                    setReplyToUserName("");
+                    inputRef.current?.setText("");
+                  }}
+                  className="text-ct-main-blue-100 hover:underline"
+                >
+                  취소
+                </button>
+              </div>
+            )}
           </div>
         </motion.div>
       </motion.div>
