@@ -228,8 +228,8 @@ export default function CommentModal({
           {/* 댓글 목록 */}
           <div
             ref={modalRef}
-            className="flex-1 overflow-y-auto px-4 pt-6 scrollbar-hide"
-            style={{ paddingBottom: `${footerHeight + 28}px` }}
+            className="z-[10] flex-1 overflow-y-auto px-4 pt-6 scrollbar-hide"
+            style={{ paddingBottom: `${footerHeight + 40}px` }}
           >
             <CommentList
               comments={[...comments].reverse()}
@@ -260,20 +260,14 @@ export default function CommentModal({
             </div>
           </div>
 
-          {/* 인풋창 + 여백을 하나로 묶은 블록 */}
+          {/* 입력바 래퍼 */}
           <div 
-            className="absolute left-0 right-0 bg-white"
+            ref={footerRef}
+            className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 absolute left-0 right-0 z-[100]"
             style={{
-              bottom: "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px))",
-              zIndex: 10,
-              height: "120px" // 인풋 영역 + 여백을 포함한 고정 높이
+              bottom: "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px) + 28px)"
             }}
           >
-            <div 
-              ref={footerRef}
-              className="px-4 pt-2 pb-4 space-y-2 border-t border-gray-200"
-              style={{ marginTop: "20px" }}
-            >
             <CommentInputField
               ref={inputRef}
               onSend={(text) => {
@@ -302,8 +296,17 @@ export default function CommentModal({
                 </button>
               </div>
             )}
-            </div>
           </div>
+
+          {/* 인풋바 언더레이: 여백 구간도 같은 레이어로 덮기 */}
+          <div
+            aria-hidden
+            className="pointer-events-none fixed left-0 right-0 z-[100] bg-white"
+            style={{
+              bottom: 0,
+              height: "calc(env(safe-area-inset-bottom, 0px) + var(--keyboard-inset, 0px) + 28px)"
+            }}
+          />
         </motion.div>
       </motion.div>
     </AnimatePresence>,
