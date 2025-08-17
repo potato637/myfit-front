@@ -272,9 +272,9 @@ export default function CommentModal({
           {/* 입력바 래퍼 */}
           <div 
             ref={footerRef}
-            className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 absolute left-0 right-0 z-[100]"
+            className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 absolute left-0 right-0 z-[120]"
             style={{
-              bottom: "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px) + 32px)",
+              bottom: "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px) + 28px)",
               transform: "translateZ(0)"
             }}
           >
@@ -314,10 +314,10 @@ export default function CommentModal({
           {/* 인풋바 언더레이: 여백 구간도 같은 레이어로 덮기 */}
           <div
             aria-hidden
-            className="pointer-events-none fixed left-0 right-0 z-[100] bg-white"
+            className="pointer-events-none fixed left-0 right-0 z-[90] bg-white"
             style={{
               bottom: 0,
-              height: "calc(env(safe-area-inset-bottom, 0px) + var(--keyboard-inset, 0px) + 32px)"
+              height: "calc(env(safe-area-inset-bottom, 0px) + var(--keyboard-inset, 0px))"
             }}
           />
         </motion.div>
