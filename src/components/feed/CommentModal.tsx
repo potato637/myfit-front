@@ -191,7 +191,7 @@ export default function CommentModal({
             if (closing) onClose();
           }}
           onClick={(e) => e.stopPropagation()}
-          className="w-full bg-red-500 rounded-t-[20px] flex flex-col relative min-h-0 pb-safe"
+          className="w-full bg-white rounded-t-[20px] flex flex-col relative min-h-0"
           style={{
             maxHeight: "calc(var(--vh, 1vh) * 80)",
             minHeight: "calc(var(--vh, 1vh) * 50)",
@@ -219,7 +219,7 @@ export default function CommentModal({
             style={{
               WebkitOverflowScrolling: "touch",
               overscrollBehavior: "contain",
-              paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px) + var(--keyboard-inset, 0px))"
+              paddingBottom: "calc(80px + var(--keyboard-inset, 0px))"
             }}
           >
             <CommentList
@@ -254,7 +254,7 @@ export default function CommentModal({
             ref={footerRef}
             className="absolute left-0 right-0 bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 z-[120]"
             style={{
-              bottom: "calc(env(safe-area-inset-bottom, 0px) + var(--keyboard-inset, 0px))",
+              bottom: "var(--keyboard-inset, 0px)",
               transform: "translateZ(0)"
             }}
           >
@@ -295,6 +295,16 @@ export default function CommentModal({
               </div>
             )}
           </div>
+
+          {/* Safe-area 언더레이: 홈 인디케이터 영역을 흰색으로 덮음 */}
+          <div
+            aria-hidden
+            className="absolute left-0 right-0 z-[110] bg-white pointer-events-none"
+            style={{
+              bottom: 0,
+              height: "env(safe-area-inset-bottom, 0px)"
+            }}
+          />
         </motion.div>
       </motion.div>
     </AnimatePresence>,
