@@ -191,7 +191,7 @@ export default function CommentModal({
             if (closing) onClose();
           }}
           onClick={(e) => e.stopPropagation()}
-          className="w-full bg-red-500 rounded-t-[20px] flex flex-col relative min-h-0"
+          className="w-full bg-red-500 rounded-t-[20px] flex flex-col relative min-h-0 pb-safe"
           style={{
             maxHeight: "calc(var(--vh, 1vh) * 80)",
             minHeight: "calc(var(--vh, 1vh) * 50)",
