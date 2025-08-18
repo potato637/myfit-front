@@ -254,7 +254,7 @@ export default function CommentModal({
             ref={footerRef}
             className="absolute left-0 right-0 bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 z-[120]"
             style={{
-              bottom: "calc(var(--keyboard-inset, 0px) + 20px)",
+              bottom: "calc(var(--keyboard-inset, 0px) + 40px)",
               transform: "translateZ(0)"
             }}
           >
