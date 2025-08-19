@@ -174,7 +174,7 @@ export default function CommentModal({
           top: 0,
           left: 0,
           width: "100vw",
-          height: "calc(var(--vh, 1vh) * 100)",
+          height: "100vh",
           overflow: "hidden",
           touchAction: "none",
         }}
