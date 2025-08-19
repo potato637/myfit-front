@@ -230,7 +230,9 @@ function Chatting() {
           src={partnerProfile?.result.profile_img}
           alt="프로필 사진"
           className="w-[49px] h-[49px] rounded-full"
-          onClick={() => `/feed/profile/${partnerProfile?.result.service_id}`}
+          onClick={() =>
+            nav(`/feed/profile/${partnerProfile?.result.service_id}`)
+          }
         />
         <span className="text-h2 text-ct-black-100">{partnerName}</span>
         <img
