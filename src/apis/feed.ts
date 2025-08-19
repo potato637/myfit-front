@@ -152,11 +152,28 @@ export const searchUsers = async ({
   const params: Record<string, string | number> = { name };
   if (last_profile_id) params.last_profile_id = last_profile_id;
 
-  const response = await apiClient.get<SearchUsersResponse>(
-    "/api/feeds/search/profiles",
-    { params }
-  );
-  return response.data;
+  try {
+    const response = await apiClient.get<SearchUsersResponse>(
+      "/api/feeds/search/profiles",
+      { params }
+    );
+    return response.data;
+  } catch (error: unknown) {
+    const axiosError = error as { response?: { status: number } };
+    // 404나 검색 결과가 없는 경우 빈 결과 반환
+    if (axiosError.response?.status === 404) {
+      return {
+        isSuccess: true,
+        code: 200,
+        message: "검색 결과가 없습니다.",
+        result: {
+          users: [],
+          pagination: { has_next: false, next_cursor: 0 }
+        }
+      };
+    }
+    throw error;
+  }
 };
 
 // 키워드로 피드 검색
@@ -167,11 +184,28 @@ export const searchFeedsByKeyword = async ({
   const params: Record<string, string | number> = { keyword };
   if (last_feed_id) params.last_feed_id = last_feed_id;
 
-  const response = await apiClient.get<SearchKeywordResponse>(
-    "/api/feeds/search/keyword",
-    { params }
-  );
-  return response.data;
+  try {
+    const response = await apiClient.get<SearchKeywordResponse>(
+      "/api/feeds/search/keyword",
+      { params }
+    );
+    return response.data;
+  } catch (error: unknown) {
+    const axiosError = error as { response?: { status: number } };
+    // 404나 검색 결과가 없는 경우 빈 결과 반환
+    if (axiosError.response?.status === 404) {
+      return {
+        isSuccess: true,
+        code: 200,
+        message: "검색 결과가 없습니다.",
+        result: {
+          feeds: [],
+          pagination: { has_next: false, next_cursor: 0 }
+        }
+      };
+    }
+    throw error;
+  }
 };
 
 // 키워드로 해시태그 분석
@@ -183,12 +217,30 @@ export const analyzeHashtags = async ({
   if (last_hashtag_id) params.last_hashtag_id = last_hashtag_id;
 
   console.log("🔄 [API] 해시태그 분석 요청:", params);
-  const response = await apiClient.get<AnalyzeHashtagResponse>(
-    "/api/feeds/search/hashtag/analyze",
-    { params }
-  );
-  console.log("✅ [API] 해시태그 분석 응답:", response.data);
-  return response.data;
+  try {
+    const response = await apiClient.get<AnalyzeHashtagResponse>(
+      "/api/feeds/search/hashtag/analyze",
+      { params }
+    );
+    console.log("✅ [API] 해시태그 분석 응답:", response.data);
+    return response.data;
+  } catch (error: unknown) {
+    const axiosError = error as { response?: { status: number } };
+    console.error("❌ [API] 해시태그 분석 실패:", error);
+    // 404나 검색 결과가 없는 경우 빈 결과 반환
+    if (axiosError.response?.status === 404) {
+      return {
+        isSuccess: true,
+        code: 200,
+        message: "검색 결과가 없습니다.",
+        result: {
+          hashtags: [],
+          pagination: { has_next: false, next_cursor: 0 }
+        }
+      };
+    }
+    throw error;
+  }
 };
 
 // 해시태그로 피드 검색
@@ -200,12 +252,30 @@ export const searchFeedsByHashtag = async ({
   if (last_feed_id) params.last_feed_id = last_feed_id;
 
   console.log("🔄 [API] 해시태그 검색 요청:", params);
-  const response = await apiClient.get<SearchHashtagResponse>(
-    "/api/feeds/search/hashtag",
-    { params }
-  );
-  console.log("✅ [API] 해시태그 검색 응답:", response.data);
-  return response.data;
+  try {
+    const response = await apiClient.get<SearchHashtagResponse>(
+      "/api/feeds/search/hashtag",
+      { params }
+    );
+    console.log("✅ [API] 해시태그 검색 응답:", response.data);
+    return response.data;
+  } catch (error: unknown) {
+    const axiosError = error as { response?: { status: number } };
+    console.error("❌ [API] 해시태그 검색 실패:", error);
+    // 404나 검색 결과가 없는 경우 빈 결과 반환
+    if (axiosError.response?.status === 404) {
+      return {
+        isSuccess: true,
+        code: 200,
+        message: "검색 결과가 없습니다.",
+        result: {
+          feeds: [],
+          pagination: { has_next: false, next_cursor: 0 }
+        }
+      };
+    }
+    throw error;
+  }
 };
 
 // 댓글 삭제
