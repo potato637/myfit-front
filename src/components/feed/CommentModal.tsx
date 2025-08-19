@@ -40,9 +40,10 @@ export default function CommentModal({
   const [closing, setClosing] = useState(false);
   const [replyToCommentId, setReplyToCommentId] = useState<number | null>(null);
   const [replyToUserName, setReplyToUserName] = useState<string>("");
+  const [keyboardActive, setKeyboardActive] = useState(false);
 
-  // 열려있는 동안만 FeedPage 스크롤 루트를 얼림 (ref가 있을 때만)
-  useElementFreeze(freezeRootRef ?? null, !closing);
+  // 키보드가 활성화되면 freeze 해제, 아니면 모달 열려있는 동안 freeze
+  useElementFreeze(freezeRootRef ?? null, !closing && !keyboardActive);
   
   // 키보드 높이를 CSS 변수로 관리
   useKeyboardInset();
@@ -261,8 +262,12 @@ export default function CommentModal({
             <CommentInputField
               ref={inputRef}
               onFocus={() => {
+                setKeyboardActive(true);
                 const el = modalRef.current;
                 if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+              }}
+              onBlur={() => {
+                setKeyboardActive(false);
               }}
               onSend={(text) => {
                 if (replyToCommentId) {
