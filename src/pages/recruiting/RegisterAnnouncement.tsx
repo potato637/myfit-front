@@ -161,7 +161,7 @@ function RegisterAnnouncement() {
           value={formattedDate}
           onClick={() => handleOpenModal("calendar")}
         />
-        <div className="flex flex-col gap-[13.15px] mt-[25px]">
+        <div className="flex flex-col gap-[13.15px] mt-[25px] mx-1">
           <span className="pl-[7px] text-sub1 text-ct-black-200">
             공고사진 첨부
           </span>
