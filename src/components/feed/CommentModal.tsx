@@ -41,6 +41,10 @@ export default function CommentModal({
   const [replyToCommentId, setReplyToCommentId] = useState<number | null>(null);
   const [replyToUserName, setReplyToUserName] = useState<string>("");
   const [keyboardActive, setKeyboardActive] = useState(false);
+  const [modalHeight, setModalHeight] = useState(70); // 초기 높이 70vh
+  const [isDragging, setIsDragging] = useState(false);
+  const [startY, setStartY] = useState(0);
+  const [startHeight, setStartHeight] = useState(70);
 
   // 키보드가 활성화되면 freeze 해제, 아니면 모달 열려있는 동안 freeze
   useElementFreeze(freezeRootRef ?? null, !closing && !keyboardActive);
@@ -49,6 +53,56 @@ export default function CommentModal({
   useKeyboardInset();
 
   const handleRequestClose = () => setClosing(true);
+
+  // 드래그 시작
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsDragging(true);
+    setStartY(e.touches[0].clientY);
+    setStartHeight(modalHeight);
+  };
+
+  // 드래그 중
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging) return;
+    
+    const currentY = e.touches[0].clientY;
+    const deltaY = startY - currentY; // 위로 드래그하면 +, 아래로 드래그하면 -
+    const deltaVh = (deltaY / window.innerHeight) * 100; // px를 vh로 변환
+    
+    let newHeight = startHeight + deltaVh;
+    newHeight = Math.max(30, Math.min(90, newHeight)); // 30vh ~ 90vh 제한
+    
+    setModalHeight(newHeight);
+  };
+
+  // 드래그 종료
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
+  // 마우스 이벤트 (데스크톱 지원)
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setStartY(e.clientY);
+    setStartHeight(modalHeight);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    
+    const currentY = e.clientY;
+    const deltaY = startY - currentY;
+    const deltaVh = (deltaY / window.innerHeight) * 100;
+    
+    let newHeight = startHeight + deltaVh;
+    newHeight = Math.max(30, Math.min(90, newHeight));
+    
+    setModalHeight(newHeight);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
 
 
   // 프로필 클릭 핸들러
@@ -194,13 +248,20 @@ export default function CommentModal({
           onClick={(e) => e.stopPropagation()}
           className="w-full bg-white rounded-t-[20px] flex flex-col relative min-h-0"
           style={{
-            maxHeight: "calc(var(--vh, 1vh) * 80)",
-            minHeight: "calc(var(--vh, 1vh) * 50)",
+            height: `${modalHeight}vh`,
             overflow: "hidden",
           }}
         >
           {/* 핸들바 */}
-          <div className="w-full flex justify-center py-2">
+          <div 
+            className="w-full flex justify-center py-2 cursor-grab active:cursor-grabbing"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+          >
             <div className="w-12 h-1 bg-gray-300 rounded-full" />
           </div>
           {/* 헤더 */}
