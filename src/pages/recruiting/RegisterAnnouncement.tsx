@@ -165,13 +165,15 @@ function RegisterAnnouncement() {
           <span className="pl-[7px] text-sub1 text-ct-black-200">
             공고사진 첨부
           </span>
-          <ImageUploadBox
-            className="w-[349px] h-[384px] rounded-[16px] bg-ct-gray-100"
-            textClassName="text-body2 text-ct-gray-300"
-            initialPreview={imageUrl}
-            onUploadSuccess={(url) => setImageUrl(url)}
-            S3Folder="recruit"
-          />
+          <div className="flex ct-center">
+            <ImageUploadBox
+              className="w-[349px] h-[384px] rounded-[16px] bg-ct-gray-100"
+              textClassName="text-body2 text-ct-gray-300"
+              initialPreview={imageUrl}
+              onUploadSuccess={(url) => setImageUrl(url)}
+              S3Folder="recruit"
+            />
+          </div>
         </div>
         <span className="mt-[25px] mb-[23.29px] text-body1 text-ct-gray-300">
           등록된 공고는 ‘마이페이지’, ‘공고 관리’ 탭에서 확인 가능합니다.
