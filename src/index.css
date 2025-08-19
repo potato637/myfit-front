@@ -28,6 +28,10 @@ body.modal-open {
   width: 100%;
 }
 
+.feed-scroll-root::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Webkit */
+}
+
 body.bottom-sheet-open {
   overflow: hidden;
   width: 100%;
@@ -105,5 +109,31 @@ body.bottom-sheet-open {
 @supports (-webkit-touch-callout: none) {
   .chat-tabs-spacer {
     height: calc(9px + env(safe-area-inset-top));
+  }
+}
+
+.feed-scroll-root {
+  /* dvh 지원 브라우저에서는 이게 우선 적용됨 */
+  height: 100dvh;
+
+  /* dvh 지원 안 하면 fallback */
+  height: calc(var(--vh, 1vh) * 100);
+
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+@supports (height: 100dvh) {
+  .feed-scroll-root {
+    height: 100dvh; /* 최신 브라우저에서는 dvh를 강제 */
+  }
+}
+
+@supports not (height: 100dvh) {
+  .feed-scroll-root {
+    height: calc(var(--vh, 1vh) * 100); /* 구버전 Safari fallback */
   }
 }

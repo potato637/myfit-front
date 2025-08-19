@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import FeedCard from "../../components/feed/FeedCard";
 import FixedHeader from "../../components/feed/FixedHeader";
@@ -12,11 +12,14 @@ import { useFeedMutations } from "../../hooks/feed/useFeedMutations";
 import { useFeedComments } from "../../hooks/feed/useFeedComments";
 import { useInfiniteScroll } from "../../hooks/common/useInfiniteScroll";
 import { FeedResponse } from "../../types/feed/feed";
+import useFix100vh from "../../hooks/useFix100vh";
 
 export default function FeedPage() {
+  useFix100vh();
   const [activePostId, setActivePostId] = useState<string | null>(null);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const feedRootRef = useRef<HTMLDivElement | null>(null);
 
   const {
     data,
@@ -52,18 +55,19 @@ export default function FeedPage() {
     [data?.pages]
   );
 
-  useEffect(() => {
-    if (activePostId) {
-      document.body.classList.add("modal-open");
-    } else {
-      document.body.classList.remove("modal-open");
-    }
-  }, [activePostId]);
 
   return (
     <BottomNavContainer showBottomNav={!activePostId}>
       <FixedHeader />
-      <div className="pt-[82px] pb-[89px] px-[10px] bg-ct-white min-h-screen flex flex-col gap-6">
+      <div
+        id="feed-scroll-root"
+        ref={feedRootRef}
+        className="feed-scroll-root px-[10px] bg-ct-white flex flex-col gap-6"
+        style={{
+          paddingTop: "calc(66px + env(safe-area-inset-top, 0px))",
+          paddingBottom: "calc(89px + env(safe-area-inset-bottom, 0px))",
+        }}
+      >
         {isLoading
           ? Array(5)
               .fill(0)
@@ -142,6 +146,7 @@ export default function FeedPage() {
           fetchNextPage={fetchCommentsNextPage}
           hasNextPage={hasCommentsNextPage}
           isFetchingNextPage={isFetchingCommentsNextPage}
+          freezeRootRef={feedRootRef}
         />
       )}
     </BottomNavContainer>

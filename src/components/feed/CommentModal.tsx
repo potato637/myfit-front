@@ -5,6 +5,8 @@ import CommentList from "../feed/CommentList";
 import { Comment } from "../../types/feed/comment";
 import CommentInputField, { CommentInputFieldRef } from "./CommentInputField";
 import { createPortal } from "react-dom";
+import useElementFreeze from "../../hooks/useElementFreeze";
+import useKeyboardInset from "../../hooks/useKeyboardInset";
 
 interface CommentModalProps {
   postId: string;
@@ -18,6 +20,7 @@ interface CommentModalProps {
   fetchNextPage?: () => void;
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
+  freezeRootRef?: React.RefObject<HTMLElement | null>;
 }
 
 export default function CommentModal({
@@ -31,13 +34,76 @@ export default function CommentModal({
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage,
+  freezeRootRef,
 }: CommentModalProps) {
   const navigate = useNavigate();
   const [closing, setClosing] = useState(false);
   const [replyToCommentId, setReplyToCommentId] = useState<number | null>(null);
   const [replyToUserName, setReplyToUserName] = useState<string>("");
+  const [keyboardActive, setKeyboardActive] = useState(false);
+  const [modalHeight, setModalHeight] = useState(70); // 초기 높이 70vh
+  const [isDragging, setIsDragging] = useState(false);
+  const [startY, setStartY] = useState(0);
+  const [startHeight, setStartHeight] = useState(70);
+
+  // 키보드가 활성화되면 freeze 해제, 아니면 모달 열려있는 동안 freeze
+  useElementFreeze(freezeRootRef ?? null, !closing && !keyboardActive);
+  
+  // 키보드 높이를 CSS 변수로 관리
+  useKeyboardInset();
 
   const handleRequestClose = () => setClosing(true);
+
+  // 드래그 시작
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsDragging(true);
+    setStartY(e.touches[0].clientY);
+    setStartHeight(modalHeight);
+  };
+
+  // 드래그 중
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging) return;
+    
+    const currentY = e.touches[0].clientY;
+    const deltaY = startY - currentY; // 위로 드래그하면 +, 아래로 드래그하면 -
+    const deltaVh = (deltaY / window.innerHeight) * 100; // px를 vh로 변환
+    
+    let newHeight = startHeight + deltaVh;
+    newHeight = Math.max(30, Math.min(90, newHeight)); // 30vh ~ 90vh 제한
+    
+    setModalHeight(newHeight);
+  };
+
+  // 드래그 종료
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
+  // 마우스 이벤트 (데스크톱 지원)
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setStartY(e.clientY);
+    setStartHeight(modalHeight);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    
+    const currentY = e.clientY;
+    const deltaY = startY - currentY;
+    const deltaVh = (deltaY / window.innerHeight) * 100;
+    
+    let newHeight = startHeight + deltaVh;
+    newHeight = Math.max(30, Math.min(90, newHeight));
+    
+    setModalHeight(newHeight);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
 
   // 프로필 클릭 핸들러
   const handleProfileClick = (userId: number) => {
@@ -50,6 +116,7 @@ export default function CommentModal({
   const modalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<CommentInputFieldRef>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -62,9 +129,6 @@ export default function CommentModal({
   useEffect(() => {
     const scrollableElement = modalRef.current;
     if (!scrollableElement) return;
-
-    // Prevent body scroll
-    document.body.style.overflow = "hidden";
 
     const handleWheel = (e: WheelEvent) => {
       const { deltaY } = e;
@@ -100,13 +164,17 @@ export default function CommentModal({
       }
     };
 
-    scrollableElement.addEventListener("wheel", handleWheel, { passive: false });
-    scrollableElement.addEventListener("touchstart", handleTouchStart, { passive: false });
-    scrollableElement.addEventListener("touchmove", handleTouchMove, { passive: false });
+    scrollableElement.addEventListener("wheel", handleWheel, {
+      passive: false,
+    });
+    scrollableElement.addEventListener("touchstart", handleTouchStart, {
+      passive: false,
+    });
+    scrollableElement.addEventListener("touchmove", handleTouchMove, {
+      passive: false,
+    });
 
     return () => {
-      // Restore body scroll
-      document.body.style.overflow = "auto";
       scrollableElement.removeEventListener("wheel", handleWheel);
       scrollableElement.removeEventListener("touchstart", handleTouchStart);
       scrollableElement.removeEventListener("touchmove", handleTouchMove);
@@ -146,6 +214,7 @@ export default function CommentModal({
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+
   return createPortal(
     <AnimatePresence>
       <motion.div
@@ -177,10 +246,22 @@ export default function CommentModal({
             if (closing) onClose();
           }}
           onClick={(e) => e.stopPropagation()}
-          className="w-full h-[75vh] max-h-[65vh] bg-white rounded-t-[20px] flex flex-col relative"
+          className="w-full bg-white rounded-t-[20px] flex flex-col relative min-h-0"
+          style={{
+            height: `${modalHeight}vh`,
+            overflow: "hidden",
+          }}
         >
           {/* 핸들바 */}
-          <div className="w-full flex justify-center py-2">
+          <div 
+            className="w-full flex justify-center py-2 cursor-grab active:cursor-grabbing"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+          >
             <div className="w-12 h-1 bg-gray-300 rounded-full" />
           </div>
           {/* 헤더 */}
@@ -196,16 +277,21 @@ export default function CommentModal({
           {/* 댓글 목록 */}
           <div
             ref={modalRef}
-            className="flex-1 overflow-y-auto px-4 pt-6 pb-24 scrollbar-hide"
+            className="flex-1 min-h-0 overflow-y-auto scrollbar-hide px-4 pt-6"
+            style={{
+              WebkitOverflowScrolling: "touch",
+              overscrollBehavior: "contain",
+              paddingBottom: keyboardActive 
+                ? "calc(80px + var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px) + 20px)" // 키보드 활성시 추가 여백
+                : "80px" // 키보드 비활성시 기본 여백 (safe-area 고려 안함)
+            }}
           >
             <CommentList
-              comments={comments}
+              comments={[...comments].reverse()}
               onReplyClick={(commentId, userName) => {
                 setReplyToCommentId(commentId);
                 setReplyToUserName(userName);
-                // 답글 대상 사용자명을 입력 필드에 미리 채우기
                 inputRef.current?.setText(`@${userName} `);
-                // 입력 필드에 포커스
                 inputRef.current?.focus();
               }}
               onDeleteClick={onCommentDelete}
@@ -227,9 +313,27 @@ export default function CommentModal({
             </div>
           </div>
 
-          <div className="bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 absolute bottom-0 left-0 right-0">
+          {/* 인풋바: 하단 고정 */}
+          <div
+            ref={footerRef}
+            className="absolute left-0 right-0 bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 z-[120]"
+            style={{
+              bottom: keyboardActive 
+                ? "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px) + 20px)" // 키보드 활성시 20px 더 높이
+                : "0px", // 키보드 비활성시 하단 고정 (safe-area 고려 안함)
+              transform: "translateZ(0)"
+            }}
+          >
             <CommentInputField
               ref={inputRef}
+              onFocus={() => {
+                setKeyboardActive(true);
+                const el = modalRef.current;
+                if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+              }}
+              onBlur={() => {
+                setKeyboardActive(false);
+              }}
               onSend={(text) => {
                 if (replyToCommentId) {
                   onReplyCreate(text, replyToCommentId);
@@ -239,6 +343,10 @@ export default function CommentModal({
                   onCommentCreate(text);
                 }
                 inputRef.current?.setText("");
+                requestAnimationFrame(() => {
+                  const el = modalRef.current;
+                  if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+                });
               }}
             />
             {replyToCommentId && (
@@ -257,6 +365,7 @@ export default function CommentModal({
               </div>
             )}
           </div>
+
         </motion.div>
       </motion.div>
     </AnimatePresence>,

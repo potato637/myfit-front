@@ -7,12 +7,14 @@ export interface CommentInputFieldRef {
 
 interface CommentInputFieldProps {
   onSend: (text: string) => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 const CommentInputField = forwardRef<
   CommentInputFieldRef,
   CommentInputFieldProps
->(({ onSend }, ref) => {
+>(({ onSend, onFocus, onBlur }, ref) => {
   const [text, setText] = useState("");
   const [isComposing, setIsComposing] = useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -21,6 +23,12 @@ const CommentInputField = forwardRef<
     if (text.trim() === "") return;
     onSend(text);
     setText("");
+  };
+
+  // 터치 이벤트도 함께 처리 (iOS 키보드 문제 해결)
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault(); // 기본 동작 방지
+    handleSubmit();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -44,7 +52,7 @@ const CommentInputField = forwardRef<
   }));
 
   return (
-    <div className="w-full bg-white px-0">
+    <div className="w-full bg-white px-0 relative z-[200]">
       <div className="relative">
         <input
           ref={inputRef}
@@ -53,15 +61,24 @@ const CommentInputField = forwardRef<
           onKeyDown={handleKeyDown}
           onCompositionStart={handleCompositionStart}
           onCompositionEnd={handleCompositionEnd}
+          onFocus={onFocus}
+          onBlur={onBlur}
           className="w-full h-[54px] rounded-[1000px] border border-ct-gray-200 pl-5 pr-12 text-sub2 placeholder:text-ct-gray-300"
           placeholder="메시지를 입력하세요"
         />
-        <img
-          src="/assets/chatting/sendbutton.svg"
-          alt="보내기"
-          className="absolute top-1/2 right-[10px] -translate-y-1/2 cursor-pointer"
+        <button
+          type="button"
           onClick={handleSubmit}
-        />
+          onTouchStart={handleTouchStart}
+          className="absolute top-1/2 right-[10px] -translate-y-1/2 cursor-pointer touch-manipulation"
+          style={{ WebkitTapHighlightColor: 'transparent' }}
+        >
+          <img
+            src="/assets/chatting/sendbutton.svg"
+            alt="보내기"
+            className="pointer-events-none"
+          />
+        </button>
       </div>
     </div>
   );
