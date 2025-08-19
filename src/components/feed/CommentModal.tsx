@@ -45,6 +45,7 @@ export default function CommentModal({
   const [replyToUserName, setReplyToUserName] = useState<string>("");
   const [keyboardActive, setKeyboardActive] = useState(false);
   const [modalHeight, setModalHeight] = useState(70); // 초기 높이 70vh
+  const [preKeyboardHeight, setPreKeyboardHeight] = useState<number | null>(null); // 키보드 활성화 전 높이 저장
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(0);
   const [startHeight, setStartHeight] = useState(70);
@@ -339,15 +340,29 @@ export default function CommentModal({
               ref={inputRef}
               onFocus={() => {
                 setKeyboardActive(true);
-                // 키보드 활성화 시 모달 높이를 safe area 내로 제한
-                if (modalHeight > 85) {
-                  setModalHeight(85);
+                
+                // 키보드 활성화 전 현재 높이 저장
+                setPreKeyboardHeight(modalHeight);
+                
+                // 키보드 활성화 시 모달 높이를 스마트하게 조정
+                // 현재 높이가 80vh보다 크면 적절한 크기로 줄이기
+                if (modalHeight > 80) {
+                  setModalHeight(75); // 키보드 공간을 고려한 적절한 크기
+                } else if (modalHeight > 75) {
+                  setModalHeight(70); // 약간 작은 모달도 조금 줄이기
                 }
+                
                 const el = modalRef.current;
                 if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
               }}
               onBlur={() => {
                 setKeyboardActive(false);
+                
+                // 키보드 비활성화 시 원래 높이로 복원
+                if (preKeyboardHeight !== null) {
+                  setModalHeight(preKeyboardHeight);
+                  setPreKeyboardHeight(null);
+                }
               }}
               onSend={(text) => {
                 if (replyToCommentId) {

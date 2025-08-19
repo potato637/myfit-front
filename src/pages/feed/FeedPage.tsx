@@ -63,7 +63,7 @@ export default function FeedPage() {
       <div
         id="feed-scroll-root"
         ref={feedRootRef}
-        className="feed-scroll-root px-[10px] bg-ct-white flex flex-col"
+        className="feed-scroll-root px-[10px] bg-ct-white flex flex-col gap-6"
         style={{
           paddingTop: "calc(66px + env(safe-area-inset-top, 0px))",
           paddingBottom: "calc(89px + env(safe-area-inset-bottom, 0px))",
@@ -72,47 +72,42 @@ export default function FeedPage() {
         {isLoading
           ? Array(5)
               .fill(0)
-              .map((_, idx) => (
-                <div key={idx} className={idx > 0 ? "mt-6" : ""}>
-                  <FeedCardSkeleton />
-                </div>
-              ))
-          : allFeeds.map((feed, idx) => (
-              <div key={feed.feed_id} className={idx > 0 ? "mt-6" : ""}>
-                <FeedCard
-                  user={{
-                    name: feed.user?.name || "알 수 없음",
-                    job: feed.user?.sector || "알 수 없음",
-                    profileImage: feed.user?.profile_img || "",
-                    serviceId: feed.user?.id,
-                  }}
-                  post={{
-                    images: feed.images || [],
-                    timeAgo: getTimeAgo(feed.created_at),
-                    likes: feed.heart || 0,
-                    comments: feed.comment_count || 0,
-                    content: feed.feed_text || "",
-                    tags: Array.isArray(feed.hashtags)
-                      ? feed.hashtags.map((tag: string) => tag.replace("#", ""))
-                      : [],
-                    isLiked: feed.is_liked || false,
-                  }}
-                  onCommentClick={() => setActivePostId(feed.feed_id.toString())}
-                  onLikeClick={() =>
-                    handleLikeToggle(feed.feed_id, feed.is_liked)
+              .map((_, idx) => <FeedCardSkeleton key={idx} />)
+          : allFeeds.map((feed) => (
+              <FeedCard
+                key={feed.feed_id}
+                user={{
+                  name: feed.user?.name || "알 수 없음",
+                  job: feed.user?.sector || "알 수 없음",
+                  profileImage: feed.user?.profile_img || "",
+                  serviceId: feed.user?.id,
+                }}
+                post={{
+                  images: feed.images || [],
+                  timeAgo: getTimeAgo(feed.created_at),
+                  likes: feed.heart || 0,
+                  comments: feed.comment_count || 0,
+                  content: feed.feed_text || "",
+                  tags: Array.isArray(feed.hashtags)
+                    ? feed.hashtags.map((tag: string) => tag.replace("#", ""))
+                    : [],
+                  isLiked: feed.is_liked || false,
+                }}
+                onCommentClick={() => setActivePostId(feed.feed_id.toString())}
+                onLikeClick={() =>
+                  handleLikeToggle(feed.feed_id, feed.is_liked)
+                }
+                onProfileClick={() => {
+                  if (feed.user?.id) {
+                    // 내가 작성한 피드라면 마이페이지로, 다른 사람 피드라면 해당 사용자 프로필로 이동
+                    const isMyFeed = feed.user.id === user?.id;
+                    const targetPath = isMyFeed
+                      ? "/mypage"
+                      : `/feed/profile/${feed.user.id}`;
+                    navigate(targetPath);
                   }
-                  onProfileClick={() => {
-                    if (feed.user?.id) {
-                      // 내가 작성한 피드라면 마이페이지로, 다른 사람 피드라면 해당 사용자 프로필로 이동
-                      const isMyFeed = feed.user.id === user?.id;
-                      const targetPath = isMyFeed
-                        ? "/mypage"
-                        : `/feed/profile/${feed.user.id}`;
-                      navigate(targetPath);
-                    }
-                  }}
-                />
-              </div>
+                }}
+              />
             ))}
 
         {/* 무한스크롤 트리거 */}
