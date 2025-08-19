@@ -73,7 +73,9 @@ export default function CommentModal({
     const deltaVh = (deltaY / window.innerHeight) * 100; // px를 vh로 변환
     
     let newHeight = startHeight + deltaVh;
-    newHeight = Math.max(30, Math.min(90, newHeight)); // 30vh ~ 90vh 제한
+    // 키보드 활성화 시 safe area를 고려한 최대 높이 제한
+    const maxHeight = keyboardActive ? 85 : 90; // 키보드 활성시 85vh로 제한
+    newHeight = Math.max(30, Math.min(maxHeight, newHeight));
     
     setModalHeight(newHeight);
   };
@@ -98,7 +100,9 @@ export default function CommentModal({
     const deltaVh = (deltaY / window.innerHeight) * 100;
     
     let newHeight = startHeight + deltaVh;
-    newHeight = Math.max(30, Math.min(90, newHeight));
+    // 키보드 활성화 시 safe area를 고려한 최대 높이 제한
+    const maxHeight = keyboardActive ? 85 : 90; // 키보드 활성시 85vh로 제한
+    newHeight = Math.max(30, Math.min(maxHeight, newHeight));
     
     setModalHeight(newHeight);
   };
@@ -335,6 +339,10 @@ export default function CommentModal({
               ref={inputRef}
               onFocus={() => {
                 setKeyboardActive(true);
+                // 키보드 활성화 시 모달 높이를 safe area 내로 제한
+                if (modalHeight > 85) {
+                  setModalHeight(85);
+                }
                 const el = modalRef.current;
                 if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
               }}
