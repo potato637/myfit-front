@@ -70,7 +70,7 @@ function Searching() {
 
             {/* 최신 순 및 필터 */}
             <div className="w-full ct-center pb-[10px]">
-              <div className="w-[340px] flex justify-between items-center">
+              <div className="w-[90%] flex justify-between items-center">
                 <div className="relative">
                   <select
                     value={sortOption}
@@ -87,7 +87,9 @@ function Searching() {
                   className="w-[60px] h-[25px] ct-center bg-ct-main-blue-100 rounded-[5px]"
                   onClick={() => navigate("/searching/filter")}
                 >
-                  <span className="text-ct-white text-body1 mr-[6px]">필터</span>
+                  <span className="text-ct-white text-body1 mr-[6px]">
+                    필터
+                  </span>
                   <img src="/assets/searching/filter.svg" alt="필터 아이콘" />
                 </div>
               </div>
