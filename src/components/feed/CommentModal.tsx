@@ -281,7 +281,9 @@ export default function CommentModal({
             style={{
               WebkitOverflowScrolling: "touch",
               overscrollBehavior: "contain",
-              paddingBottom: "calc(80px + var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px))"
+              paddingBottom: keyboardActive 
+                ? "calc(80px + var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px) + 20px)" // 키보드 활성시 추가 여백
+                : "80px" // 키보드 비활성시 기본 여백 (safe-area 고려 안함)
             }}
           >
             <CommentList
@@ -316,7 +318,9 @@ export default function CommentModal({
             ref={footerRef}
             className="absolute left-0 right-0 bg-white px-4 pt-2 pb-4 space-y-2 border-t border-gray-200 z-[120]"
             style={{
-              bottom: "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px))",
+              bottom: keyboardActive 
+                ? "calc(var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px) + 20px)" // 키보드 활성시 20px 더 높이
+                : "0px", // 키보드 비활성시 하단 고정 (safe-area 고려 안함)
               transform: "translateZ(0)"
             }}
           >
