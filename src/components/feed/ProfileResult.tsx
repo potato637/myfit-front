@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import ProfileResultSkeleton from "../skeletons/common/ProfileResultSkeleton";
 import { searchUsers } from "../../apis/feed";
 import { SearchUser } from "../../types/feed/search";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface Props {
   keyword: string;
@@ -108,6 +109,16 @@ const ProfileResult = ({ keyword }: Props) => {
     );
   }
 
+  const { user: currentUser } = useAuth();
+
+  const handleClickUser = (user: SearchUser) => {
+    if (user.user_id !== currentUser?.id) {
+      navigate(`/feed/profile/${user.user_id}?tab=feed`);
+    } else {
+      navigate("/mypage");
+    }
+  };
+
   return (
     <ul className="mt-[6px] flex flex-col gap-[20px]">
       {allUsers.length > 0 ? (
@@ -116,10 +127,7 @@ const ProfileResult = ({ keyword }: Props) => {
             <li
               key={user.user_id}
               className="ml-2 flex items-center gap-4 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
-              onClick={() => {
-                console.log("프로필 검색에서 사용자 클릭:", user);
-                navigate(`/feed/profile/${user.user_id}?tab=feed`);
-              }}
+              onClick={() => handleClickUser(user)}
             >
               <img
                 src={user.profile_img}
