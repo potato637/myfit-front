@@ -6,10 +6,18 @@ export default function useKeyboardInset() {
     const vv = window.visualViewport;
 
     const compute = () => {
-      // iOS: 키보드가 뜨면 visualViewport.height가 줄고 offsetTop이 생김
-      const inset = vv
-        ? Math.max(0, window.innerHeight - vv.height - vv.offsetTop)
-        : 0;
+      let inset = 0;
+      
+      if (vv) {
+        // iOS: 키보드가 뜨면 visualViewport.height가 줄고 offsetTop이 생김
+        inset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      } else {
+        // visualViewport 미지원 시 window.innerHeight 변화로 추정
+        const currentHeight = window.innerHeight;
+        const initialHeight = window.screen.height;
+        inset = Math.max(0, initialHeight - currentHeight - 100); // 상단바 고려
+      }
+      
       document.documentElement.style.setProperty(
         "--keyboard-inset",
         `${inset}px`
@@ -27,9 +35,11 @@ export default function useKeyboardInset() {
     // 처음 포커스 시 iOS가 약간 늦게 값을 주는 문제 방지 (딜레이 재계산)
     const focusIn = () => {
       compute();
-      // 애니메이션 끝나고 한 번 더
+      // 더 촘촘한 재계산으로 첫 키보드 활성화 대응
       setTimeout(compute, 50);
-      setTimeout(compute, 250);
+      setTimeout(compute, 150);
+      setTimeout(compute, 300);
+      setTimeout(compute, 500);  // 애니메이션 완전 완료 후
     };
     const focusOut = () => {
       // 키보드 내려가면 0으로 수렴
