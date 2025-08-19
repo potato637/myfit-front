@@ -11,8 +11,7 @@ function RecruitTopBarContainer({ TopBarContent, children }: Props) {
   return (
     <>
       <RecruitTopBar>{TopBarContent}</RecruitTopBar>
-      {/* 헤더(118px) + safe-area 만큼 스페이서 */}
-      <div className="h-[calc(118px+env(safe-area-inset-top))]" />
+      <div className="h-[calc(135px+env(safe-area-inset-top))]" />
       {children}
     </>
   );
