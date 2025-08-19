@@ -64,7 +64,7 @@ export default function FeedPage() {
         ref={feedRootRef}
         className="feed-scroll-root px-[10px] bg-ct-white flex flex-col gap-6"
         style={{
-          paddingTop: "calc(82px + env(safe-area-inset-top, 0px))",
+          paddingTop: "calc(66px + env(safe-area-inset-top, 0px))",
           paddingBottom: "calc(89px + env(safe-area-inset-bottom, 0px))",
         }}
       >
