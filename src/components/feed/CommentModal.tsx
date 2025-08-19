@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import CommentList from "../feed/CommentList";
 import { Comment } from "../../types/feed/comment";
 import CommentInputField, { CommentInputFieldRef } from "./CommentInputField";
+import CommentSkeleton from "../skeletons/feed/CommentSkeleton";
 import { createPortal } from "react-dom";
 import useElementFreeze from "../../hooks/useElementFreeze";
 import useKeyboardInset from "../../hooks/useKeyboardInset";
@@ -20,6 +21,7 @@ interface CommentModalProps {
   fetchNextPage?: () => void;
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
+  isLoading?: boolean;
   freezeRootRef?: React.RefObject<HTMLElement | null>;
 }
 
@@ -34,6 +36,7 @@ export default function CommentModal({
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage,
+  isLoading,
   freezeRootRef,
 }: CommentModalProps) {
   const navigate = useNavigate();
@@ -286,19 +289,23 @@ export default function CommentModal({
                 : "80px" // 키보드 비활성시 기본 여백 (safe-area 고려 안함)
             }}
           >
-            <CommentList
-              comments={[...comments].reverse()}
-              onReplyClick={(commentId, userName) => {
-                setReplyToCommentId(commentId);
-                setReplyToUserName(userName);
-                inputRef.current?.setText(`@${userName} `);
-                inputRef.current?.focus();
-              }}
-              onDeleteClick={onCommentDelete}
-              onProfileClick={handleProfileClick}
-              currentUserId={currentUserId}
-              postOwnerId={postOwnerId}
-            />
+            {isLoading ? (
+              <CommentSkeleton />
+            ) : (
+              <CommentList
+                comments={[...comments].reverse()}
+                onReplyClick={(commentId, userName) => {
+                  setReplyToCommentId(commentId);
+                  setReplyToUserName(userName);
+                  inputRef.current?.setText(`@${userName} `);
+                  inputRef.current?.focus();
+                }}
+                onDeleteClick={onCommentDelete}
+                onProfileClick={handleProfileClick}
+                currentUserId={currentUserId}
+                postOwnerId={postOwnerId}
+              />
+            )}
 
             {/* 무한스크롤 트리거 */}
             <div

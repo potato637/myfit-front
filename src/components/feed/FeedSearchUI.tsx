@@ -11,9 +11,7 @@ function FeedSearchUI() {
   const [activeTab, setActiveTab] = useState<TabType | null>("프로필");
 
   const handleSearch = () => {
-    if (searchText.trim()) {
-      setSearchText("");
-    }
+    // 검색 아이콘 클릭 시 입력값을 유지
   };
 
   const renderTabContent = () => {
