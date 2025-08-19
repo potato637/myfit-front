@@ -42,6 +42,7 @@ export default function FeedPage() {
     fetchNextPage: fetchCommentsNextPage,
     hasNextPage: hasCommentsNextPage,
     isFetchingNextPage: isFetchingCommentsNextPage,
+    isLoading: isCommentsLoading,
   } = useFeedComments({ activePostId });
 
   const { loadMoreRef } = useInfiniteScroll({
@@ -146,6 +147,7 @@ export default function FeedPage() {
           fetchNextPage={fetchCommentsNextPage}
           hasNextPage={hasCommentsNextPage}
           isFetchingNextPage={isFetchingCommentsNextPage}
+          isLoading={isCommentsLoading}
           freezeRootRef={feedRootRef}
         />
       )}
