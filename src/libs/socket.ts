@@ -3,6 +3,7 @@ import { io } from "socket.io-client";
 const socket = io("https://myfit.my", {
   transports: ["websocket"],
   withCredentials: true,
+  autoConnect: false, // 자동 연결 비활성화
 });
 
 socket.on("connect", () => {
