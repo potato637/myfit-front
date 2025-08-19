@@ -25,6 +25,12 @@ const CommentInputField = forwardRef<
     setText("");
   };
 
+  // 터치 이벤트도 함께 처리 (iOS 키보드 문제 해결)
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault(); // 기본 동작 방지
+    handleSubmit();
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !isComposing) {
       e.preventDefault();
@@ -60,12 +66,19 @@ const CommentInputField = forwardRef<
           className="w-full h-[54px] rounded-[1000px] border border-ct-gray-200 pl-5 pr-12 text-sub2 placeholder:text-ct-gray-300"
           placeholder="메시지를 입력하세요"
         />
-        <img
-          src="/assets/chatting/sendbutton.svg"
-          alt="보내기"
-          className="absolute top-1/2 right-[10px] -translate-y-1/2 cursor-pointer"
+        <button
+          type="button"
           onClick={handleSubmit}
-        />
+          onTouchStart={handleTouchStart}
+          className="absolute top-1/2 right-[10px] -translate-y-1/2 cursor-pointer touch-manipulation"
+          style={{ WebkitTapHighlightColor: 'transparent' }}
+        >
+          <img
+            src="/assets/chatting/sendbutton.svg"
+            alt="보내기"
+            className="pointer-events-none"
+          />
+        </button>
       </div>
     </div>
   );
