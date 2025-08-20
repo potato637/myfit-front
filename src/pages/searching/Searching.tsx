@@ -14,13 +14,13 @@ function Searching() {
   const navigate = useNavigate();
 
   // Use the search hook
-  const { data } = useSectorBaseSearching({
+  const { data, isLoading } = useSectorBaseSearching({
     high_sector: selectedCategory,
     low_sector: selectedSkill,
     sort: sortOption,
   });
 
-  const cardsData = data?.pages.flatMap((page) => page.result.cards);
+  const cardsData = data?.pages.flatMap((page) => page.result.cards) || [];
 
   return (
     <BottomNavContainer>
@@ -99,9 +99,15 @@ function Searching() {
       >
         {/* 검색 결과 - 개선된 카드 간격 적용 */}
         <div className="w-full ct-center flex-col space-y-[40px] pb-[80px]">
-          {cardsData?.map((card) => (
-            <SearchingSwipeItem key={card.card_id} card={card} />
-          ))}
+          {cardsData.length === 0 ? (
+            <div className="text-center py-8 text-sub2 text-ct-gray-200">
+              현재 등록된 카드가 없습니다.
+            </div>
+          ) : (
+            cardsData.map((card) => (
+              <SearchingSwipeItem key={card.card_id} card={card} />
+            ))
+          )}
         </div>
       </SearchingTopBarContainer>
     </BottomNavContainer>
