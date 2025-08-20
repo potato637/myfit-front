@@ -23,7 +23,7 @@ function Introduction({
   }
 
   return (
-    <div className="w-[335px]">
+    <div className="w-[90%]">
       <img
         src="/assets/profile/setting.svg"
         alt="설정"
@@ -31,39 +31,41 @@ function Introduction({
         onClick={handleSettingClick}
       />
       <div className="w-full flex justify-between items-center mt-4 h-[80px]">
-        <img
-          src={profile?.result.service.profile_img}
-          alt="프로필 이미지"
-          className="w-[70px] h-[70px] rounded-full"
-          onClick={() => setEditProfile(true)}
-        />
-        <div className="w-[150px] h-full flex flex-col justify-between">
-          <div className="h-[20px] flex items-center gap-1">
-            <span className="text-sub1 text-ct-black-100">
-              {profile?.result.user.name}
-            </span>
-            {profile?.result.user.inc_AuthN_file && (
-              <img
-                src="/assets/profile/badge.svg"
-                alt="인증"
-                className="w-[21px] h-[21px]"
-              />
-            )}
-          </div>
-          <div className="flex flex-col h-[50px]">
-            <span className="text-body1 text-ct-gray-300">
-              {`${profile?.result.service.userArea.high_area} ${profile?.result.service.userArea.low_area}`}
-            </span>
-            <span className="text-body1 text-ct-sub-blue-300">
-              {profile?.result.user.division === "personal"
-                ? profile?.result.service.low_sector
-                : profile?.result.user.team_division}
-            </span>
-            <span className="text-body1 text-ct-black-100 whitespace-nowrap">
-              {profile?.result.user.division === "personal"
-                ? `${profile?.result.user.Highest_grade} ${profile?.result.user.grade_status}`
-                : profile?.result.user.industry}
-            </span>
+        <div className="flex gap-[15px] items-center">
+          <img
+            src={profile?.result.service.profile_img}
+            alt="프로필 이미지"
+            className="w-[80px] h-[80px] rounded-full"
+            onClick={() => setEditProfile(true)}
+          />
+          <div className="w-[150px] h-full flex flex-col justify-between">
+            <div className="h-[20px] flex items-center gap-1">
+              <span className="text-sub1 text-ct-black-100">
+                {profile?.result.user.name}
+              </span>
+              {profile?.result.user.inc_AuthN_file && (
+                <img
+                  src="/assets/profile/badge.svg"
+                  alt="인증"
+                  className="w-[21px] h-[21px]"
+                />
+              )}
+            </div>
+            <div className="flex flex-col h-[50px]">
+              <span className="text-body1 text-ct-gray-300">
+                {`${profile?.result.service.userArea.high_area} ${profile?.result.service.userArea.low_area}`}
+              </span>
+              <span className="text-body1 text-ct-sub-blue-300">
+                {profile?.result.user.division === "personal"
+                  ? profile?.result.service.low_sector
+                  : profile?.result.user.team_division}
+              </span>
+              <span className="text-body1 text-ct-black-100 whitespace-nowrap">
+                {profile?.result.user.division === "personal"
+                  ? `${profile?.result.user.Highest_grade} ${profile?.result.user.grade_status}`
+                  : profile?.result.user.industry}
+              </span>
+            </div>
           </div>
         </div>
         <div className="w-[90px] h-full flex flex-col justify-between">
