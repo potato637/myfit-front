@@ -48,6 +48,14 @@ function CardKeyword() {
           cardImageUrl: location.state.cardImageUrl, // 이미지 정보도 함께 전달
         },
       });
+    } else if (location.state?.from === "filter") {
+      // 필터에서 온 경우, 선택한 키워드와 함께 이전 페이지로 이동
+      navigate("/searching/filter", {
+        state: {
+          ...location.state,
+          selectedKeywords: finalKeywords,
+        },
+      });
     } else {
       // 다른 경로에서 온 경우 기본 처리
       navigate(-1);

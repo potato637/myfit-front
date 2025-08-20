@@ -3,7 +3,6 @@ import BottomNavContainer from "../../components/layouts/BottomNavContainer";
 import { useLocation, useNavigate } from "react-router-dom";
 import PersonalInputField from "../../components/setting/PersonalInputField";
 import { useState, useEffect } from "react";
-import { z } from "zod";
 import { useModal } from "../../contexts/ui/modalContext";
 import { useCountCard } from "../../hooks/searchingQueries";
 import { useFilter } from "../../contexts/filterContext";
@@ -22,42 +21,53 @@ function TopBarContent() {
 function Filter() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { 
-    filterState, 
-    updateRegion, 
-    updateEmploymentStatus, 
-    updateKeywords, 
-    updateKeywordInput, 
-    updateJobPreference 
+  const {
+    filterState,
+    updateRegion,
+    updateEmploymentStatus,
+    updateKeywords,
+    updateJobPreference,
   } = useFilter();
-  
+
   const [keywordError, setKeywordError] = useState("");
   const [debouncedKeyword, setDebouncedKeyword] = useState<string[]>([]);
 
   useEffect(() => {
     if (!location.state) return;
+
+    // Handle job sector updates
     const s = location.state as {
       high_sector?: string | string[] | null;
       low_sector?: string | string[] | null;
       high_sector_list?: string[];
       low_sector_list?: string[];
+      selectedKeywords?: string[];
     };
-    
+
+    // Update job sectors if they exist in location state
     if (s.high_sector !== undefined && s.high_sector !== null) {
-      const highSector = Array.isArray(s.high_sector) ? s.high_sector[0] ?? "" : s.high_sector;
-      const lowSector = s.low_sector !== undefined && s.low_sector !== null
-        ? Array.isArray(s.low_sector) ? s.low_sector[0] ?? "" : s.low_sector
-        : Array.isArray(s.low_sector_list) ? s.low_sector_list[0] ?? "" : "";
-      
+      const highSector = Array.isArray(s.high_sector)
+        ? s.high_sector[0] ?? ""
+        : s.high_sector;
+      const lowSector =
+        s.low_sector !== undefined && s.low_sector !== null
+          ? Array.isArray(s.low_sector)
+            ? s.low_sector[0] ?? ""
+            : s.low_sector
+          : Array.isArray(s.low_sector_list)
+          ? s.low_sector_list[0] ?? ""
+          : "";
+
       updateJobPreference(highSector, lowSector);
     }
-  }, [location.state]);
 
-  const keywordSchema = z.object({
-    keywords: z
-      .array(z.string().min(1))
-      .max(3, "키워드는 최대 3개까지 입력 가능합니다"),
-  });
+    // Update keywords if they exist in location state (coming back from CardKeyword)
+    if (s.selectedKeywords) {
+      updateKeywords(s.selectedKeywords);
+      // Clear any existing keyword errors
+      setKeywordError("");
+    }
+  }, [location.state]);
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -73,31 +83,13 @@ function Filter() {
     keywords: debouncedKeyword,
   });
 
-  const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    updateKeywordInput(value);
-    const keywords = value
-      .split(",")
-      .map((k) => k.trim())
-      .filter((k) => k.length > 0);
-    updateKeywords(keywords);
-    const result = keywordSchema.safeParse({ keywords });
-    if (!result.success) {
-      const firstError =
-        result.error.issues[0]?.message || "유효하지 않은 키워드입니다";
-      setKeywordError(firstError);
-    } else {
-      setKeywordError("");
-    }
-  };
-
   const { openModal, closeModal } = useModal();
 
   return (
     <BottomNavContainer>
       <TopBarContainer TopBarContent={<TopBarContent />}>
         <div className="w-full flex flex-col flex-1 items-center justify-between">
-          <div className="mt-[50px] ct-center flex-col w-[330px] gap-[20px]">
+          <div className="mt-[50px] ct-center flex-col w-[85%] gap-[20px]">
             <PersonalInputField
               label="주 활동 지역"
               value={filterState.region}
@@ -130,13 +122,34 @@ function Filter() {
             />
             <div className="flex flex-col gap-[11px] w-full mb-[10px]">
               <label className="ml-1 text-sub1 text-ct-black-200">키워드</label>
-              <input
-                type="text"
-                value={filterState.keywordInput}
-                onChange={handleKeywordChange}
-                placeholder="최대 3개 ( ,로 구분됩니다. )"
-                className="w-full flex text-sub2 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100"
-              />
+              <div
+                onClick={() => {
+                  navigate("/mypage/keyword-selector", {
+                    state: {
+                      from: "filter",
+                      selectedKeywords: filterState.keywords,
+                    },
+                  });
+                }}
+                className="w-full flex items-center text-sub2 placeholder:text-ct-gray-300 text-ct-black-200 font-Pretendard min-h-[44px] rounded-[10px] pl-[26px] bg-ct-gray-100 cursor-pointer"
+              >
+                {filterState.keywords.length > 0 ? (
+                  <div className="flex flex-wrap gap-2 py-2 justify-start">
+                    {filterState.keywords.map((keyword, index) => (
+                      <span
+                        key={index}
+                        className="bg-ct-main-blue-50 text-ct-main-blue-200 rounded-full text-body2"
+                      >
+                        {keyword}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <span className="text-ct-gray-300">
+                    키워드를 선택해주세요 (최대 3개)
+                  </span>
+                )}
+              </div>
               {keywordError && (
                 <span className="text-body2 text-ct-red-100 pl-[13px]">
                   {keywordError}
