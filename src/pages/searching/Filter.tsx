@@ -177,7 +177,7 @@ function Filter() {
             </div>
           </div>
           <div
-            className="mb-[30px] px-[40px] py-[10px] rounded-[100px] border-[1px] border-ct-main-blue-200 cursor-pointer"
+            className="mb-[30px] px-[40px] py-[10px] rounded-[100px] border-[1px] border-ct-main-blue-200 cursor-pointer w-[80%] text-center"
             onClick={() => {
               if (!keywordError) {
                 navigate("/searching/filter/result", {
