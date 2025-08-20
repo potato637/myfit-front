@@ -85,7 +85,7 @@ function NetworkingBar() {
   };
 
   return (
-    <div className="w-[335px] flex items-center justify-between mt-[20px] gap-2">
+    <div className="w-[90%] flex items-center justify-between mt-[20px] gap-2">
       {networkStatus === "CONNECTED" ? (
         <div className="flex-[2] h-[29px] ct-center">
           <div

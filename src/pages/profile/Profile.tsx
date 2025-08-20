@@ -46,12 +46,12 @@ function ProfileItem({
         }`}
       >
         <Introduction setEditProfile={setEditProfile} />
-        <div className="mt-[20px] w-[335px]">
+        <div className="mt-[20px] w-[90%]">
           <span className="text-ct-black-100 text-body1">
             {profile?.result.user.one_line_profile}
           </span>
         </div>
-        <div className="w-[335px]">
+        <div className="w-[90%] mt-4">
           {profile?.result.user.link && (
             <CompanyLink link={profile?.result.user.link} />
           )}

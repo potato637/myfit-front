@@ -25,7 +25,7 @@ function Networking() {
     <TopBarContainer>
       <BottomNavContainer>
         <div className="w-full h-full">
-          <div className="w-[349px] mx-auto border-b-[1px] border-ct-gray-200 relative mt-[15px]">
+          <div className="w-[90%] mx-auto border-b-[1px] border-ct-gray-200 relative mt-[15px]">
             <input
               placeholder="네이밍, 회사, 직무를 검색해보세요!"
               className="w-full pl-[12px] pr-[30px] py-[7px] placeholder:text-body2 placeholder:text-ct-gray-200 focus:outline-none"
@@ -108,7 +108,7 @@ function Networking() {
               )}
             </div>
           </div>
-          <div className="w-[350px] mx-auto mt-[30px]">
+          <div className="w-[90%] mx-auto mt-[30px]">
             <NetworkingResult
               selectedTab={selectedTab}
               searchTerm={debouncedSearchTerm}
