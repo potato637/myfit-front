@@ -5,6 +5,7 @@ import SearchingSwipeItem from "../../components/searching/SearchingSwipeItem";
 import { useNavigate } from "react-router-dom";
 import { useSectorBaseSearching } from "../../hooks/searchingQueries";
 import SearchingTopBarContainer from "../../components/searching/SearchingTopBarContainer";
+import SwipeItemSkeleton from "../../components/skeletons/searching/SwipeItemSkeleton";
 
 function Searching() {
   const [selectedCategory, setSelectedCategory] = useState("기획/PM");
@@ -99,7 +100,11 @@ function Searching() {
       >
         {/* 검색 결과 - 개선된 카드 간격 적용 */}
         <div className="w-full ct-center flex-col space-y-[40px] pb-[80px]">
-          {cardsData.length === 0 ? (
+          {isLoading ? (
+            Array.from({ length: 3 }).map((_, idx) => (
+              <SwipeItemSkeleton key={idx} />
+            ))
+          ) : cardsData.length === 0 ? (
             <div className="text-center py-8 text-sub2 text-ct-gray-200">
               현재 등록된 카드가 없습니다.
             </div>
