@@ -22,15 +22,15 @@ function TopBarContent() {
 function Filter() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { 
-    filterState, 
-    updateRegion, 
-    updateEmploymentStatus, 
-    updateKeywords, 
-    updateKeywordInput, 
-    updateJobPreference 
+  const {
+    filterState,
+    updateRegion,
+    updateEmploymentStatus,
+    updateKeywords,
+    updateKeywordInput,
+    updateJobPreference,
   } = useFilter();
-  
+
   const [keywordError, setKeywordError] = useState("");
   const [debouncedKeyword, setDebouncedKeyword] = useState<string[]>([]);
 
@@ -42,13 +42,20 @@ function Filter() {
       high_sector_list?: string[];
       low_sector_list?: string[];
     };
-    
+
     if (s.high_sector !== undefined && s.high_sector !== null) {
-      const highSector = Array.isArray(s.high_sector) ? s.high_sector[0] ?? "" : s.high_sector;
-      const lowSector = s.low_sector !== undefined && s.low_sector !== null
-        ? Array.isArray(s.low_sector) ? s.low_sector[0] ?? "" : s.low_sector
-        : Array.isArray(s.low_sector_list) ? s.low_sector_list[0] ?? "" : "";
-      
+      const highSector = Array.isArray(s.high_sector)
+        ? s.high_sector[0] ?? ""
+        : s.high_sector;
+      const lowSector =
+        s.low_sector !== undefined && s.low_sector !== null
+          ? Array.isArray(s.low_sector)
+            ? s.low_sector[0] ?? ""
+            : s.low_sector
+          : Array.isArray(s.low_sector_list)
+          ? s.low_sector_list[0] ?? ""
+          : "";
+
       updateJobPreference(highSector, lowSector);
     }
   }, [location.state]);
@@ -97,7 +104,7 @@ function Filter() {
     <BottomNavContainer>
       <TopBarContainer TopBarContent={<TopBarContent />}>
         <div className="w-full flex flex-col flex-1 items-center justify-between">
-          <div className="mt-[50px] ct-center flex-col w-[330px] gap-[20px]">
+          <div className="mt-[50px] ct-center flex-col w-[85%] gap-[20px]">
             <PersonalInputField
               label="주 활동 지역"
               value={filterState.region}
