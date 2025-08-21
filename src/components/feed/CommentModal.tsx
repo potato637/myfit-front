@@ -96,14 +96,19 @@ export default function CommentModal({
 
   // 스냅포인트로 이동하는 함수
   const snapToClosestPoint = (currentHeight: number, velocity: number) => {
+    console.log('Snap decision:', { currentHeight, velocity });
+    
     // 빠른 아래 스와이프 감지 (velocity가 양수면 아래로 스와이프)
-    if (velocity > 500) {
+    // 임계값을 낮춰서 더 민감하게 반응
+    if (velocity > 0.3) {
+      console.log('Fast downward swipe detected, closing modal');
       handleRequestClose();
       return;
     }
     
     // 빠른 위 스와이프는 최대 높이로
-    if (velocity < -500) {
+    if (velocity < -0.3) {
+      console.log('Fast upward swipe detected, expanding modal');
       const maxHeight = keyboardActive ? SNAP_POINTS.LARGE : 90;
       setModalHeight(maxHeight);
       return;
@@ -116,7 +121,6 @@ export default function CommentModal({
     }
     
     // 가장 가까운 스냅포인트 찾기
-    const maxHeight = keyboardActive ? SNAP_POINTS.LARGE : 90;
     const snapPoints = [SNAP_POINTS.MEDIUM, SNAP_POINTS.LARGE];
     if (!keyboardActive) {
       snapPoints.push(90);
