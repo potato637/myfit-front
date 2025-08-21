@@ -1,5 +1,6 @@
 import { SectorBaseSearchingItem } from "../../apis/searchingAPI";
 import SearchingSwipeItem from "./SearchingSwipeItem";
+import SwipeItemSkeleton from "../skeletons/searching/SwipeItemSkeleton";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import "swiper/css";
@@ -59,6 +60,17 @@ function SwipeContainer({
       return '<span class="' + className + '"></span>';
     },
   };
+
+  // 로딩 중이고 카드가 없을 때 skeleton 표시
+  if (isLoading && cards.length === 0) {
+    return (
+      <div className="w-full flex flex-col items-center">
+        <div className="w-[320px] p-[10px]">
+          <SwipeItemSkeleton mode="horizontal" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full flex flex-col items-center">
