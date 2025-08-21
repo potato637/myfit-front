@@ -49,6 +49,15 @@ export default function CommentModal({
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(0);
   const [startHeight, setStartHeight] = useState(70);
+  const [dragStartTime, setDragStartTime] = useState(0);
+  const [lastMoveY, setLastMoveY] = useState(0);
+  
+  // 스냅포인트 정의
+  const SNAP_POINTS = {
+    MEDIUM: 60,  // 중간 높이
+    LARGE: 85,   // 큰 높이 (키보드 비활성화시 90)
+    CLOSE_THRESHOLD: 40  // 이 높이 이하로 내려가면 모달 닫기
+  };
 
   // 키보드가 활성화되면 freeze 해제, 아니면 모달 열려있는 동안 freeze
   useElementFreeze(freezeRootRef ?? null, !closing && !keyboardActive);
@@ -62,7 +71,9 @@ export default function CommentModal({
   const handleTouchStart = (e: React.TouchEvent) => {
     setIsDragging(true);
     setStartY(e.touches[0].clientY);
+    setLastMoveY(e.touches[0].clientY);
     setStartHeight(modalHeight);
+    setDragStartTime(Date.now());
   };
 
   // 드래그 중
@@ -70,19 +81,71 @@ export default function CommentModal({
     if (!isDragging) return;
     
     const currentY = e.touches[0].clientY;
+    setLastMoveY(currentY);
+    
     const deltaY = startY - currentY; // 위로 드래그하면 +, 아래로 드래그하면 -
     const deltaVh = (deltaY / window.innerHeight) * 100; // px를 vh로 변환
     
     let newHeight = startHeight + deltaVh;
     // 키보드 활성화 시 safe area를 고려한 최대 높이 제한
-    const maxHeight = keyboardActive ? 85 : 90; // 키보드 활성시 85vh로 제한
-    newHeight = Math.max(30, Math.min(maxHeight, newHeight));
+    const maxHeight = keyboardActive ? SNAP_POINTS.LARGE : 90;
+    newHeight = Math.max(20, Math.min(maxHeight, newHeight)); // 최소값을 20으로 낮춤
     
     setModalHeight(newHeight);
   };
 
+  // 스냅포인트로 이동하는 함수
+  const snapToClosestPoint = (currentHeight: number, velocity: number) => {
+    // 빠른 아래 스와이프 감지 (velocity가 양수면 아래로 스와이프)
+    if (velocity > 500) {
+      handleRequestClose();
+      return;
+    }
+    
+    // 빠른 위 스와이프는 최대 높이로
+    if (velocity < -500) {
+      const maxHeight = keyboardActive ? SNAP_POINTS.LARGE : 90;
+      setModalHeight(maxHeight);
+      return;
+    }
+    
+    // 임계값 이하면 모달 닫기
+    if (currentHeight <= SNAP_POINTS.CLOSE_THRESHOLD) {
+      handleRequestClose();
+      return;
+    }
+    
+    // 가장 가까운 스냅포인트 찾기
+    const maxHeight = keyboardActive ? SNAP_POINTS.LARGE : 90;
+    const snapPoints = [SNAP_POINTS.MEDIUM, SNAP_POINTS.LARGE];
+    if (!keyboardActive) {
+      snapPoints.push(90);
+    }
+    
+    let closestPoint = SNAP_POINTS.MEDIUM;
+    let minDistance = Math.abs(currentHeight - SNAP_POINTS.MEDIUM);
+    
+    snapPoints.forEach(point => {
+      const distance = Math.abs(currentHeight - point);
+      if (distance < minDistance) {
+        closestPoint = point;
+        minDistance = distance;
+      }
+    });
+    
+    setModalHeight(closestPoint);
+  };
+
   // 드래그 종료
   const handleTouchEnd = () => {
+    if (!isDragging) return;
+    
+    // velocity 계산 (px/ms)
+    const dragDuration = Date.now() - dragStartTime;
+    const dragDistance = lastMoveY - startY; // 아래로 이동하면 양수
+    const velocity = dragDistance / Math.max(dragDuration, 1); // 0으로 나누기 방지
+    
+    snapToClosestPoint(modalHeight, velocity);
     setIsDragging(false);
   };
 
@@ -90,25 +153,37 @@ export default function CommentModal({
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     setStartY(e.clientY);
+    setLastMoveY(e.clientY);
     setStartHeight(modalHeight);
+    setDragStartTime(Date.now());
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging) return;
     
     const currentY = e.clientY;
+    setLastMoveY(currentY);
+    
     const deltaY = startY - currentY;
     const deltaVh = (deltaY / window.innerHeight) * 100;
     
     let newHeight = startHeight + deltaVh;
     // 키보드 활성화 시 safe area를 고려한 최대 높이 제한
-    const maxHeight = keyboardActive ? 85 : 90; // 키보드 활성시 85vh로 제한
-    newHeight = Math.max(30, Math.min(maxHeight, newHeight));
+    const maxHeight = keyboardActive ? SNAP_POINTS.LARGE : 90;
+    newHeight = Math.max(20, Math.min(maxHeight, newHeight));
     
     setModalHeight(newHeight);
   };
 
   const handleMouseUp = () => {
+    if (!isDragging) return;
+    
+    // velocity 계산 (px/ms)
+    const dragDuration = Date.now() - dragStartTime;
+    const dragDistance = lastMoveY - startY;
+    const velocity = dragDistance / Math.max(dragDuration, 1);
+    
+    snapToClosestPoint(modalHeight, velocity);
     setIsDragging(false);
   };
 
@@ -258,6 +333,7 @@ export default function CommentModal({
           style={{
             height: `${modalHeight}vh`,
             overflow: "hidden",
+            transition: isDragging ? "none" : "height 0.3s cubic-bezier(0.32, 0.72, 0, 1)",
           }}
         >
           {/* 핸들바 */}
@@ -273,7 +349,15 @@ export default function CommentModal({
             <div className="w-12 h-1 bg-gray-300 rounded-full" />
           </div>
           {/* 헤더 */}
-          <div className="text-center py-3 border-b border-gray-200 relative">
+          <div 
+            className="text-center py-3 border-b border-gray-200 relative cursor-grab active:cursor-grabbing"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+          >
             <h2 className="text-base font-semibold">댓글</h2>
             <button
               onClick={handleRequestClose}
