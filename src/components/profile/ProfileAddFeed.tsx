@@ -6,8 +6,12 @@ function ProfileAddFeed() {
   const feedWidth = screenWidth * 0.32;
   return (
     <div
-      className={`w-[${feedWidth}px] h-[128px] rounded-[5px] bg-ct-gray-100 ct-center`}
+      className={`rounded-[5px] bg-ct-gray-100 ct-center`}
       onClick={() => navigate("/feed/post")}
+      style={{
+        width: `${feedWidth}px`,
+        height: "128px",
+      }}
     >
       <img src="/assets/onboarding/plus.svg" alt="plus" />
     </div>

@@ -22,12 +22,16 @@ function ProfileCardItem({
     }
   };
   const screenWidth = window.innerWidth;
-  const feedWidth = screenWidth * 0.4;
+  const feedWidth = screenWidth * 0.49;
 
   return (
     <div
-      className={`w-[${feedWidth}px] h-[216px] relative`}
       onClick={handleClick}
+      style={{
+        position: "relative",
+        width: `${feedWidth}px`,
+        height: "216px",
+      }}
     >
       {isHighlight && (
         <img
