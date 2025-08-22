@@ -38,7 +38,7 @@ const bulletStyles = `
 function DetailFeedItem({ item }: { item: FeedItem }) {
   const swiperRef = useRef<any>(null);
   const { openBottomSheet } = useBottomSheet();
-  
+
   const location = useLocation();
   const isMine = location.pathname.startsWith("/mypage");
   const { user } = useAuth();
@@ -203,9 +203,9 @@ function DetailFeedItem({ item }: { item: FeedItem }) {
             pagination={paginationConfig || false}
           >
             {item.images.map((img) => (
-              <SwiperSlide key={img} className="!h-auto">
+              <SwiperSlide key={img} className="!h-auto w-[90%]">
                 <img
-                  className="w-[353px] h-[359px] rounded-[5px] object-cover"
+                  className="w-full h-[359px] rounded-[5px] object-cover"
                   src={img}
                   alt="활동 카드 이미지"
                 />

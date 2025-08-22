@@ -30,7 +30,7 @@ function DetailCardItem({ item }: { item: CardItem }) {
         )}
       </div>
       <img
-        className="w-[353px] h-[442px] rounded-[5px] object-cover"
+        className="w-[100%] h-[442px] rounded-[5px] object-cover"
         src={item.card_img}
         alt="활동 카드 이미지"
       />
