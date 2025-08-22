@@ -19,8 +19,11 @@ function ProfileFeedItem({
     }
   };
 
+  const screenWidth = window.innerWidth;
+  const feedWidth = screenWidth * 0.32;
+
   return (
-    <div className="w-[122px] h-[128px]" onClick={handleClick}>
+    <div className={`w-[${feedWidth}px] h-[128px]`} onClick={handleClick}>
       <img
         src={feed.images[0]}
         alt="피드 이미지"

@@ -21,9 +21,14 @@ function ProfileCardItem({
       navigate(`/${path}/card#${card.id}`);
     }
   };
+  const screenWidth = window.innerWidth;
+  const feedWidth = screenWidth * 0.4;
 
   return (
-    <div className="w-[174px] h-[216px] relative" onClick={handleClick}>
+    <div
+      className={`w-[${feedWidth}px] h-[216px] relative`}
+      onClick={handleClick}
+    >
       {isHighlight && (
         <img
           src="/assets/profile/bestCard.svg"
