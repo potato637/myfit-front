@@ -6,7 +6,13 @@ function FixedHeader() {
   const { data: unreadData } = useUnreadNotifications();
 
   return (
-    <div className="fixed top-0 left-0 w-full pt-safe bg-white z-40 shadow">
+    <div 
+      className="fixed top-0 left-0 w-full bg-white z-40 shadow"
+      style={{
+        height: 'calc(66px + env(safe-area-inset-top, 0px))',
+        paddingTop: 'env(safe-area-inset-top, 0px)',
+      }}
+    >
       <div className="w-full h-[66px] bg-white flex items-center justify-between px-[30px]">
         <img
           src="/assets/common/headerLogo.svg"
