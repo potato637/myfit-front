@@ -38,7 +38,7 @@ const bulletStyles = `
 function DetailFeedItem({ item }: { item: FeedItem }) {
   const swiperRef = useRef<any>(null);
   const { openBottomSheet } = useBottomSheet();
-  
+
   const location = useLocation();
   const isMine = location.pathname.startsWith("/mypage");
   const { user } = useAuth();

@@ -1,11 +1,14 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useGetProfile } from "../../hooks/mypageQueries";
+import { useNavigate } from "react-router-dom";
 
 function DetailIntroduction() {
   const location = useLocation();
+  const navigate = useNavigate();
   const isMine = location.pathname.startsWith("/mypage");
   const { user } = useAuth();
+  const { id } = useParams();
   const service_id = isMine
     ? user?.id?.toString()
     : location.pathname.split("/")[3];
@@ -19,12 +22,21 @@ function DetailIntroduction() {
 
   const isPWA = window.matchMedia("(display-mode: standalone)").matches;
 
+  const handleClick = () => {
+    if (id !== user?.id?.toString()) {
+      navigate(`/feed/profile/${id}`);
+    } else {
+      navigate("/mypage");
+    }
+  };
+
   return (
     <>
       <div
         className={`w-full h-[61px] flex items-center px-[17px] gap-[7px] bg-ct-white fixed z-10 left-0 ${
           isPWA ? "top-[calc(pb-safe+42px)]" : "top-[40px]"
         }`}
+        onClick={handleClick}
       >
         <img
           src={profile?.result.service.profile_img}
