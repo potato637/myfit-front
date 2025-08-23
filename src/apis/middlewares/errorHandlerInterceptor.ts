@@ -1,5 +1,4 @@
 import { AxiosInstance, AxiosError } from "axios";
-import { toast } from "react-toastify";
 
 export function applyErrorHandlerInterceptor(apiInstance: AxiosInstance): void {
   apiInstance.interceptors.response.use(
@@ -11,7 +10,6 @@ export function applyErrorHandlerInterceptor(apiInstance: AxiosInstance): void {
       if (!error.response) {
         console.error("Network Error or No Response:", error.message);
         console.error("🔍 [디버깅] 네트워크 에러 상세:", error);
-        toast.error("네트워크 오류가 발생했습니다.");
         return Promise.reject(error);
       }
 
@@ -22,7 +20,6 @@ export function applyErrorHandlerInterceptor(apiInstance: AxiosInstance): void {
         case 400: // Bad Request
           errorMessage = "잘못된 요청입니다. 입력값을 확인해주세요.";
           console.error(`HTTP 400 Bad Request: ${errorMessage}`, data);
-          toast.error("입력값을 다시 확인해주세요.");
           return Promise.reject(error);
 
         case 401: // Unauthorized
@@ -30,14 +27,12 @@ export function applyErrorHandlerInterceptor(apiInstance: AxiosInstance): void {
           console.error("🔍 [디버깅] 401 에러 상세:", error.response?.data);
 
           window.dispatchEvent(new CustomEvent("auth:logout"));
-          toast.error("다시 로그인해주세요.");
 
           return Promise.reject(error);
 
         case 403: // Forbidden
           errorMessage = "접근 권한이 없습니다.";
           console.error(`HTTP 403 Forbidden: ${errorMessage}`, data);
-          toast.error("접근 권한이 없습니다.");
           return Promise.reject(error);
 
         case 404: // Not Found
@@ -48,7 +43,6 @@ export function applyErrorHandlerInterceptor(apiInstance: AxiosInstance): void {
             data,
             url: error.config?.url,
           });
-          toast.error("요청하신 내용을 찾을 수 없습니다.");
           return Promise.reject(error);
 
         case 500: // Internal Server Error
@@ -62,7 +56,6 @@ export function applyErrorHandlerInterceptor(apiInstance: AxiosInstance): void {
             data,
             url: error.config?.url,
           });
-          toast.error("서버 오류가 발생했습니다.");
           return Promise.reject(error);
 
         default: // unexpected
@@ -76,7 +69,6 @@ export function applyErrorHandlerInterceptor(apiInstance: AxiosInstance): void {
             data,
             url: error.config?.url,
           });
-          toast.error("알 수 없는 오류가 발생했습니다.");
           return Promise.reject(error);
       }
     }
